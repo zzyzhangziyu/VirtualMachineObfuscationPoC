@@ -4,25 +4,25 @@ A code obfuscation method using virtual machines to protect a product.
 A virtual machine simulates a CPU along with a few other hardware components, allowing it to perform arithmetic, read and write to memory and interact with I/O devices. It can understand a machine language which you can use to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random).
 
 ## Documentation
-The VM will simulate a fictional cpu (16-bit). It has a custom instrucion set compared to x86-64.
+The VM will simulate a fictional cpu (32-bit). It has a custom instrucion set compared to x86-64.
 
 ### Memory
-The VM has 4,096 memory locations, each of which stores a 8-bit value (it can store a total of 4kb). The VM has stack, which is a separate data structure. The stack has 256 memory locations, each of which stores a 16-bit value (it can store a total of 512b).
+The VM has 51,200 memory locations, each of which stores a 8-bit value (it can store a total of 50kb). The VM has stack, which is a separate data structure. The stack has 256 memory locations, each of which stores a 32-bit value (it can store a total of 512b).
 
 ```c++
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
 
-BYTE data[4096];
+BYTE codeData[51200];
 WORD stack[256];
 ```
 
 ### Registers
-A register is a slot for storing value on the CPU. The VM has 8 total registers, each of which is 2 bytes (16 bits). The six of them are general purpose, one has designated role as program counter and another has role as stack pointer. The VM has also two regisers ZF (Zero Flag) and CF (Carry Flag). These two provide information about the most recently executed calculation (allows to check logical conditions such as *AND*).
+A register is a slot for storing value on the CPU. The VM has 10 total registers, each of which is 4 bytes (32 bits). The six of them are general purpose, one has designated role as program counter and another has role as stack pointer. The VM has also two regisers ZF (Zero Flag) and CF (Carry Flag). These two provide information about the most recently executed calculation (allows to check logical conditions such as *AND*).
 
 ```c++
-/* General Purpose Registers R0 -> R5 */
-WORD R[6];
+/* General Purpose Registers R0 -> R7 */
+DWORD R[8];
 struct {
     /* Zero Flag 
         value 1 - flag is set if the result of the last comparison was zero
@@ -36,9 +36,9 @@ struct {
     unsigned char CF : 1;
 };
 /* Program Counter */
-WORD PC;
+DWORD PC;
 /* Stack Pointer */
-WORD SP;
+DWORD SP;
 ```
 
 ### Instructions
