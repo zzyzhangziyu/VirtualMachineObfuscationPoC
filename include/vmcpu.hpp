@@ -12,16 +12,20 @@ typedef uint16_t WORD;
 typedef uint32_t DWORD;
 
 typedef struct {
-    /* Here is the code and other data */
-    BYTE data[4096];
-    /* Size of one element is WORD 
+    /* Here will be a code to execute and other data - 50KB*/
+    BYTE codeData[51200];
+
+    /* Heap - 50MB*/
+    BYTE heap[52428800];
+
+    /* Size of one element is DWORD 
     in order to be able to push addresses. */
-    WORD stack[256];
+    DWORD stack[256];
 } ADDRESS_SPACE, *PADDRESS_SPACE;
 
 typedef struct {
-    /* General Purpose Registers R0 -> R5 */
-    WORD R[6];
+    /* General Purpose Registers R0 -> R7 */
+    DWORD R[8];
     struct {
         /* Zero Flag 
             value 1 - flag is set if the result of the last comparison was zero
@@ -35,9 +39,9 @@ typedef struct {
         unsigned char CF : 1;
     };
     /* Program Counter */
-    WORD PC;
+    DWORD PC;
     /* Stack Pointer */
-    WORD SP;
+    DWORD SP;
 } REGISTERSS, *PREGISTERSS;
 
 

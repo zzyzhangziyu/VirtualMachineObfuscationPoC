@@ -54,40 +54,39 @@ ADRR R2, R1 => 22 02 01
 OPCODE | Mnemonic and params | Description
 --- | --- | ---
 00  | NOP | No operation |
-01  | NOPV | No operation |
-EC  | EC | End of code and end of the VM's cpu |
-02  | MOV r<sub>dst</sub>, r<sub>src</sub> | Move from a register to a register|
-03  |  MOVMB r<sub>dst</sub>, addr<sub>src</sub> | Move and extend byte from memory to a register|
-04  |  MOVMW r<sub>dst</sub>, addr<sub>src</sub> | Move word from memory to a register |
-05  |  MOVB r<sub>dst</sub>, byte | Move and extend byte to a register  |
-06  |  MOVW r<sub>dst</sub>, word | Move word to a register |
-07  |  MOVBM addr<sub>dst</sub>, r<sub>src</sub> | Move byte from a register to memory location |
-08  |  MOVWM addr<sub>dst</sub>, r<sub>src</sub> | Move word from a register to memory location |
-09  |  MOVMRB r<sub>dst</sub>, r<sub>src</sub> | Move and extend byte from memory to a register; get an address from a register |
-0A  |  MOVMRW r<sub>dst</sub>, r<sub>src</sub> | Move word from memory to a register; get an address from a register |
-11  |  JMP addr | Unconditional jump |
-12  |  JZ addr | Jump if equal; it set up PC to the specified location if the ZF is set (1) |
-13  |  JNZ addr | Jump if not equal; it set up PC to the specified location if the ZF is not set (0) |
-14  |  JAE addr | Jump if above or equal; it set up PC to the specified location if the ZF is set (1) and the CF is not set (0) |
-15  |  JBE addr | Jump if below or equal; it set up PC to the specified location if the ZF is set (1) and the CF is set (1) |
-16  |  JB addr | Jump if below; it set up PC to the specified location if the ZF is not set (0) and the CF is set (1) |
-17  |  JA addr | Jump if above; it set up PC to the specified location if the ZF is not set (0) and the CF is not set (0) |
-21  |  ADVR r<sub>dst</sub>, word | Add value to a register |
-22  |  ADRR r<sub>dst</sub>, r<sub>src</sub> | Add two registers |
-23  |  ADRRL r<sub>dst</sub>, r<sub>src</sub> | Add two registers (the low byte) |
-24  |  SUBVR r<sub>dst</sub>, word | Substract value from a register |
-25  |  SUBRR r<sub>dst</sub>, r<sub>src</sub> | Substract two registers |
-26  |  SUBRRL r<sub>dst</sub>, r<sub>src</sub> | Substract two registers (the low byte) |
-27  |  xOR r<sub>dst</sub>, r<sub>src</sub> | Xor two registers |
-28  |  xOR r<sub>dst</sub>, r<sub>src</sub> | Xor two registers (the low byte) |
-29  |  NOT r<sub>dst</sub>| Bitwise NOT on value in a register |
-2A  |  NOT r<sub>dst</sub> | Bitwise NOT on value in a register (the low byte) |
-31  |  CMP r<sub>dst</sub>, r<sub>src</sub> | Compare two registers |
-32  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
-61  |  PUSH r<sub>src</sub> | Push value from a register to stack |
-62  |  POP r<sub>dst</sub> | Pop value from stack to a register |
-51  |  POC  | Print char without new line, the value must be at the top of the stack |
-52  |  POCN  | Print char with new line, the value must be at the top of the stack |
+EC  | EE | End of code and end of the VM's cpu |
+01  | MOV r<sub>dst</sub>, r<sub>src</sub> | Move from a register to a register|
+02  |  MOVMB r<sub>dst</sub>, addr<sub>src</sub> | Move and extend byte from memory to a register|
+03  |  MOVMW r<sub>dst</sub>, addr<sub>src</sub> | Move word from memory to a register |
+04  |  MOVB r<sub>dst</sub>, byte | Move and extend byte to a register  |
+05  |  MOVW r<sub>dst</sub>, word | Move word to a register |
+06  |  MOVBM addr<sub>dst</sub>, r<sub>src</sub> | Move byte from a register to memory location |
+07  |  MOVWM addr<sub>dst</sub>, r<sub>src</sub> | Move word from a register to memory location |
+08  |  MOVMRB r<sub>dst</sub>, r<sub>src</sub> | Move and extend byte from memory to a register; get an address from a register |
+09  |  MOVMRW r<sub>dst</sub>, r<sub>src</sub> | Move word from memory to a register; get an address from a register |
+20  |  JMP addr | Unconditional jump |
+21  |  JZ addr | Jump if equal; it set up PC to the specified location if the ZF is set (1) |
+22  |  JNZ addr | Jump if not equal; it set up PC to the specified location if the ZF is not set (0) |
+23  |  JAE addr | Jump if above or equal; it set up PC to the specified location if the ZF is set (1) and the CF is not set (0) |
+24  |  JBE addr | Jump if below or equal; it set up PC to the specified location if the ZF is set (1) and the CF is set (1) |
+25  |  JB addr | Jump if below; it set up PC to the specified location if the ZF is not set (0) and the CF is set (1) |
+26  |  JA addr | Jump if above; it set up PC to the specified location if the ZF is not set (0) and the CF is not set (0) |
+30  |  ADVR r<sub>dst</sub>, word | Add value to a register |
+31  |  ADRR r<sub>dst</sub>, r<sub>src</sub> | Add two registers |
+32  |  ADRRL r<sub>dst</sub>, r<sub>src</sub> | Add two registers (the low byte) |
+33  |  SUBVR r<sub>dst</sub>, word | Substract value from a register |
+34  |  SUBRR r<sub>dst</sub>, r<sub>src</sub> | Substract two registers |
+35  |  SUBRRL r<sub>dst</sub>, r<sub>src</sub> | Substract two registers (the low byte) |
+36  |  XOR r<sub>dst</sub>, r<sub>src</sub> | Xor two registers |
+37  |  XOR r<sub>dst</sub>, r<sub>src</sub> | Xor two registers (the low byte) |
+38  |  NOT r<sub>dst</sub>| Bitwise NOT on value in a register |
+39  |  NOT r<sub>dst</sub> | Bitwise NOT on value in a register (the low byte) |
+50  |  CMP r<sub>dst</sub>, r<sub>src</sub> | Compare two registers |
+51  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
+90  |  PUSH r<sub>src</sub> | Push value from a register to stack |
+91  |  POP r<sub>dst</sub> | Pop value from stack to a register |
+A0  |  POC  | Print char without new line, the value must be at the top of the stack |
+A1  |  POCN  | Print char with new line, the value must be at the top of the stack |
 
 </details>
 
