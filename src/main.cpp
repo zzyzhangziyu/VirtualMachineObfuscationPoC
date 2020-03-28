@@ -1,15 +1,27 @@
 #include "../include/main.hpp"
 #include "../include/vmcpu.hpp"
 
-int main()
+int main(int argc, char *argv[])
 {
     std::cout << "***************" << std::endl;
-    std::cout << "VMPROTECT v0.02" << std::endl;
+    std::cout << "VMPROTECT v0.1" << std::endl;
     std::cout << "***************" << std::endl;
 
+    if(argc != 2) {
+        std::cout << "[ERROR] WRONG ARGUMENTS!" << std::endl;
+        std::cout << "Usage: VMPROTECT file_name_to_run" << std::endl;
+        exit(1);
+    }
+
+    std::string fileName;
+    std::stringstream ssFileName;
     VMCPU *vm = new VMCPU();
-    
     std::string password;
+
+    ssFileName << argv[1];
+    ss >> fileName;
+    ssFileName.clear();
+
     do {
         std::cout << "PASSWORD: ";
         std::cin >> password;
@@ -29,7 +41,19 @@ int main()
     }
 
     BYTE *mc = NULL;
-    int mcsize = loadProtectedCode(&mc);
+
+    int mcsize = -1;
+    try
+    {
+        mcsize = loadProtectedCode(&mc, fileName);
+    }
+    catch (int e)
+    {
+        std::cout << "[ERROR " + e + "] NO FILE OR STH ELSE \n";
+        delete[] usrInput;
+        delete[] mc;
+        exit(1);
+    }
     if(!vm->loadCode(mc, mcsize, usrInput, password.size()))
     {
         delete[] usrInput;
