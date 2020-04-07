@@ -15,9 +15,6 @@ typedef struct {
     /* Here will be a code to execute and other data - 50KB*/
     BYTE codeData[51200];
 
-    /* Heap - 50MB*/
-    BYTE heap[52428800];
-
     /* Size of one element is DWORD 
     in order to be able to push addresses. */
     DWORD stack[256];

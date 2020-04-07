@@ -54,7 +54,7 @@ ADRR R2, R1 => 22 02 01
 OPCODE | Mnemonic and params | Description
 --- | --- | ---
 00  | NOP | No operation |
-EC  | EE | End of code and end of the VM's cpu |
+EE  | EE | End of code and end of the VM's cpu |
 01  | MOV r<sub>dst</sub>, r<sub>src</sub> | Move from a register to a register|
 02  |  MOVMB r<sub>dst</sub>, addr<sub>src</sub> | Move and extend byte from memory to a register|
 03  |  MOVMW r<sub>dst</sub>, addr<sub>src</sub> | Move word from memory to a register |
