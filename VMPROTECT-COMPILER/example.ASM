@@ -1,6 +1,8 @@
 ; Usr input (addr) saved in R0
 
-; Enter 
+%include "vm.inc"
+
+main:
     mov r1, r0
     movw r3, 0x3
     movw r2, 0x0

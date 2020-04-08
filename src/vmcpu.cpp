@@ -71,17 +71,18 @@ void VMCPU::run()
             */
             /*
                 MOV - move from register to register
-                01 25 => MOV R2, R5
-                01 00 => MOV R0, R0
+                01 02 05 => MOV R2, R5
+                01 00 00 => MOV R0, R0
             */
             case 0x01:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOV" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if((bTmp_0 & 0xF0) <= 0x60 && (bTmp_0 & 0x0F) <= 5){
+                bTmp_1 = AS->codeData[REGS->PC++];
+                if((bTmp_0 >= 0 && bTmp_0 <= 7) && (bTmp_1 >= 0 && bTmp_1 <= 7)){
                     // bTmp_0 == XXXX XXXX, XXXX XXXX & 0xF0 == XXXX 0000
-                    REGS->R[(bTmp_0 & 0xF0) >> 4] = REGS->R[bTmp_0 & 0x0F];
+                    REGS->R[bTmp_0] = REGS->R[bTmp_1];
                 }
                 else goto EXCEPTION;
                 break;
