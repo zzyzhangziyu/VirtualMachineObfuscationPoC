@@ -10,76 +10,76 @@ main:
     movw r5, 0x0
     advr r3, 0x2
 
-9JLL:
+JLL9:
     movmrb r2, r1
-    adrr r4, R2
+    adrr r4, r2
     advr r4, 0x5
     advr r1, 0x1
     movmrb r2, r1
     cmp r2, r5
-    jz 8JLL
+    jz JLL8
 
     adrr r4, r2
     advr r4, 0xa
     advr r1, 0x1
     movmrb r2, r1
     cmp r2, r5
-    jz 8JLL
+    jz JLL8
 
     adrr r4, r2
     subvr r4, 0x6
     advr r1, 0x1
     movmrb r2, r1
     cmp r2, r5
-    jz 8JLL
+    jz JLL8
 
-    drr r4, r2
+    adrr r4, r2
     subvr r4, 0xc
     advr r1, 0x1
     movmrb r2, r1
     cmp r2, r5
-    jz 8JLL
+    jz JLL8
 
     adrr r4, r2
     advr r4, 0xf
     advr r1, 0x1
     movmrb r2, r1
     cmp r2, r5
-    jz 8JLL
+    jz JLL8
 
-    jnz 9JLL
+    jnz JLL9
 
-8JLL:    
+JLL8:    
     advr r3, 0x5
     movw r5, 0x980
     xor r4, r5
     cmp r4, r3
-    jz 6JLL
-    jnz 7JLL
+    jz JLL6
+    jnz JLL7
 
-6JLL:
+JLL6:
 ; PRINT "PASS"
-    jmp 5JLL
+    jmp JLL5
 
-7JLL:
+JLL7:
 ; PRINT "FAILED"
-    jmp 4JLL
+    jmp JLL4
 
-5JLL:
-    movw r1, 1DL
-    jmp 3JLL
+JLL5:
+    movw r1, data1
+    jmp JLL3
 
-4JLL:
-    movw r1, 2DL
-    jmp 3JLL
+JLL4:
+    movw r1, data2
+    jmp JLL3
 
-3JLL:
+JLL3:
     mov r2, r1
     advr r2, 0x1
     movw r3, 0x0
     movw r4, 0x0
 
-1JLL:
+JLL1:
     movmrb r3, r1
     push r3
     poc
@@ -87,16 +87,16 @@ main:
     advr r2, 0x1
     movmrb r3, r2
     cmp r3, r4
-    jz 2JLL
-    jnz 1JLL
+    jz JLL2
+    jnz JLL1
 
-2JLL:
+JLL2:
     movmrb r3, r1
     push r3
     pocn
     ee
 
-1DL:
+data1:
     db "PASS", 0 
-2DL:
+data2:
     db "FAILED", 0

@@ -10,11 +10,11 @@
 %define r6 6
 %define r7 7
 
-%macro nop
+%macro nop 0
 db 0x00
 %endmacro
 
-%macro ee
+%macro ee 0
 db 0xee
 %endmacro
 
@@ -154,10 +154,10 @@ db 0x90, %1
 db 0x91, %1
 %endmacro
 
-%macro poc
+%macro poc 0
 db 0xa0
 %endmacro
 
-%macro pocn
+%macro pocn 0
 db 0xa1
 %endmacro
