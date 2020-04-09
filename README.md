@@ -100,13 +100,3 @@ A0  |  POC  | Print char without new line, the value must be at the top of the s
 A1  |  POCN  | Print char with new line, the value must be at the top of the stack |
 
 </details>
-
-## Solution
-
-<details>
-  <summary>Click to show!</summary>
-
-  ```
-  Answer: vmobfuscationisthebest
-  ```
-</details>
