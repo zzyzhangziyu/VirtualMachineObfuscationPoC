@@ -68,6 +68,7 @@ EE  | EE | End of code and end of the VM's cpu |
 0B  |  MOVD r<sub>dst</sub>, word | Move double word to a register |
 0C  |  MOVDM addr<sub>dst</sub>, r<sub>src</sub> | Move double word from a register to memory location |
 0D  |  MOVMRD r<sub>dst</sub>, r<sub>src</sub> | Move double from memory to a register; get an address from a register |
+  | | |
 20  |  JMP addr | Unconditional jump |
 21  |  JZ addr | Jump if equal; it set up PC to the specified location if the ZF is set (1) |
 22  |  JNZ addr | Jump if not equal; it set up PC to the specified location if the ZF is not set (0) |
@@ -75,6 +76,7 @@ EE  | EE | End of code and end of the VM's cpu |
 24  |  JBE addr | Jump if below or equal; it set up PC to the specified location if the ZF is set (1) and the CF is set (1) |
 25  |  JB addr | Jump if below; it set up PC to the specified location if the ZF is not set (0) and the CF is set (1) |
 26  |  JA addr | Jump if above; it set up PC to the specified location if the ZF is not set (0) and the CF is not set (0) |
+  | | |
 30  |  ADVR r<sub>dst</sub>, word | Add word value to a register |
 31  |  ADRR r<sub>dst</sub>, r<sub>src</sub> | Add two registers |
 32  |  ADRRL r<sub>dst</sub>, r<sub>src</sub> | Add two registers (the low byte) |
@@ -87,10 +89,13 @@ EE  | EE | End of code and end of the VM's cpu |
 39  |  NOT r<sub>dst</sub> | Bitwise NOT on value in a register (the low byte) |
 3A  |  ADVRD r<sub>dst</sub>, dword | Add double word value to a register |
 3B  |  SUBVR r<sub>dst</sub>, dword | Substract double word value from a register |
+  | | |
 50  |  CMP r<sub>dst</sub>, r<sub>src</sub> | Compare two registers |
 51  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
+  | | |
 90  |  PUSH r<sub>src</sub> | Push value from a register to stack |
 91  |  POP r<sub>dst</sub> | Pop value from stack to a register |
+  | | |
 A0  |  POC  | Print char without new line, the value must be at the top of the stack |
 A1  |  POCN  | Print char with new line, the value must be at the top of the stack |
 
