@@ -64,6 +64,10 @@ EE  | EE | End of code and end of the VM's cpu |
 07  |  MOVWM addr<sub>dst</sub>, r<sub>src</sub> | Move word from a register to memory location |
 08  |  MOVMRB r<sub>dst</sub>, r<sub>src</sub> | Move and extend byte from memory to a register; get an address from a register |
 09  |  MOVMRW r<sub>dst</sub>, r<sub>src</sub> | Move word from memory to a register; get an address from a register |
+0A  |  MOVMD r<sub>dst</sub>, addr<sub>src</sub> | Move double word from memory to a register |
+0B  |  MOVD r<sub>dst</sub>, word | Move double word to a register |
+0C  |  MOVDM addr<sub>dst</sub>, r<sub>src</sub> | Move double word from a register to memory location |
+0D  |  MOVMRD r<sub>dst</sub>, r<sub>src</sub> | Move double from memory to a register; get an address from a register |
 20  |  JMP addr | Unconditional jump |
 21  |  JZ addr | Jump if equal; it set up PC to the specified location if the ZF is set (1) |
 22  |  JNZ addr | Jump if not equal; it set up PC to the specified location if the ZF is not set (0) |
@@ -71,16 +75,18 @@ EE  | EE | End of code and end of the VM's cpu |
 24  |  JBE addr | Jump if below or equal; it set up PC to the specified location if the ZF is set (1) and the CF is set (1) |
 25  |  JB addr | Jump if below; it set up PC to the specified location if the ZF is not set (0) and the CF is set (1) |
 26  |  JA addr | Jump if above; it set up PC to the specified location if the ZF is not set (0) and the CF is not set (0) |
-30  |  ADVR r<sub>dst</sub>, word | Add value to a register |
+30  |  ADVR r<sub>dst</sub>, word | Add word value to a register |
 31  |  ADRR r<sub>dst</sub>, r<sub>src</sub> | Add two registers |
 32  |  ADRRL r<sub>dst</sub>, r<sub>src</sub> | Add two registers (the low byte) |
-33  |  SUBVR r<sub>dst</sub>, word | Substract value from a register |
+33  |  SUBVR r<sub>dst</sub>, word | Substract word value from a register |
 34  |  SUBRR r<sub>dst</sub>, r<sub>src</sub> | Substract two registers |
 35  |  SUBRRL r<sub>dst</sub>, r<sub>src</sub> | Substract two registers (the low byte) |
 36  |  XOR r<sub>dst</sub>, r<sub>src</sub> | Xor two registers |
 37  |  XOR r<sub>dst</sub>, r<sub>src</sub> | Xor two registers (the low byte) |
 38  |  NOT r<sub>dst</sub>| Bitwise NOT on value in a register |
 39  |  NOT r<sub>dst</sub> | Bitwise NOT on value in a register (the low byte) |
+3A  |  ADVRD r<sub>dst</sub>, dword | Add double word value to a register |
+3B  |  SUBVR r<sub>dst</sub>, dword | Substract double word value from a register |
 50  |  CMP r<sub>dst</sub>, r<sub>src</sub> | Compare two registers |
 51  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
 90  |  PUSH r<sub>src</sub> | Push value from a register to stack |

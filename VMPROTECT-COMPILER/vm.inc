@@ -61,6 +61,23 @@ db 0x08, %1, %2
 db 0x09, %1, %2
 %endmacro
 
+%macro movmd 2
+db 0x0a, %1, %2
+%endmacro
+
+%macro movd 2
+db 0x0b, %1
+dd %2
+%endmacro
+
+%macro movdm 2
+db 0x0c, %1, %2
+%endmacro
+
+%macro movmrd 2
+db 0x0d, %1, %2
+%endmacro
+
 %macro jmp 1
 db 0x20
 dw %1
@@ -136,6 +153,16 @@ db 0x38, %1
 
 %macro notb 1
 db 0x39, %1
+%endmacro
+
+%macro advrd 2
+db 0x3a, %1
+dd %2
+%endmacro
+
+%macro subvrd 2
+db 0x3a, %1
+dd %2
 %endmacro
 
 %macro cmp 2

@@ -45,6 +45,7 @@ void VMCPU::run()
     BYTE opcode;
     BYTE bTmp_0, bTmp_1, bTmp_2;
     WORD wTmp_0, wTmp_1, wTmp_2;
+    DWORD dTmp_0, dTmp_1, dTmp_2;
 
     while(!exit)
     {
@@ -206,6 +207,65 @@ void VMCPU::run()
                 if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
                 *(WORD*) REGS->R[bTmp_0] = *(WORD*) &AS->codeData[REGS->R[bTmp_1]];
                 break;
+            /* 
+                MOVMD - move double word from memory to register 
+                03 03 04 01 => MOVMW R3, 0104
+            */
+            case 0x0A:
+                #ifdef V_DEBUG
+                    std::cout << "[DEBUG] MOVMD" << std::endl;
+                #endif
+                bTmp_0 = AS->codeData[REGS->PC++];
+                if(bTmp_0 > 5) goto EXCEPTION;
+                dTmp_0 = *(DWORD*) &AS->codeData[REGS->PC];
+                if(dTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
+                REGS->PC += 2;
+                REGS->R[bTmp_0] = *(DWORD*) &AS->codeData[dTmp_0];
+                break;  
+            /* 
+                MOVD - move value to register 
+                05 01 00 00 15 28 => MOVW R1, 2815
+            */
+            case 0x0B:
+                #ifdef V_DEBUG
+                    std::cout << "[DEBUG] MOVD" << std::endl;
+                #endif
+                bTmp_0 = AS->codeData[REGS->PC++];
+                if(bTmp_0 > 5) goto EXCEPTION;
+                REGS->R[bTmp_0] = *(DWORD *) &AS->codeData[REGS->PC];
+                REGS->PC += 2;
+                break;  
+            /* 
+                MOVDM - move double word from register to memory location 
+                07 04 43 13 => MOVWM 1343, R4
+            */
+            case 0x0C:
+                #ifdef V_DEBUG
+                    std::cout << "[DEBUG] MOVDM" << std::endl;
+                #endif
+                bTmp_0 = AS->codeData[REGS->PC++];
+                if(bTmp_0 > 5) goto EXCEPTION;
+                wTmp_0 = *(WORD*) &AS->codeData[REGS->PC];
+                if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
+                REGS->PC += 2;
+                *(DWORD*) &AS->codeData[wTmp_0] = REGS->R[bTmp_0];
+                break;
+            /* 
+                MOVMRD - move double word from memory to register
+                        get addr from register
+                09 02 01 => MOVMRW R2, R1
+            */
+            case 0x0D:
+                #ifdef V_DEBUG
+                    std::cout << "[DEBUG] MOVMRD" << std::endl;
+                #endif
+                bTmp_0 = AS->codeData[REGS->PC++];
+                if(bTmp_0 > 5) goto EXCEPTION;
+                bTmp_1 = AS->codeData[REGS->PC++];
+                if(bTmp_1 > 5) goto EXCEPTION;
+                if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
+                REGS->R[bTmp_0] = *(DWORD*) &AS->codeData[REGS->R[bTmp_1]];
+                break;
             /*  ********************************
                             JUMP
                 ********************************
@@ -306,7 +366,7 @@ void VMCPU::run()
                 ********************************
             */
             /*
-                ADVR - Add value to register
+                ADVR - Add word value to register
                 30 02 10 00 => ADVR R2, 10
             */
             case 0x30:
@@ -322,7 +382,7 @@ void VMCPU::run()
                 else REGS->ZF = 0;
                 if(wTmp_1 < REGS->R[bTmp_0]) REGS->CF = 1;
                 else REGS->CF = 0;
-                REGS->R[bTmp_0] = wTmp_1;
+                *(WORD *) &REGS->R[bTmp_0] = wTmp_1;
                 break;
             /*
                 ADRR - Add two registers
@@ -337,13 +397,13 @@ void VMCPU::run()
                 if(bTmp_0 > 5) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
                 if(bTmp_1 > 5) goto EXCEPTION;
-                wTmp_0 = REGS->R[bTmp_0];
-                wTmp_1 = REGS->R[bTmp_1];
-                wTmp_2 = wTmp_0 + wTmp_1;
-                REGS->R[bTmp_0] = wTmp_2;
-                if(wTmp_2 == 0) REGS->ZF = 1;
+                dTmp_0 = REGS->R[bTmp_0];
+                dTmp_1 = REGS->R[bTmp_1];
+                dTmp_2 = dTmp_0 + dTmp_1;
+                REGS->R[bTmp_0] = dTmp_2;
+                if(dTmp_2 == 0) REGS->ZF = 1;
                 else REGS->ZF = 0;
-                if(wTmp_2 < wTmp_0) REGS->CF = 1;
+                if(dTmp_2 < dTmp_0) REGS->CF = 1;
                 else REGS->CF = 0;
                 break;
             /*
@@ -369,7 +429,7 @@ void VMCPU::run()
                 else REGS->CF = 0;
                 break;
             /*
-                SUBVR - Substract value from register
+                SUBVR - Substract word value from register
                 33 02 10 00 => SUBVR R2, 10
             */
             case 0x33:
@@ -385,7 +445,7 @@ void VMCPU::run()
                 else REGS->ZF = 0;
                 if(wTmp_1 > REGS->R[bTmp_0]) REGS->CF = 1;
                 else REGS->CF = 0;
-                REGS->R[bTmp_0] = wTmp_1;
+                *(WORD *) &REGS->R[bTmp_0] = wTmp_1;
                 break;
             /*
                 SUBRR - Substract two registers
@@ -400,13 +460,13 @@ void VMCPU::run()
                 if(bTmp_0 > 5) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
                 if(bTmp_1 > 5) goto EXCEPTION;
-                wTmp_0 = REGS->R[bTmp_0];
-                wTmp_1 = REGS->R[bTmp_1];
-                wTmp_2 = wTmp_0 - wTmp_1;
-                REGS->R[bTmp_0] = wTmp_2;
-                if(wTmp_2 == 0) REGS->ZF = 1;
+                dTmp_0 = REGS->R[bTmp_0];
+                dTmp_1 = REGS->R[bTmp_1];
+                dTmp_2 = dTmp_0 - dTmp_1;
+                REGS->R[bTmp_0] = dTmp_2;
+                if(dTmp_2 == 0) REGS->ZF = 1;
                 else REGS->ZF = 0;
-                if(wTmp_2 > wTmp_0) REGS->CF = 1;
+                if(dTmp_2 > dTmp_0) REGS->CF = 1;
                 else REGS->CF = 0;
                 break;
             /*
@@ -444,12 +504,12 @@ void VMCPU::run()
                 if(bTmp_0 > 5) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
                 if(bTmp_1 > 5) goto EXCEPTION;
-                wTmp_0 = REGS->R[bTmp_0];
-                wTmp_1 = REGS->R[bTmp_1];
-                wTmp_2 = wTmp_0 ^ wTmp_1;
-                if(wTmp_2 == 0) REGS->ZF = 1;
+                dTmp_0 = REGS->R[bTmp_0];
+                dTmp_1 = REGS->R[bTmp_1];
+                dTmp_2 = dTmp_0 ^ dTmp_1;
+                if(dTmp_2 == 0) REGS->ZF = 1;
                 else REGS->ZF = 0;
-                REGS->R[bTmp_0] = wTmp_2;
+                REGS->R[bTmp_0] = dTmp_2;
                 REGS->CF = 0;
                 break;
             /*
@@ -493,6 +553,44 @@ void VMCPU::run()
                 if(bTmp_0 > 5) goto EXCEPTION;
                 *(BYTE *) &REGS->R[bTmp_0] = ~ (*(BYTE *) &REGS->R[bTmp_0]);
                 break;
+            /*
+                ADVRD - Add word value to register
+                3A 02 10 00 00 00 => ADVR R2, 10
+            */
+            case 0x3A:
+                #ifdef V_DEBUG
+                    std::cout << "[DEBUG] ADVR" << std::endl;
+                #endif
+                bTmp_0 = AS->codeData[REGS->PC++];
+                if(bTmp_0 > 5) goto EXCEPTION;
+                dTmp_0 = *(DWORD*) &AS->codeData[REGS->PC];
+                REGS->PC += 2;
+                dTmp_1 = REGS->R[bTmp_0] + dTmp_0;          
+                if(dTmp_1 == 0) REGS->ZF = 1;
+                else REGS->ZF = 0;
+                if(dTmp_1 < REGS->R[bTmp_0]) REGS->CF = 1;
+                else REGS->CF = 0;
+                REGS->R[bTmp_0] = dTmp_1;
+                break;
+             /*
+                SUBVRD - Substract double word value from register
+                3B 02 10 00 00 00 => SUBVR R2, 10
+            */
+            case 0x3B:
+                #ifdef V_DEBUG
+                    std::cout << "[DEBUG] SUBVR" << std::endl;
+                #endif
+                bTmp_0 = AS->codeData[REGS->PC++];
+                if(bTmp_0 > 5) goto EXCEPTION;
+                dTmp_0 = *(DWORD*) &AS->codeData[REGS->PC];
+                REGS->PC += 2;
+                dTmp_1 = REGS->R[bTmp_0] - dTmp_0;          
+                if(wTmp_1 == 0) REGS->ZF = 1;
+                else REGS->ZF = 0;
+                if(wTmp_1 > REGS->R[bTmp_0]) REGS->CF = 1;
+                else REGS->CF = 0;
+                *(DWORD *) &REGS->R[bTmp_0] = dTmp_1;
+                break;
             /*  ********************************
                             COMPARE
                 ********************************
@@ -509,11 +607,11 @@ void VMCPU::run()
                 if(bTmp_0 > 5) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
                 if(bTmp_1 > 5) goto EXCEPTION;
-                wTmp_0 = REGS->R[bTmp_0];
-                wTmp_1 = REGS->R[bTmp_1];
-                if(wTmp_1 == wTmp_0) REGS->ZF = 1;
+                dTmp_0 = REGS->R[bTmp_0];
+                dTmp_1 = REGS->R[bTmp_1];
+                if(dTmp_1 == dTmp_0) REGS->ZF = 1;
                 else REGS->ZF = 0;
-                if(wTmp_1 > wTmp_0) REGS->CF = 1;
+                if(dTmp_1 > dTmp_0) REGS->CF = 1;
                 else REGS->CF = 0;
                 break;
             /*
@@ -571,7 +669,7 @@ void VMCPU::run()
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
                 if(bTmp_0 > 5) goto EXCEPTION;
-                if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(WORD)]){
+                if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(DWORD)]){
                     #ifdef _VM_TEST_
                         vcpuFlag = VCpuFlag::UNDERFLOW;
                     #endif
@@ -597,7 +695,7 @@ void VMCPU::run()
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] POC" << std::endl;
                 #endif
-                if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(WORD)]){
+                if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(DWORD)]){
                     #ifdef _VM_TEST_
                         vcpuFlag = VCpuFlag::UNDERFLOW;
                     #endif
@@ -619,7 +717,7 @@ void VMCPU::run()
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] POCN" << std::endl;
                 #endif
-                if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(WORD)]){
+                if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(DWORD)]){
                     #ifdef _VM_TEST_
                         vcpuFlag = VCpuFlag::UNDERFLOW;
                     #endif
