@@ -59,7 +59,7 @@ void VMCPU::run()
                 #endif
                 opcode+=20;
                 break;
-            /* EC - end of code */
+            /* EE - end of code */
             case 0xEE:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] EC" << std::endl;
