@@ -14,13 +14,13 @@ int main(int argc, char *argv[])
     }
 
     std::string fileName;
-    std::stringstream ssFileName;
+    std::stringstream fileStream;
     VMCPU *vm = new VMCPU();
     std::string password;
 
-    ssFileName << argv[1];
-    ss >> fileName;
-    ssFileName.clear();
+    fileStream << argv[1];
+    fileStream >> fileName;
+    fileStream.clear();
 
     do {
         std::cout << "PASSWORD: ";
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     }
     catch (int e)
     {
-        std::cout << "[ERROR " + e + "] NO FILE OR STH ELSE \n";
+        std::cout << "[ERROR " << e << "] NO FILE OR STH ELSE \n";
         delete[] usrInput;
         delete[] mc;
         exit(1);

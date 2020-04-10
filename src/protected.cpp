@@ -5,7 +5,7 @@
 int loadProtectedCode(BYTE **mc, std::string fileName)
 {
     int codeSize;
-    std::ifstream fileStream(fileName, ios::binary);
+    std::ifstream fileStream(fileName, std::ios::binary);
 
     if(fileStream.is_open())
     {
@@ -20,7 +20,12 @@ int loadProtectedCode(BYTE **mc, std::string fileName)
         }
 
         *mc = new BYTE[codeSize];
-        fileStream.read(*mc, codeSize);
+        BYTE byte;
+        int counter = 0;
+        while(fileStream >> byte)
+        {
+            *mc[counter++] = byte;
+        }
         fileStream.close();
     }
     else

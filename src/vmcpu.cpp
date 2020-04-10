@@ -44,7 +44,7 @@ void VMCPU::run()
     bool exit = false;
     BYTE opcode;
     BYTE bTmp_0, bTmp_1, bTmp_2;
-    WORD wTmp_0, wTmp_1, wTmp_2;
+    WORD wTmp_0, wTmp_1;
     DWORD dTmp_0, dTmp_1, dTmp_2;
 
     while(!exit)
