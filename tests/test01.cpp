@@ -94,14 +94,17 @@ bool VMTest::testVM()
     T_REGS->R[1] = (DWORD) 5;
     T_REGS->R[2] = (DWORD) 1;
     T_AS->codeData[0] = 0x02; // MOV
-    T_AS->codeData[1] = 0x12; // R1, R2
-    T_AS->codeData[2] = 0xEE; // EE
+    T_AS->codeData[1] = 0x01; // R1
+    T_AS->codeData[1] = 0x02; // R2
+    T_AS->codeData[3] = 0xEE; // EE
     vm->vcpuFlag = VCpuFlag::OK;
     vm->run();
     if(vm->vcpuFlag == VCpuFlag::ERROR) {
         bTestPass = false;
         goto FINISH_TESTS;
     }
+    std::cout << "1: " << T_REGS->R[1]<< std::endl;
+    std::cout << "2: " << T_REGS->R[2]<< std::endl;
     if(T_REGS->R[2] == (DWORD) 1) {
         if(T_REGS->R[1] != (DWORD) 1) {
             bTestPass = false;
@@ -117,6 +120,7 @@ bool VMTest::testVM()
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
     T_AS->codeData[2] = 0x00;
+    T_AS->codeData[3] = 0x00;
     T_REGS->PC = (DWORD) 0;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
