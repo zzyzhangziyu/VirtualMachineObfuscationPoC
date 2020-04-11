@@ -5,11 +5,11 @@
 
 main:
     mov r1, r0
-    movd r3, 0x3
+    movd r3, 0x10
     movd r2, 0x0
     movd r4, 0x0
     movd r5, 0x0
-    advrd r3, 0x2
+    advrd r3, 0x5
 
 JLL9:
     movmrb r2, r1

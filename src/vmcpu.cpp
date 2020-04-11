@@ -66,7 +66,7 @@ void VMCPU::run()
             /* EE - end of code */
             case 0xEE:
                 #ifdef V_DEBUG
-                    std::cout << "[DEBUG] EC" << std::endl;
+                    std::cout << "[DEBUG] EE" << std::endl;
                 #endif
                 exit = true;
                 break;
