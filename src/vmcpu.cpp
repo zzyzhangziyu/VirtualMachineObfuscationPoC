@@ -120,7 +120,7 @@ void VMCPU::run()
                 wTmp_0 = *(WORD*) &AS->codeData[REGS->PC];
                 if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
                 REGS->PC += 2;
-                *(WORD*) REGS->R[bTmp_0] = *(WORD*) &AS->codeData[wTmp_0];
+                *(WORD*) &REGS->R[bTmp_0] = *(WORD*) &AS->codeData[wTmp_0];
                 break;  
             /* 
                 MOVB - move and extend byte to register 

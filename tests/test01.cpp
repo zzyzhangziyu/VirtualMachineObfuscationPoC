@@ -93,9 +93,9 @@ bool VMTest::testVM()
     ++currentTestNumber;
     T_REGS->R[1] = (DWORD) 5;
     T_REGS->R[2] = (DWORD) 1;
-    T_AS->codeData[0] = 0x02; // MOV
+    T_AS->codeData[0] = 0x01; // MOV
     T_AS->codeData[1] = 0x01; // R1
-    T_AS->codeData[1] = 0x02; // R2
+    T_AS->codeData[2] = 0x02; // R2
     T_AS->codeData[3] = 0xEE; // EE
     vm->vcpuFlag = VCpuFlag::OK;
     vm->run();
@@ -103,8 +103,6 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    std::cout << "1: " << T_REGS->R[1]<< std::endl;
-    std::cout << "2: " << T_REGS->R[2]<< std::endl;
     if(T_REGS->R[2] == (DWORD) 1) {
         if(T_REGS->R[1] != (DWORD) 1) {
             bTestPass = false;
@@ -130,7 +128,7 @@ bool VMTest::testVM()
     /* ************************* */
     ++currentTestNumber;
     T_REGS->R[2] = (DWORD) 6;
-    T_AS->codeData[0] = 0x03; // MOVMB
+    T_AS->codeData[0] = 0x02; // MOVMB
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0x07;
     T_AS->codeData[3] = 0x00; // 0007h
@@ -161,8 +159,9 @@ bool VMTest::testVM()
         */
     /* ************************* */
     ++currentTestNumber;
-    T_REGS->R[2] = (DWORD) 6;
-    T_AS->codeData[0] = 0x04; // MOVMW
+    T_REGS->R[2] = (DWORD) 0;
+    T_REGS->R[2] = (WORD) 6;
+    T_AS->codeData[0] = 0x03; // MOVMW
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0x07;
     T_AS->codeData[3] = 0x00; // 0007h
@@ -175,7 +174,7 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    if(T_REGS->R[2] != (DWORD) 0x0403){
+    if(T_REGS->R[2] != (WORD) 0x0403){
         bTestPass = false;
         goto FINISH_TESTS;
     }
@@ -196,7 +195,7 @@ bool VMTest::testVM()
     /* ************************* */
     ++currentTestNumber;
     T_REGS->R[2] = (DWORD) 6;
-    T_AS->codeData[0] = 0x07; // MOVBM
+    T_AS->codeData[0] = 0x06; // MOVBM
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0x07;
     T_AS->codeData[3] = 0x00; // 0007h
@@ -240,7 +239,7 @@ bool VMTest::testVM()
     /* ************************* */
     ++currentTestNumber;
     T_REGS->R[2] = (DWORD) 6;
-    T_AS->codeData[0] = 0x08; // MOVWM
+    T_AS->codeData[0] = 0x07; // MOVWM
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0x07;
     T_AS->codeData[3] = 0x00; // 0007h
@@ -286,7 +285,7 @@ bool VMTest::testVM()
     /* ************************* */
     ++currentTestNumber;
     T_REGS->R[2] = (DWORD) 6;
-    T_AS->codeData[0] = 0x62; // POP
+    T_AS->codeData[0] = 0x91; // POP
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0xEE; // EE
     vm->vcpuFlag = VCpuFlag::OK;
@@ -319,7 +318,7 @@ bool VMTest::testVM()
     ++currentTestNumber;
     T_REGS->R[2] = (DWORD) 6;
     T_REGS->SP = 0;
-    T_AS->codeData[0] = 0x61; // POP
+    T_AS->codeData[0] = 0x91; // POP
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0xEE; // EE
     vm->vcpuFlag = VCpuFlag::OK;
