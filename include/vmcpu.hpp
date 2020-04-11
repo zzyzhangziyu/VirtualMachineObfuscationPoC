@@ -43,7 +43,7 @@ typedef struct {
 
 
 #ifdef _VM_TEST_
-    enum VCpuFlag {OK = 0, ERROR, UNDERFLOW, OVERFLOW};
+    enum class VCpuFlag {OK = 0, ERROR, UNDERFLOW, OVERFLOW};
 #endif // _VM_TEST_
 
 class VMCPU {
