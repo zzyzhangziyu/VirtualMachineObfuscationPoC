@@ -1,6 +1,6 @@
 #include "../include/vmcpu.hpp"
 
-#define V_DEBUG
+//#define V_DEBUG
 
 VMCPU::VMCPU()
 {
@@ -50,7 +50,6 @@ void VMCPU::run()
     while(!exit)
     {
         opcode = AS->codeData[REGS->PC++];
-        std::cout << "opcode : " << static_cast<int16_t>(opcode) << std::endl;
         switch(opcode)
         {
             /* NOP */
@@ -81,9 +80,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOV" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                std::cout << " : " << static_cast<int16_t>(bTmp_0) << std::endl;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                std::cout << " : " << static_cast<int16_t>(bTmp_1) << std::endl;
                 if((bTmp_0 >= 0 && bTmp_0 <= 7) && (bTmp_1 >= 0 && bTmp_1 <= 7))
                 {
                     REGS->R[bTmp_1] = REGS->R[bTmp_0];
@@ -236,7 +233,7 @@ void VMCPU::run()
                 bTmp_0 = AS->codeData[REGS->PC++];
                 if(bTmp_0 > 5) goto EXCEPTION;
                 REGS->R[bTmp_0] = *(DWORD *) &AS->codeData[REGS->PC];
-                REGS->PC += 2;
+                REGS->PC += 4;
                 break;  
             /* 
                 MOVDM - move double word from register to memory location 
@@ -567,7 +564,7 @@ void VMCPU::run()
                 bTmp_0 = AS->codeData[REGS->PC++];
                 if(bTmp_0 > 5) goto EXCEPTION;
                 dTmp_0 = *(DWORD*) &AS->codeData[REGS->PC];
-                REGS->PC += 2;
+                REGS->PC += 4;
                 dTmp_1 = REGS->R[bTmp_0] + dTmp_0;          
                 if(dTmp_1 == 0) REGS->ZF = 1;
                 else REGS->ZF = 0;
@@ -586,7 +583,7 @@ void VMCPU::run()
                 bTmp_0 = AS->codeData[REGS->PC++];
                 if(bTmp_0 > 5) goto EXCEPTION;
                 dTmp_0 = *(DWORD*) &AS->codeData[REGS->PC];
-                REGS->PC += 2;
+                REGS->PC += 4;
                 dTmp_1 = REGS->R[bTmp_0] - dTmp_0;          
                 if(wTmp_1 == 0) REGS->ZF = 1;
                 else REGS->ZF = 0;
@@ -707,7 +704,7 @@ void VMCPU::run()
                     #endif
                     goto EXCEPTION;
                 }
-                bTmp_0 = *(BYTE*) &AS->stack[REGS->SP++];
+                bTmp_0 = *(BYTE*) &AS->codeData[AS->stack[REGS->SP++]];
                 vmPrint(bTmp_0);
                 break;
             /*
@@ -729,7 +726,7 @@ void VMCPU::run()
                     #endif
                     goto EXCEPTION;
                 }
-                bTmp_0 = *(BYTE*) &AS->stack[REGS->SP++];
+                bTmp_0 = *(BYTE*) &AS->codeData[AS->stack[REGS->SP++]];
                 vmPrintN(bTmp_0);
                 break;
             /*  

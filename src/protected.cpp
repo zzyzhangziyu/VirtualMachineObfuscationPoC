@@ -21,18 +21,17 @@ int loadProtectedCode(BYTE **mc, std::string fileName)
         }
 
         *mc = new BYTE[codeSize];
-        BYTE byte;
+        char byte;
         int counter = 0;
 
         //std::cout << "[DEBUG] *************" << std::endl;
-        while(fileStream >> byte)
+        while(fileStream.get(byte))
         {
-            std::cout << " [READ] : " << static_cast<int16_t>(byte) << std::endl;
             (*mc)[counter++] = byte;
+            //std::cout << "\t<READ> : " << static_cast<uint16_t>((*mc)[counter - 1]) << std::endl;
         }
         //std::cout << "[DEBUG] *************" << std::endl;
         fileStream.close();
-        exit(-1);
     }
     else
     {
