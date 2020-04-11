@@ -11,6 +11,7 @@ int loadProtectedCode(BYTE **mc, std::string fileName)
     {
         fileStream.seekg(0, fileStream.end);
         codeSize = fileStream.tellg();
+        ++codeSize;
         fileStream.seekg(0, fileStream.beg);
         
         if(codeSize > 51200)
@@ -22,11 +23,16 @@ int loadProtectedCode(BYTE **mc, std::string fileName)
         *mc = new BYTE[codeSize];
         BYTE byte;
         int counter = 0;
+
+        //std::cout << "[DEBUG] *************" << std::endl;
         while(fileStream >> byte)
         {
-            *mc[counter++] = byte;
+            std::cout << " [READ] : " << static_cast<int16_t>(byte) << std::endl;
+            (*mc)[counter++] = byte;
         }
+        //std::cout << "[DEBUG] *************" << std::endl;
         fileStream.close();
+        exit(-1);
     }
     else
     {

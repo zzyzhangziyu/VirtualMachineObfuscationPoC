@@ -27,4 +27,4 @@ clean:
 	rm ./*.exe
 
 run:
-	./$(PREXEC)
+	./$(PREXEC) $(ARGS)

@@ -1,6 +1,6 @@
 #include "../include/vmcpu.hpp"
 
-//#define V_DEBUG
+#define V_DEBUG
 
 VMCPU::VMCPU()
 {
@@ -50,6 +50,7 @@ void VMCPU::run()
     while(!exit)
     {
         opcode = AS->codeData[REGS->PC++];
+        std::cout << "opcode : " << static_cast<int16_t>(opcode) << std::endl;
         switch(opcode)
         {
             /* NOP */
@@ -80,10 +81,12 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOV" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
+                std::cout << " : " << static_cast<int16_t>(bTmp_0) << std::endl;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if((bTmp_0 >= 0 && bTmp_0 <= 7) && (bTmp_1 >= 0 && bTmp_1 <= 7)){
-                    // bTmp_0 == XXXX XXXX, XXXX XXXX & 0xF0 == XXXX 0000
-                    REGS->R[bTmp_0] = REGS->R[bTmp_1];
+                std::cout << " : " << static_cast<int16_t>(bTmp_1) << std::endl;
+                if((bTmp_0 >= 0 && bTmp_0 <= 7) && (bTmp_1 >= 0 && bTmp_1 <= 7))
+                {
+                    REGS->R[bTmp_1] = REGS->R[bTmp_0];
                 }
                 else goto EXCEPTION;
                 break;
@@ -554,12 +557,12 @@ void VMCPU::run()
                 *(BYTE *) &REGS->R[bTmp_0] = ~ (*(BYTE *) &REGS->R[bTmp_0]);
                 break;
             /*
-                ADVRD - Add word value to register
+                ADVRD - Add double word value to register
                 3A 02 10 00 00 00 => ADVR R2, 10
             */
             case 0x3A:
                 #ifdef V_DEBUG
-                    std::cout << "[DEBUG] ADVR" << std::endl;
+                    std::cout << "[DEBUG] ADVRD" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
                 if(bTmp_0 > 5) goto EXCEPTION;
@@ -578,7 +581,7 @@ void VMCPU::run()
             */
             case 0x3B:
                 #ifdef V_DEBUG
-                    std::cout << "[DEBUG] SUBVR" << std::endl;
+                    std::cout << "[DEBUG] SUBVRD" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
                 if(bTmp_0 > 5) goto EXCEPTION;
