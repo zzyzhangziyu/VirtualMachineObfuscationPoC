@@ -294,15 +294,15 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
+    else if(vm->vcpuFlag == VCpuFlag::OK){
+        bTestPass = false;
+        goto FINISH_TESTS;
+    }
     else if(vm->vcpuFlag == VCpuFlag::UNDERFLOW){
         if(T_REGS->R[2] != (DWORD) 6) {
             bTestPass = false;
             goto FINISH_TESTS;
         }
-    }
-    else{
-        bTestPass = false;
-        goto FINISH_TESTS;
     }
     T_REGS->R[2] = (DWORD) 0;
     T_AS->codeData[0] = 0x00;

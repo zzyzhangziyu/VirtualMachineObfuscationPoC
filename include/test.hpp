@@ -1,4 +1,3 @@
-
-#define _VM_TEST_
+#define VM_TEST
 
 #include "../include/vmcpu.hpp"
