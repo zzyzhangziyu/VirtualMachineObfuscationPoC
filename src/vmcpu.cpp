@@ -24,7 +24,7 @@ bool VMCPU::loadCode(BYTE *mcode, int mcsize, BYTE *usrInput, int sizeUserIn)
     if((unsigned) mcsize > sizeof(AS->codeData)) 
         return false;
     memcpy(AS->codeData, mcode, mcsize);
-    REGS->R[0] = (WORD) mcsize;
+    REGS->R[0] = (DWORD) mcsize + 1;                        //ISSUE: problem with get INPUT ******************************8
     memcpy(AS->codeData + mcsize, usrInput, sizeUserIn);
     return true;
 }
@@ -184,9 +184,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVMRB" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 7) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 7) goto EXCEPTION;
                 if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
                 REGS->R[bTmp_0] = 0;
                 *(BYTE*) &REGS->R[bTmp_0] = AS->codeData[REGS->R[bTmp_1]];
