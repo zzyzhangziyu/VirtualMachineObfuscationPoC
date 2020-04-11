@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     do {
         std::cout << "PASSWORD: ";
         std::cin >> password;
-    } while(password.length() < 2);
+    } while((password.length()) < 2);
 
     BYTE *usrInput = new BYTE(password.length() + 1);
     try {
