@@ -28,3 +28,9 @@ clean:
 
 run:
 	./$(PREXEC) $(ARGS)
+
+TEST_SRC_DIR = tests
+TEST_SOURCE = $(wildcard $(SRC_DIR)/vmcpu.cpp) $(wildcard $(TEST_SRC_DIR)/test01.cpp)
+TEST_EXEC = vmtest01.exe
+buildtest:
+	$(CC) $(TEST_SOURCE) -o $(TEST_EXEC) $(CFLAGS) -DVMTESTS

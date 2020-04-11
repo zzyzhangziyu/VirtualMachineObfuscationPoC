@@ -5,7 +5,9 @@
 #include <string.h>
 #include <stdint.h>
 
-//#include "./test.hpp"
+#ifdef VMTESTS
+    #include "./test.hpp"
+#endif //VMTESTS
 
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
@@ -42,9 +44,9 @@ typedef struct {
 } REGISTERSS, *PREGISTERSS;
 
 
-#ifdef VM_TEST
+#ifdef _VM_CPU_TEST_
     enum class VCpuFlag {OK = 0, ERROR, UNDERFLOW, OVERFLOW};
-#endif // VM_TEST
+#endif // _VM_CPU_TEST_
 
 class VMCPU {
     private:
@@ -62,14 +64,14 @@ class VMCPU {
         void run();
         bool loadCode(BYTE *, int, BYTE *, int);
 
-    #ifdef VM_TEST
+    #ifdef _VM_CPU_TEST_
     public:
         static const bool bIsOnTest = true;
         VCpuFlag vcpuFlag;
 
         PADDRESS_SPACE getAS() { return AS; }
         PREGISTERSS getREGS() { return REGS; }
-    #endif // VM_TEST
+    #endif // _VM_CPU_TEST_
 };
 
 #endif //_VM_CPU_HPP

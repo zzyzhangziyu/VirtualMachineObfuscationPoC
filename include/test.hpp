@@ -1,3 +1,6 @@
-#define VM_TEST
+#ifndef _VM_TEST_HPP
+#define _VM_TEST_HPP
 
-#include "../include/vmcpu.hpp"
+#define _VM_CPU_TEST_
+
+#endif //_VM_TEST_HPP

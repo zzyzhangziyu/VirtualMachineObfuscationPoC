@@ -1,4 +1,5 @@
 #include "../include/test.hpp"
+#include "../include/vmcpu.hpp"
 
 class VMTest {
     private:
@@ -318,7 +319,7 @@ bool VMTest::testVM()
     ++currentTestNumber;
     T_REGS->R[2] = (DWORD) 6;
     T_REGS->SP = 0;
-    T_AS->codeData[0] = 0x91; // POP
+    T_AS->codeData[0] = 0x90; // PUSH
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0xEE; // EE
     vm->vcpuFlag = VCpuFlag::OK;
