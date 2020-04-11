@@ -21,7 +21,7 @@ VMCPU::~VMCPU()
 
 bool VMCPU::loadCode(BYTE *mcode, int mcsize, BYTE *usrInput, int sizeUserIn)
 {
-    if((unsigned) mcsize > sizeof(AS->codeData)) 
+    if((unsigned) (mcsize + sizeUserIn) > sizeof(AS->codeData)) 
         return false;
     memcpy(AS->codeData, mcode, mcsize);
     for(int i = 0; i < 8; i++)

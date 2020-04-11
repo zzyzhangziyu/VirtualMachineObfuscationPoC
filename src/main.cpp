@@ -1,5 +1,6 @@
 #include "../include/main.hpp"
 #include "../include/vmcpu.hpp"
+#include <sstream>
 
 int main(int argc, char *argv[])
 {
@@ -20,28 +21,26 @@ int main(int argc, char *argv[])
 
     fileStream << argv[1];
     fileStream >> fileName;
-    fileStream.clear();
 
     do {
         std::cout << "PASSWORD: ";
         std::cin >> password;
-    } while(password.size() < 2 || password.size() > 26);
+    } while(password.length() < 2);
 
-    BYTE *usrInput = new BYTE(password.size() + 1);
+    BYTE *usrInput = new BYTE(password.length() + 1);
     try {
-        memset(usrInput, 0, sizeof(usrInput)/sizeof(usrInput[0]));
-        for(unsigned int i =0; i < password.size(); i++) {
+        memset(usrInput, 0, (password.length() + 1));
+        for(unsigned int i = 0; i < password.length(); i++) {
             usrInput[i] = (BYTE) password[i];
         }
-        usrInput[password.size()] = (BYTE) 0;
+        usrInput[password.length()] = (BYTE) 0;
     } catch (...) {
         delete[] usrInput;
         delete vm;
         return -1;
     }
-
     BYTE *mc = NULL;
-
+    
     int mcsize = -1;
     try
     {
@@ -52,8 +51,9 @@ int main(int argc, char *argv[])
         std::cout << "[ERROR " << e << "] NO FILE OR STH ELSE \n";
         delete[] usrInput;
         delete[] mc;
-        exit(1);
+        return -1;
     }
+
     if(!vm->loadCode(mc, mcsize, usrInput, password.size()))
     {
         delete[] usrInput;

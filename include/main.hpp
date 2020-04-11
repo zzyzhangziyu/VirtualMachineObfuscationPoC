@@ -2,8 +2,6 @@
 #define _MAIN_HPP
 
 #include <iostream>
-#include <stdint.h>
-#include <sstream>
 
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
