@@ -24,7 +24,11 @@ bool VMCPU::loadCode(BYTE *mcode, int mcsize, BYTE *usrInput, int sizeUserIn)
     if((unsigned) mcsize > sizeof(AS->codeData)) 
         return false;
     memcpy(AS->codeData, mcode, mcsize);
-    REGS->R[0] = (DWORD) mcsize + 1;                        //ISSUE: problem with get INPUT ******************************8
+    for(int i = 0; i < 8; i++)
+    {
+        REGS->R[i] = (DWORD) 0;
+    }
+    REGS->R[0] = (DWORD) (mcsize + 1);
     memcpy(AS->codeData + mcsize, usrInput, sizeUserIn);
     return true;
 }
@@ -83,7 +87,7 @@ void VMCPU::run()
                 bTmp_1 = AS->codeData[REGS->PC++];
                 if((bTmp_0 >= 0 && bTmp_0 <= 7) && (bTmp_1 >= 0 && bTmp_1 <= 7))
                 {
-                    REGS->R[bTmp_1] = REGS->R[bTmp_0];
+                    REGS->R[bTmp_0] = REGS->R[bTmp_1];
                 }
                 else goto EXCEPTION;
                 break;
@@ -96,7 +100,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVMB" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 wTmp_0 = *(WORD*) &AS->codeData[REGS->PC];
                 if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
                 REGS->PC += 2;
@@ -112,7 +116,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVMW" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 wTmp_0 = *(WORD*) &AS->codeData[REGS->PC];
                 if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
                 REGS->PC += 2;
@@ -127,7 +131,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVB" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 REGS->R[bTmp_0] = 0;
                 *(BYTE *) &REGS->R[bTmp_0] = AS->codeData[REGS->PC++];
                 break; 
@@ -140,7 +144,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVW" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 *(WORD*) REGS->R[bTmp_0] = *(WORD *) &AS->codeData[REGS->PC];
                 REGS->PC += 2;
                 break; 
@@ -153,7 +157,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVBM" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 wTmp_0 = *(WORD*) &AS->codeData[REGS->PC];
                 if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
                 REGS->PC += 2;
@@ -168,7 +172,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVWM" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 wTmp_0 = *(WORD*) &AS->codeData[REGS->PC];
                 if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
                 REGS->PC += 2;
@@ -184,9 +188,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVMRB" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 7) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 7) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
                 REGS->R[bTmp_0] = 0;
                 *(BYTE*) &REGS->R[bTmp_0] = AS->codeData[REGS->R[bTmp_1]];
@@ -201,9 +205,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVMRW" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
                 *(WORD*) REGS->R[bTmp_0] = *(WORD*) &AS->codeData[REGS->R[bTmp_1]];
                 break;
@@ -216,7 +220,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVMD" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 dTmp_0 = *(DWORD*) &AS->codeData[REGS->PC];
                 if(dTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
                 REGS->PC += 2;
@@ -231,7 +235,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVD" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 REGS->R[bTmp_0] = *(DWORD *) &AS->codeData[REGS->PC];
                 REGS->PC += 4;
                 break;  
@@ -244,7 +248,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVDM" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 wTmp_0 = *(WORD*) &AS->codeData[REGS->PC];
                 if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
                 REGS->PC += 2;
@@ -260,9 +264,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] MOVMRD" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
                 REGS->R[bTmp_0] = *(DWORD*) &AS->codeData[REGS->R[bTmp_1]];
                 break;
@@ -374,7 +378,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] ADVR" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 wTmp_0 = *(WORD*) &AS->codeData[REGS->PC];
                 REGS->PC += 2;
                 wTmp_1 = REGS->R[bTmp_0] + wTmp_0;          
@@ -394,9 +398,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] ADRR" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 dTmp_0 = REGS->R[bTmp_0];
                 dTmp_1 = REGS->R[bTmp_1];
                 dTmp_2 = dTmp_0 + dTmp_1;
@@ -416,9 +420,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] ADRRL" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 bTmp_2 = *(BYTE *) &REGS->R[bTmp_0];
                 bTmp_1 = *(BYTE *) &REGS->R[bTmp_1];
                 bTmp_1 += bTmp_2;
@@ -437,7 +441,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] SUBVR" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 wTmp_0 = *(WORD*) &AS->codeData[REGS->PC];
                 REGS->PC += 2;
                 wTmp_1 = REGS->R[bTmp_0] - wTmp_0;          
@@ -457,9 +461,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] SUBRR" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 dTmp_0 = REGS->R[bTmp_0];
                 dTmp_1 = REGS->R[bTmp_1];
                 dTmp_2 = dTmp_0 - dTmp_1;
@@ -479,9 +483,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] SUBRRL" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 bTmp_2 = *(BYTE *) &REGS->R[bTmp_0];
                 bTmp_1 = *(BYTE *) &REGS->R[bTmp_1];
                 bTmp_1 -= bTmp_2;
@@ -501,9 +505,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] XOR" << std::endl;
                 #endif 
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 dTmp_0 = REGS->R[bTmp_0];
                 dTmp_1 = REGS->R[bTmp_1];
                 dTmp_2 = dTmp_0 ^ dTmp_1;
@@ -522,9 +526,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] XORL" << std::endl;
                 #endif 
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 bTmp_2 = REGS->R[bTmp_0];
                 bTmp_1 = REGS->R[bTmp_1];
                 bTmp_2 ^= bTmp_1;
@@ -540,7 +544,7 @@ void VMCPU::run()
             */
             case 0x38:
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 REGS->R[bTmp_0] = ~ REGS->R[bTmp_0];
                 break;
             /*
@@ -550,7 +554,7 @@ void VMCPU::run()
             */
             case 0x39:
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 *(BYTE *) &REGS->R[bTmp_0] = ~ (*(BYTE *) &REGS->R[bTmp_0]);
                 break;
             /*
@@ -562,7 +566,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] ADVRD" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 dTmp_0 = *(DWORD*) &AS->codeData[REGS->PC];
                 REGS->PC += 4;
                 dTmp_1 = REGS->R[bTmp_0] + dTmp_0;          
@@ -581,7 +585,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] SUBVRD" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 dTmp_0 = *(DWORD*) &AS->codeData[REGS->PC];
                 REGS->PC += 4;
                 dTmp_1 = REGS->R[bTmp_0] - dTmp_0;          
@@ -604,9 +608,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] CMP" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 dTmp_0 = REGS->R[bTmp_0];
                 dTmp_1 = REGS->R[bTmp_1];
                 if(dTmp_1 == dTmp_0) REGS->ZF = 1;
@@ -623,9 +627,9 @@ void VMCPU::run()
                     std::cout << "[DEBUG] CMPL" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 bTmp_1 = AS->codeData[REGS->PC++];
-                if(bTmp_1 > 5) goto EXCEPTION;
+                if(bTmp_1 > 8) goto EXCEPTION;
                 bTmp_0 = *(BYTE*) &REGS->R[bTmp_0];
                 bTmp_1 = *(BYTE*) &REGS->R[bTmp_1];
                 if(bTmp_0 == bTmp_1) REGS->ZF = 1;
@@ -646,7 +650,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] PUSH" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 REGS->SP -= 1;
                 if(REGS->SP == 0xFFFF) {
                     #ifdef _VM_TEST_
@@ -668,7 +672,7 @@ void VMCPU::run()
                     std::cout << "[DEBUG] POP" << std::endl;
                 #endif
                 bTmp_0 = AS->codeData[REGS->PC++];
-                if(bTmp_0 > 5) goto EXCEPTION;
+                if(bTmp_0 > 8) goto EXCEPTION;
                 if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(DWORD)]){
                     #ifdef _VM_TEST_
                         vcpuFlag = VCpuFlag::UNDERFLOW;

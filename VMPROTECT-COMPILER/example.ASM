@@ -81,7 +81,7 @@ JLL3:
     movd r4, 0x0
 
 JLL1:
-    movmrb r3, r1
+    mov r3, r1
     push r3
     poc
     advrd r1, 0x1
@@ -92,7 +92,7 @@ JLL1:
     jnz JLL1
 
 JLL2:
-    movmrb r3, r1
+    mov r3, r1
     push r3
     pocn
     ee
