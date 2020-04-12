@@ -22,11 +22,24 @@ int main(int argc, char *argv[])
     fileStream << argv[1];
     fileStream >> fileName;
 
+    BYTE *mc;
+    
+    int mcsize = -1;
+    try
+    {
+        mc = loadProtectedCode(mcsize, fileName);
+    }
+    catch (int e)
+    {
+        std::cout << "[ERROR " << e << "] NO FILE OR STH ELSE \n";
+        return -1;
+    }
+
     do {
         password.clear();
         std::cout << "PASSWORD: ";
         std::cin >> password;
-    } while((password.length()) < 2 || (password.length()) > 40);
+    } while((password.length()) < 2 || (password.length()) > 100);
 
     BYTE *usrInput = new BYTE((password.length()) + 1);
     try {
@@ -38,29 +51,13 @@ int main(int argc, char *argv[])
     } catch (...) {
         std::cout << "[ERROR] FAILED ON GET INPUT \n";
         delete[] usrInput;
-        delete vm;
-        return -1;
-    }
-    BYTE *mc = NULL;
-    
-    int mcsize = -1;
-    try
-    {
-        mcsize = loadProtectedCode(&mc, fileName);
-    }
-    catch (int e)
-    {
-        std::cout << "[ERROR " << e << "] NO FILE OR STH ELSE \n";
-        delete[] usrInput;
         delete[] mc;
         return -1;
     }
-
     if(!vm->loadCode(mc, mcsize, usrInput, password.size()))
     {
         delete[] usrInput;
         delete[] mc;
-        delete vm;
         return -1;
     }
 
@@ -70,10 +67,8 @@ int main(int argc, char *argv[])
     try{
         vm->run();
     } catch(...){
-        delete vm;
         return -1;
     }
 
-    delete vm;
     return 0;
 }
