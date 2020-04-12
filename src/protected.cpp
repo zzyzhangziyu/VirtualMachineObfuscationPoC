@@ -5,19 +5,19 @@
 int loadProtectedCode(BYTE **mc, std::string fileName)
 {
     int codeSize;
-    std::ifstream fileStream;
+    std::ifstream fileBinToRead;
     
-    fileStream.open(fileName, std::ios::binary);
+    fileBinToRead.open(fileName, std::ios::binary);
 
-    if(fileStream.is_open())
+    if(fileBinToRead.is_open())
     {
-        fileStream.seekg(0, fileStream.end);
-        codeSize = fileStream.tellg();
-        fileStream.seekg(0, fileStream.beg);
+        fileBinToRead.seekg(0, fileBinToRead.end);
+        codeSize = fileBinToRead.tellg();
+        fileBinToRead.seekg(0, fileBinToRead.beg);
         
-        if(codeSize > 51200)
+        if(codeSize > 51150)
         {
-            fileStream.close();
+            fileBinToRead.close();
             throw 100011;
         }
 
@@ -26,13 +26,13 @@ int loadProtectedCode(BYTE **mc, std::string fileName)
         int counter = 0;
 
         //std::cout << "[DEBUG] *************" << std::endl;
-        while(fileStream.get(byte))
+        while(fileBinToRead.get(byte))
         {
             (*mc)[counter++] = byte;
             //std::cout << "\t<READ> : " << static_cast<uint16_t>((*mc)[counter - 1]) << std::endl;
         }
         //std::cout << "[DEBUG] *************" << std::endl;
-        fileStream.close();
+        fileBinToRead.close();
     }
     else
     {

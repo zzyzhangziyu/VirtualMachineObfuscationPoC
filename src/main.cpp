@@ -23,18 +23,20 @@ int main(int argc, char *argv[])
     fileStream >> fileName;
 
     do {
+        password.clear();
         std::cout << "PASSWORD: ";
         std::cin >> password;
-    } while((password.length()) < 2);
+    } while((password.length()) < 2 || (password.length()) > 40);
 
-    BYTE *usrInput = new BYTE(password.length() + 1);
+    BYTE *usrInput = new BYTE((password.length()) + 1);
     try {
-        memset(usrInput, 0, (password.length() + 1));
-        for(unsigned int i = 0; i < password.length(); i++) {
+        memset(usrInput, 0, (password.length()));
+        for(unsigned int i = 0; i < (password.length()); i++) {
             usrInput[i] = (BYTE) password[i];
         }
-        usrInput[password.length()] = (BYTE) 0;
+        usrInput[(password.length())] = (BYTE) 0;
     } catch (...) {
+        std::cout << "[ERROR] FAILED ON GET INPUT \n";
         delete[] usrInput;
         delete vm;
         return -1;
