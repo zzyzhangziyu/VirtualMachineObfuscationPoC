@@ -12,9 +12,10 @@ The VM has 51,200 memory locations, each of which stores a 8-bit value (it can s
 ```c++
 typedef uint8_t BYTE;
 typedef uint16_t WORD;
+typedef uint32_t DWORD;
 
 BYTE codeData[51200];
-WORD stack[256];
+DWORD stack[256];
 ```
 
 ### Registers
