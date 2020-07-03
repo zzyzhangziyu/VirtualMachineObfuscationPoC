@@ -50,17 +50,21 @@ int main(int argc, char *argv[])
         usrInput[(password.length())] = (BYTE) 0;
     } catch (...) {
         std::cout << "[ERROR] FAILED ON GET INPUT \n";
-        delete[] usrInput;
-        delete[] mc;
-        return -1;
-    }
-    if(!vm->loadCode(mc, mcsize, usrInput, password.size()))
-    {
-        delete[] usrInput;
-        delete[] mc;
-        return -1;
+        goto ERROR;
     }
 
+    if(!vm->loadCode(mc, mcsize, usrInput, password.size()))
+    {
+        goto ERROR;
+    }
+
+    goto OK;
+
+ERROR:
+    delete[] usrInput;
+    delete[] mc;
+    return -1;
+OK:
     delete[] usrInput;
     delete[] mc;
     
