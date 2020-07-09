@@ -99,5 +99,7 @@ EE  | EE | End of code and end of the VM's cpu |
   | | |
 A0  |  POC  | Print char without new line, the value must be at the top of the stack |
 A1  |  POCN  | Print char with new line, the value must be at the top of the stack |
+A2  |  UIN  | Take input from a user and save at a user input stack |
+A3  |  DUIN  | Clear a user input stack |
 
 </details>

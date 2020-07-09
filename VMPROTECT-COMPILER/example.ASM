@@ -1,4 +1,4 @@
-; Usr input (addr) saved in R0
+; Usr input (addr) saved in R0 - TODO: change!
 ; Answer: vmobfuscationisthebest
 
 %include "vm.inc"

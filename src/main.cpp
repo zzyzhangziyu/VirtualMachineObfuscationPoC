@@ -5,7 +5,7 @@
 int main(int argc, char *argv[])
 {
     std::cout << "***************" << std::endl;
-    std::cout << "VMPROTECT v0.1" << std::endl;
+    std::cout << "VMPROTECT v0.2" << std::endl;
     std::cout << "***************" << std::endl;
 
     if(argc != 2) {
