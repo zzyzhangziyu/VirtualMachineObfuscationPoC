@@ -9,7 +9,6 @@
 %define r5 5
 %define r6 6
 %define r7 7
-%define ir 8
 
 %macro nop 0
 db 0x00

@@ -736,41 +736,6 @@ void VMCPU::run()
                 bTmp_0 = *(BYTE*) &AS->codeData[AS->stack[REGS->SP++]];
                 vmPrintN(bTmp_0);
                 break;
-            /*
-                UIN - Take input from a user and save at a user input stack
-                A2 => UIN
-            */
-            case 0xA2:
-                #ifdef V_DEBUG
-                    std::cout << "[DEBUG] UIN" << std::endl;
-                #endif
-                    REGS->IR = 0;
-                    if(AS->userInputStack.size() > 0) {
-                        AS->userInputStack.clear();
-                    }
-
-                    std::string password;
-                    do {
-                        std::cin >> password;
-                    } while((password.length()) < 2 || (password.length()) > 100);
-
-                    for(unsigned int i = 0; i < (password.length()); i++) {
-                        AS->userInputStack.push_back((BYTE) password[i]);
-                    }
-
-                break;
-            /*
-                DUIN - Clear a user input stack.
-                A3 => DUIN
-            */
-            case 0xA3:
-                #ifdef V_DEBUG
-                    std::cout << "[DEBUG] DUIN" << std::endl;
-                #endif
-                    if(AS->userInputStack.size() > 0) {
-                        AS->userInputStack.clear();
-                    }
-                break;
             /*  
                 ********************************
                             DEFAULT

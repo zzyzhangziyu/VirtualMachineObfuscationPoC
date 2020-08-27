@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string.h>
 #include <stdint.h>
-#include <vector>
 
 #ifdef VMTESTS
     #include "./test.hpp"
@@ -21,9 +20,6 @@ typedef struct {
     /* Size of one element is DWORD 
     in order to be able to push addresses. */
     DWORD stack[256];
-
-    /* Here will be stored a user input */
-    std::vector<BYTE> userInputStack;
 } ADDRESS_SPACE, *PADDRESS_SPACE;
 
 typedef struct {
@@ -41,8 +37,6 @@ typedef struct {
         */
         unsigned char CF : 1;
     };
-    /*  Input Register - pointer to input */
-    DWORD IR;
     /* Program Counter */
     DWORD PC;
     /* Stack Pointer */
