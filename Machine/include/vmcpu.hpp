@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdint.h>
 
+#include "./opcodes.hpp"
+
 #ifdef VMTESTS
     #include "./test.hpp"
 #endif //VMTESTS

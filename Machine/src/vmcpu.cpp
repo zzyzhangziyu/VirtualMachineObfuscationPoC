@@ -19,6 +19,8 @@ VMCPU::~VMCPU()
     delete REGS;
 }
 
+// ********************************************************
+// TODO: Remove loadCode
 bool VMCPU::loadCode(BYTE *mcode, int mcsize, BYTE *usrInput, int sizeUserIn)
 {
     if((unsigned) (mcsize + sizeUserIn) > (sizeof(AS->codeData) / sizeof(AS->codeData[0]))) 
@@ -35,6 +37,7 @@ bool VMCPU::loadCode(BYTE *mcode, int mcsize, BYTE *usrInput, int sizeUserIn)
     memcpy(AS->codeData + mcsize, usrInput, sizeUserIn);
     return true;
 }
+// ********************************************************
 
 void VMCPU::vmPrint(BYTE s)
 {
@@ -60,14 +63,14 @@ void VMCPU::run()
         switch(opcode)
         {
             /* NOP */
-            case 0x00:
+            case NOP:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] NOP" << std::endl;
                 #endif
                 opcode+=20;
                 break;
             /* EE - end of code */
-            case 0xEE:
+            case EE:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] EE" << std::endl;
                 #endif
@@ -82,7 +85,7 @@ void VMCPU::run()
                 01 02 05 => MOV R2, R5
                 01 00 00 => MOV R0, R0
             */
-            case 0x01:
+            case MOV:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOV" << std::endl;
                 #endif
@@ -98,7 +101,7 @@ void VMCPU::run()
                 MOVMB - move and extend byte from memory to register 
                 02 03 04 01 => MOVMB R3, 0104
             */
-            case 0x02:
+            case MOVMB:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVMB" << std::endl;
                 #endif
@@ -114,7 +117,7 @@ void VMCPU::run()
                 MOVMW - move and extend word from memory to register 
                 03 03 04 01 => MOVMW R3, 0104
             */
-            case 0x03:
+            case MOVMW:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVMW" << std::endl;
                 #endif
@@ -129,7 +132,7 @@ void VMCPU::run()
                 MOVB - move and extend byte to register 
                 04 02 43 => MOVB R2, 43
             */
-            case 0x04:
+            case MOVB:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVB" << std::endl;
                 #endif
@@ -142,7 +145,7 @@ void VMCPU::run()
                 MOVW - move and extend word to register 
                 05 01 15 28 => MOVW R1, 2815
             */
-            case 0x05:
+            case MOVW:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVW" << std::endl;
                 #endif
@@ -155,7 +158,7 @@ void VMCPU::run()
                 MOVBM - move byte from register to memory location 
                 06 04 43 13 => MOVBM 1343, R4
             */
-            case 0x06:
+            case MOVBM:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVBM" << std::endl;
                 #endif
@@ -170,7 +173,7 @@ void VMCPU::run()
                 MOVWM - move word from register to memory location 
                 07 04 43 13 => MOVWM 1343, R4
             */
-            case 0x07:
+            case MOVWM:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVWM" << std::endl;
                 #endif
@@ -186,7 +189,7 @@ void VMCPU::run()
                         get addr from register
                 08 02 01 => MOVMRB R2, R1
             */
-            case 0x08:
+            case MOVMRB:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVMRB" << std::endl;
                 #endif
@@ -203,7 +206,7 @@ void VMCPU::run()
                         get addr from register
                 09 02 01 => MOVMRW R2, R1
             */
-            case 0x09:
+            case MOVMRW:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVMRW" << std::endl;
                 #endif
@@ -216,9 +219,9 @@ void VMCPU::run()
                 break;
             /* 
                 MOVMD - move double word from memory to register 
-                03 03 04 01 => MOVMW R3, 0104
+                0A 03 04 01 => MOVMW R3, 0104
             */
-            case 0x0A:
+            case MOVMD:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVMD" << std::endl;
                 #endif
@@ -231,9 +234,9 @@ void VMCPU::run()
                 break;  
             /* 
                 MOVD - move value to register 
-                05 01 00 00 15 28 => MOVW R1, 2815
+                0B 01 00 00 15 28 => MOVW R1, 2815
             */
-            case 0x0B:
+            case MOVD:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVD" << std::endl;
                 #endif
@@ -244,9 +247,9 @@ void VMCPU::run()
                 break;  
             /* 
                 MOVDM - move double word from register to memory location 
-                07 04 43 13 => MOVWM 1343, R4
+                0C 04 43 13 => MOVWM 1343, R4
             */
-            case 0x0C:
+            case MOVDM:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVDM" << std::endl;
                 #endif
@@ -260,9 +263,9 @@ void VMCPU::run()
             /* 
                 MOVMRD - move double word from memory to register
                         get addr from register
-                09 02 01 => MOVMRW R2, R1
+                0D 02 01 => MOVMRW R2, R1
             */
-            case 0x0D:
+            case MOVMRD:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] MOVMRD" << std::endl;
                 #endif
@@ -281,7 +284,7 @@ void VMCPU::run()
                 JMP - unconditional jump
                 20 15 00 => JMP 0015
             */
-            case 0x20:
+            case JMP:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] JMP" << std::endl;
                 #endif
@@ -294,7 +297,7 @@ void VMCPU::run()
                 JZ - jump if equal
                 21 15 00 => JZ 0015
             */
-            case 0x21:
+            case JZ:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] JZ" << std::endl;
                 #endif
@@ -307,7 +310,7 @@ void VMCPU::run()
                 JNZ - jump if not equal
                 22 15 00 => JNZ 0015
             */
-            case 0x22:
+            case JNZ:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] JNZ" << std::endl;
                 #endif
@@ -320,7 +323,7 @@ void VMCPU::run()
                 JAE - jump if above or equal
                 23 15 00 => JAE 0015
             */
-            case 0x23:
+            case JAE:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] JAE" << std::endl;
                 #endif
@@ -333,7 +336,7 @@ void VMCPU::run()
                 JBE - jump if below or equal
                 24 15 00 => JBE 0015
             */
-            case 0x24:
+            case JBE:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] JBE" << std::endl;
                 #endif
@@ -346,7 +349,7 @@ void VMCPU::run()
                 JB - jump if below
                 25 15 00 => JB 0015
             */
-            case 0x25:
+            case JB:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] JB" << std::endl;
                 #endif
@@ -359,7 +362,7 @@ void VMCPU::run()
                 JA - jump if above
                 26 15 00 => JA 0015
             */
-            case 0x26:
+            case JA:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] JA" << std::endl;
                 #endif
@@ -376,7 +379,7 @@ void VMCPU::run()
                 ADVR - Add word value to register
                 30 02 10 00 => ADVR R2, 10
             */
-            case 0x30:
+            case ADVR:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] ADVR" << std::endl;
                 #endif
@@ -396,7 +399,7 @@ void VMCPU::run()
                         and save result in first
                 31 02 01 => ADRR R2, R1
             */
-            case 0x31:
+            case ADRR:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] ADRR" << std::endl;
                 #endif
@@ -418,7 +421,7 @@ void VMCPU::run()
                         and save result in first
                 32 02 01 => ADRR R2, R1
             */
-            case 0x32:
+            case ADRRL:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] ADRRL" << std::endl;
                 #endif
@@ -439,7 +442,7 @@ void VMCPU::run()
                 SUBVR - Substract word value from register
                 33 02 10 00 => SUBVR R2, 10
             */
-            case 0x33:
+            case SUBVR:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] SUBVR" << std::endl;
                 #endif
@@ -459,7 +462,7 @@ void VMCPU::run()
                         and save result in first
                 34 02 01 => SUBRR R2, R1
             */
-            case 0x34:
+            case SUBRR:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] SUBRR" << std::endl;
                 #endif
@@ -481,7 +484,7 @@ void VMCPU::run()
                         and save result in first
                 35 02 01 => ADRR R2, R1
             */
-            case 0x35:
+            case SUBRRL:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] SUBRRL" << std::endl;
                 #endif
@@ -503,7 +506,7 @@ void VMCPU::run()
                     and save result in first
                 36 02 01 => XOR R2, R1
             */
-            case 0x36:
+            case XOR:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] XOR" << std::endl;
                 #endif 
@@ -524,7 +527,7 @@ void VMCPU::run()
                     and save result in first
                 37 02 01 => XOR R2, R1
             */
-            case 0x37:
+            case XORL:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] XORL" << std::endl;
                 #endif 
@@ -545,7 +548,7 @@ void VMCPU::run()
                     and save result in this register
                 38 02 => NOT R2
             */
-            case 0x38:
+            case NOT:
                 bTmp_0 = AS->codeData[REGS->PC++];
                 if(bTmp_0 > 8) goto EXCEPTION;
                 REGS->R[bTmp_0] = ~ REGS->R[bTmp_0];
@@ -555,7 +558,7 @@ void VMCPU::run()
                     and save result in this register
                 39 02 => NOT R2
             */
-            case 0x39:
+            case NOTB:
                 bTmp_0 = AS->codeData[REGS->PC++];
                 if(bTmp_0 > 8) goto EXCEPTION;
                 *(BYTE *) &REGS->R[bTmp_0] = ~ (*(BYTE *) &REGS->R[bTmp_0]);
@@ -564,7 +567,7 @@ void VMCPU::run()
                 ADVRD - Add double word value to register
                 3A 02 10 00 00 00 => ADVR R2, 10
             */
-            case 0x3A:
+            case ADVRD:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] ADVRD" << std::endl;
                 #endif
@@ -583,7 +586,7 @@ void VMCPU::run()
                 SUBVRD - Substract double word value from register
                 3B 02 10 00 00 00 => SUBVR R2, 10
             */
-            case 0x3B:
+            case SUBVRD:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] SUBVRD" << std::endl;
                 #endif
@@ -606,7 +609,7 @@ void VMCPU::run()
                 CMP - compare two registers
                 50 02 01 => CMP R2, R1
             */
-            case 0x50:
+            case CMP:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] CMP" << std::endl;
                 #endif
@@ -625,7 +628,7 @@ void VMCPU::run()
                 CMPL - compare two registers (lower byte)
                 51 02 01 => CMP R2, R1
             */
-            case 0x51:
+            case CMPL:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] CMPL" << std::endl;
                 #endif
@@ -648,7 +651,7 @@ void VMCPU::run()
                 PUSH REGISTER
                 90 03 => PUSH R3
             */
-            case 0x90:
+            case PUSH:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] PUSH" << std::endl;
                 #endif
@@ -670,7 +673,7 @@ void VMCPU::run()
                 POP TO A REGISTER
                 91 03 => POP R3
             */
-            case 0x91:
+            case POP:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] POP" << std::endl;
                 #endif
@@ -698,7 +701,7 @@ void VMCPU::run()
                     the stack
                 A0 => POC
             */
-            case 0xA0:
+            case POC:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] POC" << std::endl;
                 #endif
@@ -720,7 +723,7 @@ void VMCPU::run()
                     the stack
                 A1 => POCN
             */
-            case 0xA1:
+            case POCN:
                 #ifdef V_DEBUG
                     std::cout << "[DEBUG] POCN" << std::endl;
                 #endif

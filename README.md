@@ -3,10 +3,26 @@ A code obfuscation method using virtual machines to protect a product.
 
 A virtual machine simulates a CPU along with a few other hardware components, allowing it to perform arithmetic, read and write to memory and interact with I/O devices. It can understand a machine language which you can use to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random).
 
-## Documentation
+## Requirements
+* NASM
+* Python3
+  * Tkinter
+* g++
+* make
+
+## Editor
+todo
+
+## Compiler
+todo
+
+## Debugger
+
+## Machine
+### Documentation
 The VM will simulate a fictional cpu (32-bit). It has a custom instrucion set compared to x86-64.
 
-### Memory
+#### Memory
 The VM has 51,200 memory locations, each of which stores a 8-bit value (it can store a total of 50kb). The VM has stack, which is a separate data structure. The stack has 256 memory locations, each of which stores a 32-bit value (it can store a total of 512b).
 
 ```c++
@@ -18,7 +34,7 @@ BYTE codeData[51200];
 DWORD stack[256];
 ```
 
-### Registers
+#### Registers
 A register is a slot for storing value on the CPU. The VM has 10 total registers, each of which is 4 bytes (32 bits). The six of them are general purpose, one has designated role as program counter and another has role as stack pointer. The VM has also two regisers ZF (Zero Flag) and CF (Carry Flag). These two provide information about the most recently executed calculation (allows to check logical conditions such as *AND*).
 
 ```c++
@@ -42,7 +58,7 @@ DWORD PC;
 DWORD SP;
 ```
 
-### Instructions
+#### Instructions
 An instruction is a command which tells the CPU (and the VM's cpu) to do some task, such compare two values. Instructions have both an opcode which indicates the kind of task to perform and a set of parameters which provide inputs to the task being performed.
 
 ```assembly
