@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../Machine/include/opcodes.hpp"
+#include "../VirtualMachine/include/opcodes.hpp"
 
 int main()
 {
