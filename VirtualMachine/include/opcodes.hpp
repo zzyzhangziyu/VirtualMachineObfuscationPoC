@@ -39,6 +39,7 @@
 #define CMPL 0x51
 #define PUSH 0x90
 #define POP 0x91
+#define CLST 0x92
 #define POC 0xA0
 #define POCN 0xA1
 

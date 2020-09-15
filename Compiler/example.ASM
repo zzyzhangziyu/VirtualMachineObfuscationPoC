@@ -1,10 +1,11 @@
-; Usr input (addr) saved in R0
+; Usr input (addr) saved in R0 - TO REMOVE
 ; Answer: vmobfuscationisthebest
 
 %include "vm.inc"
 
-main:
-    mov r1, r0
+start:
+    dw 0xeacc
+    mov r1, r0      ; TODO - to refactor, get input
     movd r3, 0x10
     movd r2, 0x0
     movd r4, 0x0

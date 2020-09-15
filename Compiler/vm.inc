@@ -181,6 +181,10 @@ db 0x90, %1
 db 0x91, %1
 %endmacro
 
+%macro clst 0
+db 0x92
+%endmacro
+
 %macro poc 0
 db 0xa0
 %endmacro

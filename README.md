@@ -24,6 +24,7 @@ todo
 todo
 
 ## Debugger
+todo
 
 ## Virtual Machine
 ### Documentation
@@ -119,6 +120,7 @@ EE  | EE | End of code and end of the VM's cpu |
   | | |
 90  |  PUSH r<sub>src</sub> | Push value from a register to stack |
 91  |  POP r<sub>dst</sub> | Pop value from stack to a register |
+92  |  CLST | Clear stack |
   | | |
 A0  |  POC  | Print char without new line, the value must be at the top of the stack |
 A1  |  POCN  | Print char with new line, the value must be at the top of the stack |

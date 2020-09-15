@@ -16,10 +16,20 @@ BYTE* loadProtectedCode(int &mcsize, std::string fileName)
         codeSize = fileBinToRead.tellg();
         fileBinToRead.seekg(0, fileBinToRead.beg);
         
-        if(codeSize > 51050)
+        if(codeSize > 51202)
         {
             fileBinToRead.close();
             throw 100011;
+        }
+
+        DWORD highByte = fileBinToRead.get();
+        DWORD lowByte = fileBinToRead.get();
+        DWORD magicNumber = (highByte << 8) || lowByte;
+
+        if(magicNumber != MAGIC_NUMBER)
+        {
+            fileBinToRead.close();
+            throw 100012;
         }
 
         mc = new BYTE[codeSize];

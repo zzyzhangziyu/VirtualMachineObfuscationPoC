@@ -15,13 +15,16 @@ typedef uint8_t BYTE;
 typedef uint16_t WORD;
 typedef uint32_t DWORD;
 
+#define CODE_DATA_SIZE 51200
+#define STACK_SIZE 256
+
 typedef struct {
     /* Here will be a code to execute and other data - 50KB*/
-    BYTE codeData[51200];
+    BYTE codeData[CODE_DATA_SIZE];
 
     /* Size of one element is DWORD 
     in order to be able to push addresses. */
-    DWORD stack[256];
+    DWORD stack[STACK_SIZE];
 } ADDRESS_SPACE, *PADDRESS_SPACE;
 
 typedef struct {

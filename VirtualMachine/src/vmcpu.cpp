@@ -691,6 +691,13 @@ void VMCPU::run()
                 REGS->R[bTmp_0] = AS->stack[REGS->SP];
                 REGS->SP += 1;
                 break;
+            /*
+                Clear stack
+                92 => CLST
+            */
+            case CLST:
+                memset(AS->stack, 0, STACK_SIZE*sizeof(*(AS->stack)));
+                break;
             /*  ********************************
                             IN/OUT
                 ********************************
@@ -738,6 +745,12 @@ void VMCPU::run()
                 }
                 bTmp_0 = *(BYTE*) &AS->codeData[AS->stack[REGS->SP++]];
                 vmPrintN(bTmp_0);
+                break;
+            /*
+
+            */
+            case 0xA2:
+
                 break;
             /*  
                 ********************************

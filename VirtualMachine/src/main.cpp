@@ -1,9 +1,64 @@
 #include "../include/main.hpp"
 #include "../include/vmcpu.hpp"
-#include <sstream>
+#include "../include/protected.hpp"
+// #include <sstream>
+
+void show_usage()
+{
+    std::cout << "Usage:"
+                << "\t-m value\t\tSet program mode. The value can be D (debug) or E (execute file)\n"
+                << "\t-p filename\t\tPath to a file to execute"
+                << std::endl;
+}
 
 int main(int argc, char *argv[])
 {
+    if(argc == 1) {
+        if(ProtectedData[0] == 0xFF)
+        {
+            show_usage();
+            return 0;
+        }
+        else
+        {
+            /* code */
+        }
+    }
+
+    std::string mode = "";
+    std::string pathToFile = "";
+
+    for(int i = 1; i < argc; i++)
+    {
+        std::string arg = argv[i];
+
+        if((arg == "-m"))
+        {
+
+        }
+        else if((arg == "-p"))
+        {
+
+        }
+        else 
+        {
+            show_usage();
+            return 0;
+        }
+
+
+        BYTE *mc;
+        int mcsize = -1;
+        try
+        {
+            mc = loadProtectedCode(mcsize, pathToFile);
+        }
+        catch (int e)
+        {
+            std::cout << "[ERROR " << e << "] NO FILE OR STH ELSE \n";
+            return -1;
+        }
+    }
 
 // TODO: to change
 
@@ -24,16 +79,16 @@ int main(int argc, char *argv[])
 
 //     BYTE *mc;
     
-//     int mcsize = -1;
-//     try
-//     {
-//         mc = loadProtectedCode(mcsize, fileName);
-//     }
-//     catch (int e)
-//     {
-//         std::cout << "[ERROR " << e << "] NO FILE OR STH ELSE \n";
-//         return -1;
-//     }
+    // int mcsize = -1;
+    // try
+    // {
+    //     mc = loadProtectedCode(mcsize, fileName);
+    // }
+    // catch (int e)
+    // {
+    //     std::cout << "[ERROR " << e << "] NO FILE OR STH ELSE \n";
+    //     return -1;
+    // }
 
 //     do {
 //         password.clear();
