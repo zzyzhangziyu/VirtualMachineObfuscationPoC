@@ -828,21 +828,23 @@ int VMCPU::executer(BYTE opcode)
 
         */
         case 0xA2:
+        {
             std::string inData = "";
             std::cin >> inData;
 
             //TODO
-
+        }
             break;
         /*
 
         */
         case 0xA3:
+        {
             std::string inData = "";
             std::cin >> inData;
 
             //TODO
-
+        }
             break;
         /*  
             ********************************
