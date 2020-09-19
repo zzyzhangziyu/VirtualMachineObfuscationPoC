@@ -6,7 +6,7 @@
 <a href="https://github.com/eaglx/VMPROTECT/network/members"><img src="https://img.shields.io/github/forks/eaglx/VMPROTECT" alt="Forks Badge"/></a>
 <a href="https://github.com/eaglx/VMPROTECT/blob/master/LICENSE"><img src="https://img.shields.io/github/license/eaglx/VMPROTECT?color=2b9348" alt="License Badge"/></a>
 [![GitHub release](https://img.shields.io/github/release/eaglx/VMPROTECT)](https://GitHub.com/eaglx/VMPROTECT/releases/)
-![Progress](https://progress-bar.dev/3/?title=progress-v0.2)
+![Progress](https://progress-bar.dev/20/?title=progress-v0.2)
 
 A virtual machine simulates a CPU along with a few other hardware components, allowing it to perform arithmetic, read and write to memory and interact with I/O devices. It can understand a machine language which you can use to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random).
 
@@ -114,15 +114,24 @@ EE  | EE | End of code and end of the VM's cpu |
 39  |  NOT r<sub>dst</sub> | Bitwise NOT on value in a register (the low byte) |
 3A  |  ADVRD r<sub>dst</sub>, dword | Add double word value to a register |
 3B  |  SUBVR r<sub>dst</sub>, dword | Substract double word value from a register |
+3C  |  SHR r<sub>dst</sub>, byte |  |
+3D  |  SHL r<sub>dst</sub>, byte |  |
   | | |
 50  |  CMP r<sub>dst</sub>, r<sub>src</sub> | Compare two registers |
 51  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
   | | |
 90  |  PUSH r<sub>src</sub> | Push value from a register to stack |
 91  |  POP r<sub>dst</sub> | Pop value from stack to a register |
-92  |  CLST | Clear stack |
+92  |  CLST | Clear the stack |
   | | |
 A0  |  POC  | Print char without new line, the value must be at the top of the stack |
 A1  |  POCN  | Print char with new line, the value must be at the top of the stack |
 
 </details>
+
+---
+## Disclaimer
+#### VMPROTECT is for EDUCATION and/or RESEARCH purposes only. The author takes NO responsibility and/or liability for how you choose to use this software and damages caused by this software. You bear the full responsibility for your actions.
+
+#### By using this software, you automatically agree to the above.
+---

@@ -35,6 +35,8 @@
 #define NOTB 0x39
 #define ADVRD 0x3A
 #define SUBVRD 0x3B
+#define SHR 0x3C
+#define SHL 0x3D
 #define CMP 0x50
 #define CMPL 0x51
 #define PUSH 0x90

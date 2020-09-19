@@ -6,13 +6,15 @@
 void show_usage()
 {
     std::cout << "Usage:"
-                << "\t-m value\t\tSet program mode. The value can be D (debug) or E (execute file)\n"
+                << "\t-m value\t\tSet program mode. The value can be debug or exec\n"
                 << "\t-p filename\t\tPath to a file to execute"
                 << std::endl;
 }
 
 int main(int argc, char *argv[])
 {
+    VMCPU *vm = new VMCPU();
+
     if(argc == 1) {
         if(ProtectedData[0] == 0xFF)
         {
@@ -21,7 +23,16 @@ int main(int argc, char *argv[])
         }
         else
         {
-            /* code */
+            if(!vm->loadCode(ProtectedData, sizeof(ProtectedData)/sizeof(ProtectedData[0])))
+            {
+                return -1;
+            }
+            
+            try{
+                vm->run();
+            } catch(...){
+                return -1;
+            }
         }
     }
 
@@ -34,100 +45,59 @@ int main(int argc, char *argv[])
 
         if((arg == "-m"))
         {
-
+            i += 1;
+            mode =  argv[i];
         }
         else if((arg == "-p"))
         {
-
+            i += 1;
+            pathToFile = argv[i];
         }
         else 
         {
             show_usage();
             return 0;
         }
+        
+    }
 
+    BYTE *mc;
+    int mcsize = -1;
+    try
+    {
+        mc = loadProtectedCode(mcsize, pathToFile);
+    }
+    catch (int e)
+    {
+        std::cout << "[ERROR " << e << "] NO FILE OR SE \n";
+        return -1;
+    }
 
-        BYTE *mc;
-        int mcsize = -1;
-        try
-        {
-            mc = loadProtectedCode(mcsize, pathToFile);
-        }
-        catch (int e)
-        {
-            std::cout << "[ERROR " << e << "] NO FILE OR STH ELSE \n";
+    if(!vm->loadCode(mc, mcsize))
+    {
+        delete[] mc;
+        return -1;
+    }
+
+    delete[] mc;
+
+    if(mode.compare(MODE_DEBUG) == 0)
+    {
+        vm->debug();
+    }
+    else if(mode.compare(MODE_EXEC) == 0)
+    {
+        try{
+            vm->run();
+        } catch(...){
             return -1;
         }
     }
-
-// TODO: to change
-
-
-//     if(argc != 2) {
-//         std::cout << "[ERROR] WRONG ARGUMENTS!" << std::endl;
-//         std::cout << "Usage: VMPROTECT file_name_to_run" << std::endl;
-//         exit(1);
-//     }
-
-//     std::string fileName;
-//     std::stringstream fileStream;
-//     VMCPU *vm = new VMCPU();
-//     std::string password;
-
-//     fileStream << argv[1];
-//     fileStream >> fileName;
-
-//     BYTE *mc;
-    
-    // int mcsize = -1;
-    // try
-    // {
-    //     mc = loadProtectedCode(mcsize, fileName);
-    // }
-    // catch (int e)
-    // {
-    //     std::cout << "[ERROR " << e << "] NO FILE OR STH ELSE \n";
-    //     return -1;
-    // }
-
-//     do {
-//         password.clear();
-//         std::cout << "PASSWORD: ";
-//         std::cin >> password;
-//     } while((password.length()) < 2 || (password.length()) > 100);
-
-//     BYTE *usrInput = new BYTE((password.length()) + 1);
-//     try {
-//         memset(usrInput, 0, (password.length()));
-//         for(unsigned int i = 0; i < (password.length()); i++) {
-//             usrInput[i] = (BYTE) password[i];
-//         }
-//         usrInput[(password.length())] = (BYTE) 0;
-//     } catch (...) {
-//         std::cout << "[ERROR] FAILED ON GET INPUT \n";
-//         goto ERROR;
-//     }
-
-//     if(!vm->loadCode(mc, mcsize, usrInput, password.size()))
-//     {
-//         goto ERROR;
-//     }
-
-//     goto OK;
-
-// ERROR:
-//     delete[] usrInput;
-//     delete[] mc;
-//     return -1;
-// OK:
-//     delete[] usrInput;
-//     delete[] mc;
-    
-//     try{
-//         vm->run();
-//     } catch(...){
-//         return -1;
-//     }
+    else
+    {
+        std::cout << "[ERROR 100101] INCORRECT MODE!\n";
+        return -1;
+    }
 
     return 0;
 }

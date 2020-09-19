@@ -161,8 +161,18 @@ dd %2
 %endmacro
 
 %macro subvrd 2
-db 0x3a, %1
+db 0x3b, %1
 dd %2
+%endmacro
+
+%macro shr 2
+db 0x3c, %1
+db %2
+%endmacro
+
+%macro shl 2
+db 0x3d, %1
+db %2
 %endmacro
 
 %macro cmp 2

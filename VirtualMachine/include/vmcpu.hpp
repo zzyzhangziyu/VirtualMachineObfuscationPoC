@@ -18,6 +18,18 @@ typedef uint32_t DWORD;
 #define CODE_DATA_SIZE 51200
 #define STACK_SIZE 256
 
+#define LINUX_SOCKET
+
+#ifdef LINUX_SOCKET
+
+#include <unistd.h> 
+#include <sys/socket.h> 
+#include <netinet/in.h>
+
+#define PORT 6776
+
+#endif
+
 typedef struct {
     /* Here will be a code to execute and other data - 50KB*/
     BYTE codeData[CODE_DATA_SIZE];
@@ -59,6 +71,7 @@ class VMCPU {
         PREGISTERSS REGS;
 
     private:
+        int executer(BYTE);
         void vmPrint(BYTE s);
         void vmPrintN(BYTE s);
         //void vmScan();
@@ -67,7 +80,8 @@ class VMCPU {
         VMCPU();
         ~VMCPU();
         void run();
-        bool loadCode(BYTE *, int, BYTE *, int);
+        void debug();
+        bool loadCode(BYTE *, int);
 
     #ifdef _VM_CPU_TEST_
     public:
