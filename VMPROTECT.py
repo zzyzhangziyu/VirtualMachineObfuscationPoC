@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import Editor.main as editorModule
+import Editor.main as editor
 
 from tkinter import *
 from tkinter import messagebox
@@ -14,11 +14,11 @@ print("""\
 \ \_/ / |  | || |   | |\ \\ \_/ / | | | |___| \__/\ | |  
  \___/\_|  |_/\_|   \_| \_|\___/  \_/ \____/ \____/ \_/  
 """)
-print("ver 0.1.200920.1306-dev")
+print("ver 0.1.200920.1741-dev")
 
 # Creating TK Container
 root = Tk()
 # Passing Root to Editor Class
-editorModule.Editor(root)
+editor.Editor(root)
 # Root Window Looping
 root.mainloop()

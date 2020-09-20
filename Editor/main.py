@@ -69,6 +69,22 @@ class Editor:
     # Cascading editmenu to menubar
     self.menubar.add_cascade(label="Edit", menu=self.editmenu)
 
+    # Creating Build Menu
+    self.buildmenu = Menu(self.menubar,font=("times new roman",12,"bold"),activebackground="red",tearoff=0)
+    # Adding Build separately mode text Command
+    self.buildmenu.add_command(label="Build code separately from VMCore",accelerator="Ctrl+B+S",command=self.buildS)
+    # Adding Build integrated mode text Command
+    self.buildmenu.add_command(label="Build code integrated to VMCore",accelerator="Ctrl+B+I",command=self.buildI)
+    # Cascading buildmenu to menubar
+    self.menubar.add_cascade(label="Build", menu=self.buildmenu)
+
+    # Creating Run Menu
+    self.runmenu = Menu(self.menubar,font=("times new roman",12,"bold"),activebackground="#8ede95",tearoff=0)
+    # Adding 
+    self.runmenu.add_command(label="todo")
+    # Cascading runmenu to menubar
+    self.menubar.add_cascade(label="Run", menu=self.runmenu)
+
     # Creating Help Menu
     self.helpmenu = Menu(self.menubar,font=("times new roman",12,"bold"),activebackground="skyblue",tearoff=0)
     # Adding About Command
@@ -85,12 +101,24 @@ class Editor:
     # Adding Scrollbar to text area
     scrol_y.config(command=self.txtarea.yview)
     # Packing Text Area to root window
-    self.txtarea.pack(fill=BOTH,side=LEFT,expand=1)
+    self.txtarea.pack(fill=BOTH,side=TOP,expand=1)
 
-    self.txtarea2 = Text(self.root,yscrollcommand=scrol_y.set,font=("times new roman",15,"bold"),state="normal",relief=GROOVE)
-    self.txtarea2.pack(fill=BOTH,side=RIGHT,expand=1)
-    self.txtarea2.insert(END, "ASM CODE PREVIEW")
-    self.txtarea2.config(state=DISABLED)
+    # Creating Outputbar
+    self.outputbar = Label(self.root,text="Build Output",font=("times new roman",15,"bold"))
+    # Packing Outputbar to root window
+    self.outputbar.pack(side=TOP,fill=BOTH,expand=1)
+    # Creating Scrollbar
+    scrol_y_out = Scrollbar(self.root,orient=VERTICAL)
+    # Creating Build Output Area
+    self.buildOutputArea = Text(self.root,yscrollcommand=scrol_y_out.set,font=("times new roman",15,"bold"),state="normal",relief=GROOVE)
+    # Packing scrollbar to root window
+    scrol_y_out.pack(side=RIGHT,fill=Y)
+    # Adding Scrollbar to text area
+    scrol_y_out.config(command=self.buildOutputArea.yview)
+    # Packing Build Output Area to root window
+    self.buildOutputArea.pack(fill=BOTH,side=TOP,expand=1)
+    # Set Build Output Area to non editable
+    self.buildOutputArea.config(state=DISABLED)
 
     # Calling shortcuts funtion
     self.shortcuts()
@@ -239,7 +267,7 @@ class Editor:
 
   # Defining About Funtion
   def infoabout(self):
-    messagebox.showinfo("About VMPROTECT","A code obfuscation method using virtual machines to protect a product.\nMore information on the website: github.com/eaglx/VMPROTECT")
+    messagebox.showinfo("About VMPROTECT","A code obfuscation method using virtual machines to protect a product.\nMore information at github.com/eaglx/VMPROTECT")
 
   # Defining shortcuts Funtion
   def shortcuts(self):
@@ -261,3 +289,15 @@ class Editor:
     self.txtarea.bind("<Control-v>",self.paste)
     # Binding Ctrl+u to undo funtion
     self.txtarea.bind("<Control-u>",self.undo)
+    
+    # Binding Ctrl+b+i to build separately funtion
+    self.root.bind("<Control-b><s>",self.buildS)
+    # Binding Ctrl+b+i to build integrated funtion
+    self.root.bind("<Control-b><i>",self.buildI)
+  
+  # TODO
+  def buildS(self, event = None):
+    self.status.set("building separately ...")
+
+  def buildI(self, event = None):
+    self.status.set("building integrated ...")

@@ -22,14 +22,28 @@ Not support development on Windows right now!
 
 struct MESSAGE_TO_DEBUGGER
 {
+    DWORD R[8];
+    unsigned char ZF;
+    unsigned char CF;
+    DWORD PC;
+    DWORD SP;
     BYTE codeData[CODE_DATA_SIZE];
     DWORD stack[STACK_SIZE];
     BYTE dataBuffer[INPUT_BUFFER_SIZE];
 };
 
+#define CMD_RUN 1
+#define CMD_STEP 2
+#define CMD_SET_PC 3
+#define CMD_SET_SP 4
+#define CMD_SET_R 5
+#define CMD_SET_ZF 6
+#define CMD_SET_CF 7
+
 struct MESSAGE_FROM_DEBUGGER
 {
-    int code;
+    int cmdFlag;
+    DWORD value;
 };
 
 void serializeMSG(MESSAGE_TO_DEBUGGER *msgPacket, char *data)
