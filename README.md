@@ -6,7 +6,7 @@
 <a href="https://github.com/eaglx/VMPROTECT/network/members"><img src="https://img.shields.io/github/forks/eaglx/VMPROTECT" alt="Forks Badge"/></a>
 <a href="https://github.com/eaglx/VMPROTECT/blob/master/LICENSE"><img src="https://img.shields.io/github/license/eaglx/VMPROTECT?color=2b9348" alt="License Badge"/></a>
 [![GitHub release](https://img.shields.io/github/release/eaglx/VMPROTECT)](https://GitHub.com/eaglx/VMPROTECT/releases/)
-![Progress](https://progress-bar.dev/20/?title=progress-v0.2)
+![Progress](https://progress-bar.dev/25/?title=progress-v0.2)
 
 A virtual machine simulates a CPU along with a few other hardware components, allowing it to perform arithmetic, read and write to memory and interact with I/O devices. It can understand a machine language which you can use to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random).
 
@@ -92,7 +92,7 @@ EE  | EE | End of code and end of the VM's cpu |
 08  |  MOVMRB r<sub>dst</sub>, r<sub>src</sub> | Move and extend byte from memory to a register; get an address from a register |
 09  |  MOVMRW r<sub>dst</sub>, r<sub>src</sub> | Move word from memory to a register; get an address from a register |
 0A  |  MOVMD r<sub>dst</sub>, addr<sub>src</sub> | Move double word from memory to a register |
-0B  |  MOVD r<sub>dst</sub>, word | Move double word to a register |
+0B  |  MOVD r<sub>dst</sub>, dword | Move double word to a register |
 0C  |  MOVDM addr<sub>dst</sub>, r<sub>src</sub> | Move double word from a register to memory location |
 0D  |  MOVMRD r<sub>dst</sub>, r<sub>src</sub> | Move double from memory to a register; get an address from a register |
   | | |
@@ -116,8 +116,8 @@ EE  | EE | End of code and end of the VM's cpu |
 39  |  NOT r<sub>dst</sub> | Bitwise NOT on value in a register (the low byte) |
 3A  |  ADVRD r<sub>dst</sub>, dword | Add double word value to a register |
 3B  |  SUBVR r<sub>dst</sub>, dword | Substract double word value from a register |
-3C  |  SHR r<sub>dst</sub>, byte | Shift the bits of the operand destination to the right, by the number of bits specified in the count operand |
-3D  |  SHL r<sub>dst</sub>, byte | Shift the bits of the operand destination to the left, by the number of bits specified in the count operand |
+3C  |  SHR r<sub>dst</sub>, count<sub>byte</sub> | Shift the bits of the operand destination to the right, by the number of bits specified in the count operand |
+3D  |  SHL r<sub>dst</sub>, count<sub>byte</sub> | Shift the bits of the operand destination to the left, by the number of bits specified in the count operand |
   | | |
 50  |  CMP r<sub>dst</sub>, r<sub>src</sub> | Compare two registers |
 51  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
@@ -125,12 +125,12 @@ EE  | EE | End of code and end of the VM's cpu |
 90  |  PUSH r<sub>src</sub> | Push value from a register to stack |
 91  |  POP r<sub>dst</sub> | Pop value from stack to a register |
 92  |  CLST | Clear the stack |
-93  |  SETSP | Set the stack pointer |
+93  |  SETSP dword| Set the stack pointer to the double word value |
   | | |
 A0  |  POC  | Print char without new line, the value must be at the top of the stack |
 A1  |  POCN  | Print char with new line, the value must be at the top of the stack |
 A2  |  TIB  | Take input and move to the data buffer, the length of the string is stored in R[7] |
-A3  |  GIC  | Get a specific char from input, that is stored in the data buffer, the value will be stored in R[6], pass the position of char via a some register |
+A3  |  GIC r<sub>src</sub> | Get a specific char from input, that is stored in the data buffer, the value will be stored in R[6], pass the position of char via a some register |
 
 </details>
 
