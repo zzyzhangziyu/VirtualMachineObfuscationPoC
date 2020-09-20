@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../VirtualMachine/include/opcodes.hpp"
-#include "../VirtualMachine/include/vmdebug.hpp"
+#include "../VMCore/include/opcodes.hpp"
+#include "../VMCore/include/vmdebug.hpp"
 #include <arpa/inet.h>
 
 int main()

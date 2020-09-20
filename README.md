@@ -26,7 +26,7 @@ todo
 ## Debugger
 todo
 
-## Virtual Machine
+## VMCore
 ### Documentation
 The VM will simulate a fictional cpu (32-bit). It has a custom instrucion set compared to x86-64.
 
