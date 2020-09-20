@@ -195,10 +195,23 @@ db 0x91, %1
 db 0x92
 %endmacro
 
+%macro setsp 1
+db 0x93
+dd %1
+%endmacro
+
 %macro poc 0
 db 0xa0
 %endmacro
 
 %macro pocn 0
 db 0xa1
+%endmacro
+
+%macro tib 0
+db 0xa2
+%endmacro
+
+%macro gic 1
+db 0xa3, %1
 %endmacro

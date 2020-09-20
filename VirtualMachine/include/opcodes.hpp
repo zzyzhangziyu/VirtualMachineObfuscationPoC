@@ -42,7 +42,10 @@
 #define PUSH 0x90
 #define POP 0x91
 #define CLST 0x92
+#define SETSP 0x93
 #define POC 0xA0
 #define POCN 0xA1
+#define TIB 0xA2
+#define GIC 0xA3
 
 #endif

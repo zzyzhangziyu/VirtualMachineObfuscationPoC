@@ -17,6 +17,7 @@ typedef uint32_t DWORD;
 
 #define CODE_DATA_SIZE 51200
 #define STACK_SIZE 256
+#define INPUT_BUFFER_SIZE 1024
 
 #define LINUX_SOCKET
 
@@ -37,6 +38,9 @@ typedef struct {
     /* Size of one element is DWORD 
     in order to be able to push addresses. */
     DWORD stack[STACK_SIZE];
+
+    /* Here will be a user input*/
+    BYTE dataBuffer[INPUT_BUFFER_SIZE];
 } ADDRESS_SPACE, *PADDRESS_SPACE;
 
 typedef struct {

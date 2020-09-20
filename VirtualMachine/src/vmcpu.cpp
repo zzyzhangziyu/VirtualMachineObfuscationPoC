@@ -22,7 +22,6 @@ VMCPU::~VMCPU()
 bool VMCPU::loadCode(BYTE *mcode, int mcsize)
 {
     memset(AS->codeData, 0, CODE_DATA_SIZE*sizeof(*(AS->codeData)));
-
     if((unsigned) (mcsize) > (sizeof(AS->codeData) / sizeof(AS->codeData[0]))) 
     {
         std::cout << "[ERROR 101001] TOO BIG A CODE TO EXECUTE!\n";
@@ -88,13 +87,19 @@ void VMCPU::debug()
         exit(EXIT_FAILURE);
     }
 
-    //TODO
+    //TODO **********************************************************
+    BYTE opcode;
     while(debugLoop)
     {
         //valread = read( new_socket , buffer, 1024);
         //deserialize
         //serialize
         //send(new_socket , arry , strlen(arry) , 0 );
+
+        REGS->PC = 0;
+
+        opcode = AS->codeData[REGS->PC];
+        executer(opcode);
 
         debugLoop = false;
     }
@@ -662,20 +667,24 @@ int VMCPU::executer(BYTE opcode)
             *(DWORD *) &REGS->R[bTmp_0] = dTmp_1;
             break;
         /*
-            -
-            3C
+            SHR - Shift the bits of the operand destination to the right,
+                  by the number of bits specified in the count operand
+            3C 02 05 => SHR R2, 5
         */
         case SHR:
             bTmp_0 = AS->codeData[REGS->PC++];
+            if(bTmp_0 > 8) goto EXCEPTION;
             bTmp_1 = AS->codeData[REGS->PC++];
             REGS->R[bTmp_0] >>= bTmp_1;
             break;
         /*
-            -
-            3D
+            SHL -Shift the bits of the operand destination to the left,
+                  by the number of bits specified in the count operand
+            3D 02 05 => SHL R2, 5
         */
         case SHL:
             bTmp_0 = AS->codeData[REGS->PC++];
+            if(bTmp_0 > 8) goto EXCEPTION;
             bTmp_1 = AS->codeData[REGS->PC++];
             REGS->R[bTmp_0] <<= bTmp_1;
             break;
@@ -775,6 +784,17 @@ int VMCPU::executer(BYTE opcode)
         */
         case CLST:
             memset(AS->stack, 0, STACK_SIZE*sizeof(*(AS->stack)));
+            REGS->SP = 0;
+            break;
+        /*
+            Set the stack pointer
+            93 01 00 00 00 => SETSP 1
+        */
+        case SETSP:
+            REGS->SP = 0;
+            REGS->SP = *(DWORD *) &AS->codeData[REGS->PC];
+            if(REGS->SP > STACK_SIZE) goto EXCEPTION;
+            REGS->PC += 4;
             break;
         /*  ********************************
                         IN/OUT
@@ -825,26 +845,48 @@ int VMCPU::executer(BYTE opcode)
             vmPrintN(bTmp_0);
             break;
         /*
-
+            TIB - Take input and move to the data buffer,
+                  the length of the string is stored in R[7]
+            A2 => TIB
         */
-        case 0xA2:
+        case TIB:
         {
+            memset(AS->dataBuffer, 0, INPUT_BUFFER_SIZE*sizeof(*(AS->dataBuffer)));
             std::string inData = "";
             std::cin >> inData;
-
-            //TODO
+            BYTE endOfText = 0x3;
+            if(inData.length() > (INPUT_BUFFER_SIZE - 1)) 
+            {
+                inData = inData.substr(0, (INPUT_BUFFER_SIZE - 1));
+            }
+            int counter = 0;
+            for(char const &c: inData)
+            {
+                AS->dataBuffer[counter++] = c;
+            }
+            AS->dataBuffer[counter++] = 0x3;
+            REGS->R[7] = 0;
+            *(WORD *) &REGS->R[7] = counter;
         }
             break;
         /*
-
+            GIC - Get a specific char from input, that is stored in the data buffer,
+                  the value will be stored in R[6],
+                  pass the position of char via a some register
+            A3 02 => GIC R2
         */
-        case 0xA3:
-        {
-            std::string inData = "";
-            std::cin >> inData;
-
-            //TODO
-        }
+        case GIC:
+            bTmp_0 = AS->codeData[REGS->PC++];
+            if(bTmp_0 >= 0 && bTmp_0 <= 7)
+            {
+                if(REGS->R[bTmp_0] >= INPUT_BUFFER_SIZE)
+                {
+                    goto EXCEPTION;
+                }
+                REGS->R[6] = 0;
+                *(BYTE *) &REGS->R[6] = AS->dataBuffer[REGS->R[bTmp_0]];
+            }
+            else goto EXCEPTION;
             break;
         /*  
             ********************************
