@@ -11,11 +11,11 @@
 A virtual machine simulates a CPU along with a few other hardware components, allowing it to perform arithmetic, read and write to memory and interact with I/O devices. It can understand a machine language which you can use to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random).
 
 ## Requirements
-* NASM
-* Python3
+* NASM [tested on 2.13.02]
+* Python3 [tested on 3.6.9]
   * Tkinter
-* g++
-* make
+* g++ [tested on 7.5.0]
+* make [tested on 4.1]
 
 ## Editor
 todo
@@ -32,6 +32,8 @@ The VM will simulate a fictional cpu (32-bit). It has a custom instrucion set co
 
 #### Memory
 The VM has 51,200 memory locations, each of which stores a 8-bit value (it can store a total of 50kb). The VM has stack, which is a separate data structure. The stack has 256 memory locations, each of which stores a 32-bit value (it can store a total of 512b).
+
+Also, there is a data buffer which has 1024 memory locations, each of which stores a 1-bit value. This buffer will store user input.
 
 ```c++
 typedef uint8_t BYTE;
@@ -114,8 +116,8 @@ EE  | EE | End of code and end of the VM's cpu |
 39  |  NOT r<sub>dst</sub> | Bitwise NOT on value in a register (the low byte) |
 3A  |  ADVRD r<sub>dst</sub>, dword | Add double word value to a register |
 3B  |  SUBVR r<sub>dst</sub>, dword | Substract double word value from a register |
-3C  |  SHR r<sub>dst</sub>, byte |  |
-3D  |  SHL r<sub>dst</sub>, byte |  |
+3C  |  SHR r<sub>dst</sub>, byte | Shift the bits of the operand destination to the right, by the number of bits specified in the count operand |
+3D  |  SHL r<sub>dst</sub>, byte | Shift the bits of the operand destination to the left, by the number of bits specified in the count operand |
   | | |
 50  |  CMP r<sub>dst</sub>, r<sub>src</sub> | Compare two registers |
 51  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
@@ -123,9 +125,12 @@ EE  | EE | End of code and end of the VM's cpu |
 90  |  PUSH r<sub>src</sub> | Push value from a register to stack |
 91  |  POP r<sub>dst</sub> | Pop value from stack to a register |
 92  |  CLST | Clear the stack |
+93  |  SETSP | Set the stack pointer |
   | | |
 A0  |  POC  | Print char without new line, the value must be at the top of the stack |
 A1  |  POCN  | Print char with new line, the value must be at the top of the stack |
+A2  |  TIB  | Take input and move to the data buffer, the length of the string is stored in R[7] |
+A3  |  GIC  | Get a specific char from input, that is stored in the data buffer, the value will be stored in R[6], pass the position of char via a some register |
 
 </details>
 

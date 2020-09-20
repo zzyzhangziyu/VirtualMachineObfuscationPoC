@@ -19,17 +19,7 @@ typedef uint32_t DWORD;
 #define STACK_SIZE 256
 #define INPUT_BUFFER_SIZE 1024
 
-#define LINUX_SOCKET
-
-#ifdef LINUX_SOCKET
-
-#include <unistd.h> 
-#include <sys/socket.h> 
-#include <netinet/in.h>
-
-#define PORT 6776
-
-#endif
+#include "./vmdebug.hpp"
 
 typedef struct {
     /* Here will be a code to execute and other data - 50KB*/
