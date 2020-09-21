@@ -37,8 +37,8 @@ run: ## Run project
 	./$(PREXEC) $(ARGS)
 
 TEST_SRC_DIR = tests
-TEST_SOURCE = $(wildcard $(SRC_DIR)/vmcpu.cpp) $(wildcard $(TEST_SRC_DIR)/test01.cpp)
-TEST_EXEC = vmtest01.exe
+TEST_SOURCE = $(wildcard $(SRC_DIR)/vmcpu.cpp) $(wildcard $(TEST_SRC_DIR)/tests.cpp)
+TEST_EXEC = vmtests.exe
 buildtest: ## Build tests
 	@echo "Building tests..."
 	$(CC) $(TEST_SOURCE) -o $(TEST_EXEC) $(CFLAGS) -DVMTESTS
