@@ -16,6 +16,8 @@ cat << "EOF"
 EOF
 echo "version x.x"
 
+echo "\e[1;31m!!!! NOT READY !!!!\e[0m"
+
 # e.g.
 # make -C ./Debugger build
 # make -C ./Debugger clean

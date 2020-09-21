@@ -43,12 +43,17 @@ int main(int argc, char *argv[])
     {
         std::string arg = argv[i];
 
-        if((arg == "-m"))
+        if(arg == "-h")
+        {
+            show_usage();
+            return 0;
+        }
+        else if(arg == "-m")
         {
             i += 1;
             mode =  argv[i];
         }
-        else if((arg == "-p"))
+        else if(arg == "-p")
         {
             i += 1;
             pathToFile = argv[i];
