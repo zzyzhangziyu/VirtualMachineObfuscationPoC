@@ -864,7 +864,7 @@ int VMCPU::executer(BYTE opcode)
             {
                 AS->dataBuffer[counter++] = c;
             }
-            AS->dataBuffer[counter++] = 0x3;
+            AS->dataBuffer[counter++] = endOfText;
             REGS->R[7] = 0;
             *(WORD *) &REGS->R[7] = counter;
         }
