@@ -41,10 +41,11 @@ struct MESSAGE_TO_DEBUGGER
 #define CMD_SET_ZF 106
 #define CMD_SET_CF 107
 
+#define MSG_FROM_DBG_SIZE 20
 struct MESSAGE_FROM_DEBUGGER
 {
     int cmdFlag;
-    char buffer[20];
+    char buffer[MSG_FROM_DBG_SIZE];
 };
 
 void serializeMSG(MESSAGE_TO_DEBUGGER *, char *);

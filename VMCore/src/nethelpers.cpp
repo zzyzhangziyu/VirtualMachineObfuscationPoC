@@ -64,14 +64,14 @@ void deserializeMSG(MESSAGE_TO_DEBUGGER *msgPacket, char *dataArray)
     DWORD *d1 = (DWORD *) dataArray;
     memcpy(msgPacket->R, d1, 8);
     d1 += 8;
-    msgPacket->PC = *d1; d1++;
-    msgPacket->SP = *d1; d1++;
+    msgPacket->PC = *d1; ++d1;
+    msgPacket->SP = *d1; ++d1;
     memcpy(msgPacket->stack, d1, STACK_SIZE);
     d1 += STACK_SIZE;
 
     char *d2 = (char *) d1;
-    msgPacket->ZF = *d2; d2++;
-    msgPacket->CF = *d2; d2++;
+    msgPacket->ZF = *d2; ++d2;
+    msgPacket->CF = *d2; ++d2;
     memcpy(msgPacket->codeData, d2, CODE_DATA_SIZE);
     d2 += CODE_DATA_SIZE;
     memcpy(msgPacket->dataBuffer, d2, INPUT_BUFFER_SIZE);
@@ -80,10 +80,18 @@ void deserializeMSG(MESSAGE_TO_DEBUGGER *msgPacket, char *dataArray)
 
 void serializeMSG(MESSAGE_FROM_DEBUGGER *msgPacket, char *dataArray)
 {
-    //TODO
+    int *d1 = (int *) dataArray;
+    *d1 = msgPacket->cmdFlag; ++d1;
+
+    char *d2 = (char *) d1;
+    memcpy(d2, msgPacket->buffer, MSG_FROM_DBG_SIZE);
 }
 
 void deserializeMSG(MESSAGE_FROM_DEBUGGER *msgPacket, char *dataArray)
 {
-    //TODO
+    int *d1 = (int *) dataArray;
+    msgPacket->cmdFlag = *d1; ++d1;
+
+    char *d2 = (char *) d1;
+    memcpy(msgPacket->buffer, d2, MSG_FROM_DBG_SIZE);
 }
