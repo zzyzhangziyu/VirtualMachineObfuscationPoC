@@ -11,9 +11,13 @@ Not support development on Windows right now!
 
 #ifdef LINUX_SOCKET
 
+#include <string.h>
+
 #include <unistd.h> 
 #include <sys/socket.h> 
 #include <netinet/in.h>
+
+#include "./nethelpers.h"
 
 #define PORT 9313
 
@@ -32,13 +36,14 @@ struct MESSAGE_TO_DEBUGGER
     BYTE dataBuffer[INPUT_BUFFER_SIZE];
 };
 
-#define CMD_RUN 1
-#define CMD_STEP 2
-#define CMD_SET_PC 3
-#define CMD_SET_SP 4
-#define CMD_SET_R 5
-#define CMD_SET_ZF 6
-#define CMD_SET_CF 7
+#define CMD_RUN 100
+#define CMD_STEP 101
+#define CMD_EXIT 102
+#define CMD_SET_PC 103
+#define CMD_SET_SP 104
+#define CMD_SET_R 105
+#define CMD_SET_ZF 106
+#define CMD_SET_CF 107
 
 struct MESSAGE_FROM_DEBUGGER
 {
@@ -46,70 +51,26 @@ struct MESSAGE_FROM_DEBUGGER
     DWORD value;
 };
 
-void serializeMSG(MESSAGE_TO_DEBUGGER *msgPacket, char *data)
+void serializeMSG(MESSAGE_TO_DEBUGGER *msgPacket, char *dataArray)
+{
+    DWORD *d1 = (DWORD *) dataArray;
+    memcpy(d1, msgPacket->R, 8);    // ????
+    
+}
+
+void deserializeMSG(char *dataArray, MESSAGE_TO_DEBUGGER *msgPacket)
 {
     //TODO
 }
 
-void deserializeMSG(char *data, MESSAGE_TO_DEBUGGER *msgPacket)
+void serializeMSG(MESSAGE_FROM_DEBUGGER *msgPacket, char *dataArray)
 {
     //TODO
 }
 
-void serializeMSG(MESSAGE_FROM_DEBUGGER *msgPacket, char *data)
+void deserializeMSG(char *dataArray, MESSAGE_FROM_DEBUGGER *msgPacket)
 {
     //TODO
-}
-
-void deserializeMSG(char *data, MESSAGE_FROM_DEBUGGER *msgPacket)
-{
-    //TODO
-}
-
-#define SEND_ALL_DATA 1
-#define SEND_ZERO 0
-#define SEND_ERROR -1
-#define RECIVE_ZERO 0
-#define RECIVE_ERROR -1
-
-int sendData(int socket, void *buffer, size_t length)
-{
-    char *ptr = (char*) buffer;
-    int i;
-
-    while (length > 0)
-    {
-        i = send(socket, ptr, length, 0);
-        if (i < 0) return SEND_ERROR;
-        else if(i == 0) return SEND_ZERO;
-        ptr += i;
-        length -= i;
-    }
-    return SEND_ALL_DATA;
-}
-
-int recvData(int socket, void *buffer, size_t length)
-{
-    char *ptr = (char*) buffer;
-    int i;
-    int iteration = 0;
-    bool loopFinish = false;
-
-    while (!loopFinish)
-    {
-        i = recv(socket, ptr, length, 0);
-        if (i == -1) return RECIVE_ERROR;
-        else if(i == 0)
-        {
-            if(iteration == 0) return RECIVE_ZERO;
-            else loopFinish = true;
-        }
-        ptr += i;
-        length -= i;
-        ++iteration;
-        if(length <= 0) loopFinish = true;
-    }
-    return i;
 }
 
 #endif
