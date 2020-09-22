@@ -7,6 +7,7 @@
 
 #include "./opcodes.hpp"
 
+//#define VMTESTS
 #ifdef VMTESTS
     #include "./test.hpp"
 #endif //VMTESTS

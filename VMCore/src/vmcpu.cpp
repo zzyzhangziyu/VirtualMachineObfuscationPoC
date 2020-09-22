@@ -47,6 +47,7 @@ void VMCPU::vmPrintN(BYTE s)
 
 void VMCPU::debug()
 {
+#ifndef VMTESTS
     bool debugLoop = true;
 
     int serverSocket, debuggerSocket; 
@@ -178,6 +179,7 @@ void VMCPU::debug()
     }
     close(debuggerSocket);
     close(serverSocket);
+#endif
     return;
 }
 
