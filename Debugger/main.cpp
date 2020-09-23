@@ -3,6 +3,30 @@
 #include "../VMCore/include/vmdebug.hpp"
 #include <arpa/inet.h>
 
+void printOptions()
+{
+    std::cout << "Options:"
+                << "\t1. Execute a prograom on the VM\n"
+                << "\t2. Step execution\n"
+                << "\t3. Exit and exit debug mode in the VM\n"
+                << "\t4. Set a value in a register\n"
+                << "\t5. Set a flag\n"
+                << "\t6. Show the stack\n"
+                << "\t7. Show the code data\n"
+                << "\t8. Show the data buffer\n"
+                << "\t9. Show all registers\n"
+                << "\t10. Write to the code data"
+                << std::endl;
+    std::cout << "Choice: ";
+}
+
+void errorSend(int cliSocket)
+{
+    std::cout << "Failed send data in debug\n";
+    close(cliSocket);
+    exit(-1);
+}
+
 int main()
 {
     std::cout << R"(
@@ -22,7 +46,7 @@ ______ ___________ _   _ _____ _____  ___________
 |___/ \____/\____/ \___/ \____/\____/\____/\_| \_|       
                                                          
     )" << std::endl;
-    std::cout << "version 0.2.200921.2026" << std::endl;
+    std::cout << "version 0.1.200921.2026\n" << std::endl;
 
     int cliSocket = 0;
     struct sockaddr_in serv_addr;
@@ -53,12 +77,199 @@ ______ ___________ _   _ _____ _____  ___________
     MESSAGE_FROM_DEBUGGER msgFromDebg;
     char bufferMSGtoDbg[PACKET_TO_DEBUGGER_SIZE];
     char bufferMSGfromDbg[PACKET_FROM_DEBUGGER_SIZE];
+    int retValFromFunc;
+    int cmdDBG;
 
-    //TODO *******************
     while(connLoop)
     {
-
-        connLoop = false;
+        retValFromFunc = recvData(cliSocket, bufferMSGtoDbg, PACKET_TO_DEBUGGER_SIZE);
+        if(retValFromFunc == RECIVE_ERROR)
+        {
+            std::cout << "[ERROR] Failed receive data\n";
+            close(cliSocket);
+            exit(-1);
+        }
+        printOptions();
+        std::cin >> cmdDBG;
+        switch(cmdDBG)
+        {
+            case 1:
+                msgFromDebg.cmdFlag = CMD_RUN;
+                serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+                retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+                if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                break;
+            case 2:
+                msgFromDebg.cmdFlag = CMD_STEP;
+                serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+                retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+                if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                break;
+            case 3:
+                msgFromDebg.cmdFlag = CMD_EXIT;
+                connLoop = false;
+                serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+                retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+                if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                break;
+            case 4:
+                {
+                    int option;
+                    DWORD val;
+                    int regNr;
+                    std::cout << "Select a register to modify:"
+                                << "\t1. PC\n"
+                                << "\t2. SP\n"
+                                << "\t3. Rx\n";
+                    std::cout << "Choice: ";
+                    std::cin >> option;
+                    switch(option)
+                    {
+                        case 1:
+                            std::cout << "Value: ";
+                            std::cin >> val;
+                            msgFromDebg.cmdFlag = CMD_SET_PC;
+                            *(DWORD*) &msgFromDebg.buffer[0] = val;
+                            serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+                            retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+                            if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                            break;
+                        case 2:
+                            std::cout << "Value: ";
+                            std::cin >> val;
+                            msgFromDebg.cmdFlag = CMD_SET_SP;
+                            *(DWORD*) &msgFromDebg.buffer[0] = val;
+                            serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+                            retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+                            if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                            break;
+                        case 3:
+                            std::cout << "register nr: ";
+                            std::cin >> regNr;
+                            std::cout << "Value: ";
+                            std::cin >> val;
+                            msgFromDebg.cmdFlag = CMD_SET_R;
+                            msgFromDebg.buffer[0] = regNr + '0';
+                            *(DWORD*) &msgFromDebg.buffer[1] = val;
+                            serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+                            retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+                            if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                            break;
+                        default:
+                            std::cout << "Unkonown command!\n";
+                    }
+                }
+                break;
+            case 5:
+                {
+                    int option;
+                    std::cout << "Select a flag to modify:"
+                                << "\t1. ZF\n"
+                                << "\t2. CF\n";
+                    std::cout << "Choice: ";
+                    std::cin >> option;
+                    char val;
+                    switch(option)
+                    {
+                        case 1:
+                            {
+                                std::cout << "Value: ";
+                                std::cin >> val;
+                                msgFromDebg.cmdFlag = CMD_SET_ZF;
+                                msgFromDebg.buffer[0] = val;
+                                serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+                                retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+                                if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                            }
+                            break;
+                        case 2:
+                            {
+                                std::cout << "Value: ";
+                                std::cin >> val;
+                                msgFromDebg.cmdFlag = CMD_SET_CF;
+                                msgFromDebg.buffer[0] = val;
+                                serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+                                retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+                                if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                            }
+                            break;
+                        default:
+                            std::cout << "Unkonown command!\n";
+                    }
+                }
+                break;
+            case 6:
+                {
+                    int numberDataToPrint = 0;
+                    std::cout << "How many data to print: ";
+                    std::cin >> numberDataToPrint;
+                    if(numberDataToPrint > STACK_SIZE) numberDataToPrint = STACK_SIZE;
+                    for(int i = 0; i < numberDataToPrint; i++)
+                    {
+                        std::cout << msgToDebg.stack[i] << " ";
+                    }
+                    std::cout << "\n";
+                }
+                break;
+            case 7:
+                {
+                    int numberDataToPrint = 0;
+                    std::cout << "How many data to print: ";
+                    std::cin >> numberDataToPrint;
+                    if(numberDataToPrint > CODE_DATA_SIZE) numberDataToPrint = CODE_DATA_SIZE;
+                    for(int i = 0; i < numberDataToPrint; i++)
+                    {
+                        std::cout << msgToDebg.codeData[i] << " ";
+                    }
+                    std::cout << "\n";
+                }
+                break;
+            case 8:
+            {
+                    int numberDataToPrint = 0;
+                    std::cout << "How many data to print: ";
+                    std::cin >> numberDataToPrint;
+                    if(numberDataToPrint > INPUT_BUFFER_SIZE) numberDataToPrint = INPUT_BUFFER_SIZE;
+                    for(int i = 0; i < numberDataToPrint; i++)
+                    {
+                        std::cout << msgToDebg.dataBuffer[i] << " ";
+                    }
+                    std::cout << "\n";
+                }
+                break;
+            case 9:
+                std::cout << "PC: " << msgToDebg.PC << std::endl;
+                std::cout << "SP: " << msgToDebg.SP << std::endl;
+                for(int i = 0; i < 8; i++) 
+                {
+                    std::cout << "R[" << i << "]: " << msgToDebg.R[i] << std::endl;
+                }
+                std::cout << "ZF: " << msgToDebg.ZF << std::endl;
+                std::cout << "CF: " << msgToDebg.CF << std::endl;
+                break;
+            case 10:
+                {
+                    std::string toModify = "";
+                    std::cout << "Data to modify: ";
+                    std::cin >> toModify;
+                    if(toModify.length() > MSG_FROM_DBG_SIZE) 
+                    {
+                        toModify = toModify.substr(0, MSG_FROM_DBG_SIZE);
+                    }
+                    msgFromDebg.buffer[0] = toModify.length() + '0';
+                    int counter = 1;
+                    for(char const &c: toModify)
+                    {
+                        msgFromDebg.buffer[counter++] = c;
+                        serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+                        retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+                        if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                    }
+                }
+                break;
+            default:
+                std::cout << "Unkonown command!\n";
+        }
     }
 
     close(cliSocket);

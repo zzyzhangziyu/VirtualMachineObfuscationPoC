@@ -1,6 +1,7 @@
 #include "../include/main.hpp"
 #include <string.h>
 #include <fstream>
+//#include <bitset>
 
 BYTE* loadProtectedCode(int &mcsize, std::string fileName)
 {
@@ -22,9 +23,15 @@ BYTE* loadProtectedCode(int &mcsize, std::string fileName)
             throw 100011;
         }
 
-        DWORD highByte = fileBinToRead.get();
-        DWORD lowByte = fileBinToRead.get();
-        DWORD magicNumber = (highByte << 8) || lowByte;
+        WORD highByte = fileBinToRead.get();
+        WORD lowByte = fileBinToRead.get();
+
+        // std::cout << std::bitset<8>(highByte) << std::endl;
+        // std::cout << std::bitset<8>(lowByte) << std::endl;
+        // std::cout << std::hex << highByte << std::endl;
+        // std::cout << std::hex << lowByte << std::endl;
+
+        DWORD magicNumber = (highByte << 8) | lowByte;
 
         if(magicNumber != MAGIC_NUMBER)
         {

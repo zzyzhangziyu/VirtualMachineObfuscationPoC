@@ -1,11 +1,29 @@
-; Usr input (addr) saved in R0 - TO REMOVE
 ; Answer: vmobfuscationisthebest
 
 %include "vm.inc"
 
 start:
-    dw 0xeacc
-    mov r1, r0      ; TODO - to refactor, get input
+    dw 0xccea
+; PRINT "PASS"
+    movd r1, data3
+GETIN1:
+    mov r3, r1
+    push r3
+    poc
+    advrd r1, 0x1
+    advrd r2, 0x1
+    movmrb r3, r2
+    cmp r3, r4
+    jz GETIN2
+    jnz GETIN1
+GETIN2:
+    mov r3, r1
+    push r3
+    pocn
+    tib
+    movd r1, 0x0
+    gic r0
+    mov r1, r0
     movd r3, 0x10
     movd r2, 0x0
     movd r4, 0x0
@@ -13,39 +31,44 @@ start:
     advrd r3, 0x5
 
 JLL9:
-    movmrb r2, r1
+    mov r2, r6
     adrr r4, r2
     advrd r4, 0x5
     advrd r1, 0x1
-    movmrb r2, r1
+    gic r1
+    mov r2, r6
     cmp r2, r5
     jz JLL8
 
     adrr r4, r2
     advrd r4, 0xa
     advrd r1, 0x1
-    movmrb r2, r1
+    gic r1
+    mov r2, r6
     cmp r2, r5
     jz JLL8
 
     adrr r4, r2
     subvrd r4, 0x6
     advrd r1, 0x1
-    movmrb r2, r1
+    gic r1
+    mov r2, r6
     cmp r2, r5
     jz JLL8
 
     adrr r4, r2
     subvrd r4, 0xc
     advrd r1, 0x1
-    movmrb r2, r1
+    gic r1
+    mov r2, r6
     cmp r2, r5
     jz JLL8
 
     adrr r4, r2
     advrd r4, 0xf
     advrd r1, 0x1
-    movmrb r2, r1
+    gic r1
+    mov r2, r6
     cmp r2, r5
     jz JLL8
 
@@ -102,3 +125,5 @@ data1:
     db "PASS", 0 
 data2:
     db "FAILED", 0
+data3:
+    db "Password: ", 0

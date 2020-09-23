@@ -368,16 +368,60 @@ bool VMTest::testVM()
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
         /* TEST 8
-        desc: TODO
+        desc: shift the bits to the right
         */
     /* ************************* */
-
+    ++currentTestNumber;
+    T_REGS->R[2] = (DWORD) 4;
+    T_AS->codeData[0] = SHR;
+    T_AS->codeData[1] = 0x02;
+    T_AS->codeData[2] = 0x01;
+    T_AS->codeData[3] = EE;
+    vm->vcpuFlag = VCpuFlag::OK;
+    vm->run();
+    if(vm->vcpuFlag == VCpuFlag::ERROR) {
+        bTestPass = false;
+        goto FINISH_TESTS;
+    }
+    if(T_REGS->R[2] != (DWORD) 2){
+        bTestPass = false;
+        goto FINISH_TESTS;
+    }
+    T_REGS->R[2] = (DWORD) 0;
+    T_REGS->PC = (DWORD) 0;
+    T_AS->codeData[0] = 0x00;
+    T_AS->codeData[1] = 0x00;
+    T_AS->codeData[2] = 0x00;
+    T_AS->codeData[3] = 0x00;
+    printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
         /* TEST 9
-        desc: TODO
+        desc: shift the bits to the left
         */
     /* ************************* */
-
+    ++currentTestNumber;
+    T_REGS->R[2] = (DWORD) 4;
+    T_AS->codeData[0] = SHL;
+    T_AS->codeData[1] = 0x02;
+    T_AS->codeData[2] = 0x01;
+    T_AS->codeData[3] = EE;
+    vm->vcpuFlag = VCpuFlag::OK;
+    vm->run();
+    if(vm->vcpuFlag == VCpuFlag::ERROR) {
+        bTestPass = false;
+        goto FINISH_TESTS;
+    }
+    if(T_REGS->R[2] != (DWORD) 8){
+        bTestPass = false;
+        goto FINISH_TESTS;
+    }
+    T_REGS->R[2] = (DWORD) 0;
+    T_REGS->PC = (DWORD) 0;
+    T_AS->codeData[0] = 0x00;
+    T_AS->codeData[1] = 0x00;
+    T_AS->codeData[2] = 0x00;
+    T_AS->codeData[3] = 0x00;
+    printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
 
     goto FINISH_TESTS;

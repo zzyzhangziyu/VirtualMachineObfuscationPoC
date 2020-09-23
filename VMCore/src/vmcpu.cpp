@@ -1,6 +1,6 @@
 #include "../include/vmcpu.hpp"
 
-//#define V_DEBUG
+#define V_DEBUG
 
 VMCPU::VMCPU()
 {
@@ -154,7 +154,7 @@ void VMCPU::debug()
                 break;
             case CMD_SET_R:
                 {
-                    int regNr = (int) (msgFromDebg.buffer[0]);
+                    int regNr = msgFromDebg.buffer[0] - '0';
                     REGS->R[regNr] = *(DWORD*) &msgFromDebg.buffer[1];
                 }
                 break;
@@ -166,7 +166,7 @@ void VMCPU::debug()
                 break;
             case CMD_WRITE_MEM:
                 {
-                    int byteToWrite = (int)(msgFromDebg.buffer[0]);
+                    int byteToWrite = msgFromDebg.buffer[0] - '0';
                     for(int i = 0; i < byteToWrite; i++)
                     {
                         AS->codeData[REGS->PC++] = msgFromDebg.buffer[i + 1];
@@ -693,6 +693,9 @@ int VMCPU::executer(BYTE opcode)
             38 02 => NOT R2
         */
         case NOT:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] NOT" << std::endl;
+            #endif
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
             REGS->R[bTmp_0] = ~ REGS->R[bTmp_0];
@@ -703,6 +706,9 @@ int VMCPU::executer(BYTE opcode)
             39 02 => NOT R2
         */
         case NOTB:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] NOTB" << std::endl;
+            #endif
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
             *(BYTE *) &REGS->R[bTmp_0] = ~ (*(BYTE *) &REGS->R[bTmp_0]);
@@ -751,10 +757,13 @@ int VMCPU::executer(BYTE opcode)
             3C 02 05 => SHR R2, 5
         */
         case SHR:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] SHR" << std::endl;
+            #endif
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
             bTmp_1 = AS->codeData[REGS->PC++];
-            REGS->R[bTmp_0] >>= bTmp_1;
+            REGS->R[bTmp_0] = REGS->R[bTmp_0] >> bTmp_1;
             break;
         /*
             SHL -Shift the bits of the operand destination to the left,
@@ -762,10 +771,13 @@ int VMCPU::executer(BYTE opcode)
             3D 02 05 => SHL R2, 5
         */
         case SHL:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] SHL" << std::endl;
+            #endif
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
             bTmp_1 = AS->codeData[REGS->PC++];
-            REGS->R[bTmp_0] <<= bTmp_1;
+            REGS->R[bTmp_0] = REGS->R[bTmp_0] << bTmp_1;
             break;
         /*  ********************************
                         COMPARE
@@ -862,6 +874,9 @@ int VMCPU::executer(BYTE opcode)
             92 => CLST
         */
         case CLST:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] CLST" << std::endl;
+            #endif
             memset(AS->stack, 0, STACK_SIZE*sizeof(*(AS->stack)));
             REGS->SP = 0;
             break;
@@ -870,6 +885,9 @@ int VMCPU::executer(BYTE opcode)
             93 01 00 00 00 => SETSP 1
         */
         case SETSP:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] SETSP" << std::endl;
+            #endif
             REGS->SP = 0;
             REGS->SP = *(DWORD *) &AS->codeData[REGS->PC];
             if(REGS->SP > STACK_SIZE) goto EXCEPTION;
@@ -929,24 +947,27 @@ int VMCPU::executer(BYTE opcode)
             A2 => TIB
         */
         case TIB:
-        {
-            memset(AS->dataBuffer, 0, INPUT_BUFFER_SIZE*sizeof(*(AS->dataBuffer)));
-            std::string inData = "";
-            std::cin >> inData;
-            BYTE endOfText = 0x3;
-            if(inData.length() > (INPUT_BUFFER_SIZE - 1)) 
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] TIB" << std::endl;
+            #endif
             {
-                inData = inData.substr(0, (INPUT_BUFFER_SIZE - 1));
+                memset(AS->dataBuffer, 0, INPUT_BUFFER_SIZE*sizeof(*(AS->dataBuffer)));
+                std::string inData = "";
+                std::cin >> inData;
+                BYTE endOfText = 0x3;
+                if(inData.length() > (INPUT_BUFFER_SIZE - 1)) 
+                {
+                    inData = inData.substr(0, (INPUT_BUFFER_SIZE - 1));
+                }
+                int counter = 0;
+                for(char const &c: inData)
+                {
+                    AS->dataBuffer[counter++] = c;
+                }
+                AS->dataBuffer[counter++] = endOfText;
+                REGS->R[7] = 0;
+                *(WORD *) &REGS->R[7] = counter;
             }
-            int counter = 0;
-            for(char const &c: inData)
-            {
-                AS->dataBuffer[counter++] = c;
-            }
-            AS->dataBuffer[counter++] = endOfText;
-            REGS->R[7] = 0;
-            *(WORD *) &REGS->R[7] = counter;
-        }
             break;
         /*
             GIC - Get a specific char from input, that is stored in the data buffer,
@@ -955,6 +976,9 @@ int VMCPU::executer(BYTE opcode)
             A3 02 => GIC R2
         */
         case GIC:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] GIC" << std::endl;
+            #endif
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 >= 0 && bTmp_0 <= 7)
             {
