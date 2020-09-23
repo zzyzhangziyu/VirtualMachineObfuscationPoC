@@ -215,3 +215,11 @@ db 0xa2
 %macro gic 1
 db 0xa3, %1
 %endmacro
+
+%macro pic 0
+db 0xa4
+%endmacro
+
+%macro picn 0
+db 0xa5
+%endmacro

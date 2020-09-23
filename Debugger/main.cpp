@@ -5,7 +5,7 @@
 
 void printOptions()
 {
-    std::cout << "Options:"
+    std::cout << "Options:\n"
                 << "\t1. Execute a prograom on the VM\n"
                 << "\t2. Step execution\n"
                 << "\t3. Exit and exit debug mode in the VM\n"
@@ -46,7 +46,7 @@ ______ ___________ _   _ _____ _____  ___________
 |___/ \____/\____/ \___/ \____/\____/\____/\_| \_|       
                                                          
     )" << std::endl;
-    std::cout << "version 0.1.200921.2026\n" << std::endl;
+    std::cout << "version 0.1.200924.0001\n" << std::endl;
 
     int cliSocket = 0;
     struct sockaddr_in serv_addr;
@@ -89,6 +89,7 @@ ______ ___________ _   _ _____ _____  ___________
             close(cliSocket);
             exit(-1);
         }
+SHOWOPTIONS:
         printOptions();
         std::cin >> cmdDBG;
         switch(cmdDBG)
@@ -206,9 +207,10 @@ ______ ___________ _   _ _____ _____  ___________
                     if(numberDataToPrint > STACK_SIZE) numberDataToPrint = STACK_SIZE;
                     for(int i = 0; i < numberDataToPrint; i++)
                     {
-                        std::cout << msgToDebg.stack[i] << " ";
+                        std::cout << std::hex << msgToDebg.stack[i] << " ";
                     }
                     std::cout << "\n";
+                    goto SHOWOPTIONS;
                 }
                 break;
             case 7:
@@ -219,33 +221,36 @@ ______ ___________ _   _ _____ _____  ___________
                     if(numberDataToPrint > CODE_DATA_SIZE) numberDataToPrint = CODE_DATA_SIZE;
                     for(int i = 0; i < numberDataToPrint; i++)
                     {
-                        std::cout << msgToDebg.codeData[i] << " ";
+                        std::cout << std::hex << msgToDebg.codeData[i] << " ";
                     }
                     std::cout << "\n";
+                    goto SHOWOPTIONS;
                 }
                 break;
             case 8:
-            {
+                {
                     int numberDataToPrint = 0;
                     std::cout << "How many data to print: ";
                     std::cin >> numberDataToPrint;
                     if(numberDataToPrint > INPUT_BUFFER_SIZE) numberDataToPrint = INPUT_BUFFER_SIZE;
                     for(int i = 0; i < numberDataToPrint; i++)
                     {
-                        std::cout << msgToDebg.dataBuffer[i] << " ";
+                        std::cout << std::hex << msgToDebg.dataBuffer[i] << " ";
                     }
                     std::cout << "\n";
+                    goto SHOWOPTIONS;
                 }
                 break;
             case 9:
-                std::cout << "PC: " << msgToDebg.PC << std::endl;
-                std::cout << "SP: " << msgToDebg.SP << std::endl;
+                std::cout << "PC: " << std::hex << msgToDebg.PC << std::endl;
+                std::cout << "SP: " << std::hex << msgToDebg.SP << std::endl;
                 for(int i = 0; i < 8; i++) 
                 {
                     std::cout << "R[" << i << "]: " << msgToDebg.R[i] << std::endl;
                 }
-                std::cout << "ZF: " << msgToDebg.ZF << std::endl;
-                std::cout << "CF: " << msgToDebg.CF << std::endl;
+                std::cout << "ZF: " << std::hex << msgToDebg.ZF << std::endl;
+                std::cout << "CF: " << std::hex << msgToDebg.CF << std::endl;
+                goto SHOWOPTIONS;
                 break;
             case 10:
                 {

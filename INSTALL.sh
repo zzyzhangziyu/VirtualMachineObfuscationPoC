@@ -14,12 +14,15 @@ cat << "EOF"
  /__/\___|\__|\_,_| .__/ |_|_||_/__/\__\__,_|_|_\___|_|                                         
                   |_|                                                                           
 EOF
-echo "version 0.2.200921.2026"
+echo "version 0.2.200924.0001"
 echo "#####################################"
 
 echo ""
 echo -n "Write path to deploy: "
 read pathToInstall
+
+vmDirName="/VMPROTECT"
+fullPathToDeploy="$pathToInstall$vmDirName"
 
 # #####################################
 # ############## STAGE 1 ##############
@@ -53,9 +56,26 @@ else
 fi
 # #####################################
 
+# #####################################
+# ############## STAGE 2 ##############
+echo "STAGE 2 - copy files"
+mkdir $fullPathToDeploy
+cp -v -R ./VMCore $fullPathToDeploy/VMCore
+cp -v -R ./Editor $fullPathToDeploy/Editor
+cp -v -R ./Debugger $fullPathToDeploy/Debugger
+cp -v ./Compiler/vm.inc $fullPathToDeploy/vm.inc
+cp -v ./VMPROTECT.py $fullPathToDeploy/VMPROTECT.py
+chmod +x $fullPathToDeploy/VMPROTECT.py
+# #####################################
 
-echo "\e[1;31m!!!! NOT READY !!!!\e[0m"
+# #####################################
+# ############## STAGE 3 ##############
+echo "STAGE 3 - test environment"
+make -C $fullPathToDeploy/VMCore buildtests
+make -C $fullPathToDeploy/VMCore runtests
+make -C $fullPathToDeploy/VMCore clean
+make -C $fullPathToDeploy/VMCore build
+# #####################################
 
-# e.g.
-# make -C ./Debugger build
-# make -C ./Debugger clean
+echo "\n"
+echo "\e[96mFINISHED!\e[0m"

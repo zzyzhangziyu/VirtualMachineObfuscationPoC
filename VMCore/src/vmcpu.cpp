@@ -1,6 +1,7 @@
 #include "../include/vmcpu.hpp"
 
-#define V_DEBUG
+// #define V_DEBUG
+// #include <bitset>
 
 VMCPU::VMCPU()
 {
@@ -22,6 +23,8 @@ VMCPU::~VMCPU()
 bool VMCPU::loadCode(BYTE *mcode, int mcsize)
 {
     memset(AS->codeData, 0, CODE_DATA_SIZE*sizeof(*(AS->codeData)));
+    memset(AS->stack, 0, STACK_SIZE*sizeof(*(AS->stack)));
+    memset(AS->dataBuffer, 0, INPUT_BUFFER_SIZE*sizeof(*(AS->dataBuffer)));
     if((unsigned) (mcsize) > (sizeof(AS->codeData) / sizeof(AS->codeData[0]))) 
     {
         std::cout << "[ERROR 101001] TOO BIG A CODE TO EXECUTE!\n";
@@ -32,6 +35,8 @@ bool VMCPU::loadCode(BYTE *mcode, int mcsize)
     {
         REGS->R[i] = (DWORD) 0;
     }
+    REGS->CF = 0;
+    REGS->ZF = 0;
     return true;
 }
 
@@ -54,7 +59,6 @@ void VMCPU::debug()
     struct sockaddr_in address;
     int opt = 1; 
     int addrlen = sizeof(address);
-    char buffer[1024] = {0};
 
     if((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
     { 
@@ -207,6 +211,8 @@ int VMCPU::executer(BYTE opcode)
     switch(opcode)
     {
         /* NOP */
+        case 0x56:
+        case 0x6d:
         case NOP:
             #ifdef V_DEBUG
                 std::cout << "[DEBUG] NOP" << std::endl;
@@ -235,6 +241,14 @@ int VMCPU::executer(BYTE opcode)
             #endif
             bTmp_0 = AS->codeData[REGS->PC++];
             bTmp_1 = AS->codeData[REGS->PC++];
+            #ifdef V_DEBUG
+                std::cout << std::hex << REGS->R[bTmp_0] << std::endl;
+                std::cout << std::hex << REGS->R[bTmp_1] << std::endl;
+                // std::cout << std::hex << bTmp_0 << "\n";
+                // std::cout << std::hex << bTmp_1 << "\n";
+                // std::cout << std::bitset<8>(bTmp_0) << std::endl;
+                // std::cout << std::bitset<8>(bTmp_1) << std::endl;
+            #endif
             if((bTmp_0 >= 0 && bTmp_0 <= 7) && (bTmp_1 >= 0 && bTmp_1 <= 7))
             {
                 REGS->R[bTmp_0] = REGS->R[bTmp_1];
@@ -797,6 +811,10 @@ int VMCPU::executer(BYTE opcode)
             if(bTmp_1 > 8) goto EXCEPTION;
             dTmp_0 = REGS->R[bTmp_0];
             dTmp_1 = REGS->R[bTmp_1];
+            #ifdef V_DEBUG
+                std::cout << dTmp_0 << std::endl;
+                std::cout << dTmp_1 << std::endl;
+            #endif
             if(dTmp_1 == dTmp_0) REGS->ZF = 1;
             else REGS->ZF = 0;
             if(dTmp_1 > dTmp_0) REGS->CF = 1;
@@ -846,6 +864,10 @@ int VMCPU::executer(BYTE opcode)
                 goto EXCEPTION;
             }
             AS->stack[REGS->SP] = REGS->R[bTmp_0];
+            #ifdef V_DEBUG
+                if(bTmp_0 == 1)
+                    std::cout << REGS->R[bTmp_0] << std::endl;
+            #endif
             break;
             /*
             POP TO A REGISTER
@@ -953,7 +975,7 @@ int VMCPU::executer(BYTE opcode)
             {
                 memset(AS->dataBuffer, 0, INPUT_BUFFER_SIZE*sizeof(*(AS->dataBuffer)));
                 std::string inData = "";
-                std::cin >> inData;
+                std::getline(std::cin, inData);
                 BYTE endOfText = 0x3;
                 if(inData.length() > (INPUT_BUFFER_SIZE - 1)) 
                 {
@@ -971,7 +993,7 @@ int VMCPU::executer(BYTE opcode)
             break;
         /*
             GIC - Get a specific char from input, that is stored in the data buffer,
-                  the value will be stored in R[6],
+                  the value will be stored in R[7],
                   pass the position of char via a some register
             A3 02 => GIC R2
         */
@@ -986,10 +1008,54 @@ int VMCPU::executer(BYTE opcode)
                 {
                     goto EXCEPTION;
                 }
-                REGS->R[6] = 0;
-                *(BYTE *) &REGS->R[6] = AS->dataBuffer[REGS->R[bTmp_0]];
+                REGS->R[7] = 0;
+                *(BYTE *) &REGS->R[7] = AS->dataBuffer[REGS->R[bTmp_0]];
             }
             else goto EXCEPTION;
+            break;
+        /*
+            PIC - Print char from input without new line
+                the value must be at the top of
+                the stack
+            A4 => PIC
+        */
+        case PIC:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] PIC" << std::endl;
+            #endif
+            if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(DWORD)]){
+                #ifdef _VM_CPU_TEST_
+                    vcpuFlag = VCpuFlag::UNDERFLOW;
+                #endif
+                #ifndef _VM_CPU_TEST_
+                    std::cout << "[ERROR] STACK UNDERFLOW!" << std::endl;
+                #endif
+                goto EXCEPTION;
+            }
+            bTmp_0 = AS->stack[REGS->SP++];
+            vmPrint(bTmp_0);
+            break;
+        /*
+            PICN - Print char from input with new line
+                the value must be at the top of
+                the stack
+            A5 => POCN
+        */
+        case PICN:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] PICN" << std::endl;
+            #endif
+            if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(DWORD)]){
+                #ifdef _VM_CPU_TEST_
+                    vcpuFlag = VCpuFlag::UNDERFLOW;
+                #endif
+                #ifndef _VM_CPU_TEST_
+                    std::cout << "[ERROR] STACK UNDERFLOW!" << std::endl;
+                #endif
+                goto EXCEPTION;
+            }
+            bTmp_0 = AS->stack[REGS->SP++];
+            vmPrintN(bTmp_0);
             break;
         /*  
             ********************************

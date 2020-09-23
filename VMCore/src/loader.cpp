@@ -39,6 +39,8 @@ BYTE* loadProtectedCode(int &mcsize, std::string fileName)
             throw 100012;
         }
 
+        fileBinToRead.seekg(0, fileBinToRead.beg);
+
         mc = new BYTE[codeSize];
         char byte;
         int counter = 0;

@@ -2,6 +2,10 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import filedialog
 
+import subprocess
+import binascii
+import time
+
 class Editor:
   # Defining Constructor
   def __init__(self,root):
@@ -77,13 +81,6 @@ class Editor:
     self.buildmenu.add_command(label="Build code integrated to VMCore",accelerator="Ctrl+B+I",command=self.buildI)
     # Cascading buildmenu to menubar
     self.menubar.add_cascade(label="Build", menu=self.buildmenu)
-
-    # Creating Run Menu
-    self.runmenu = Menu(self.menubar,font=("times new roman",12,"bold"),activebackground="#8ede95",tearoff=0)
-    # Adding 
-    self.runmenu.add_command(label="todo")
-    # Cascading runmenu to menubar
-    self.menubar.add_cascade(label="Run", menu=self.runmenu)
 
     # Creating Help Menu
     self.helpmenu = Menu(self.menubar,font=("times new roman",12,"bold"),activebackground="skyblue",tearoff=0)
@@ -294,10 +291,60 @@ class Editor:
     self.root.bind("<Control-b><s>",self.buildS)
     # Binding Ctrl+b+i to build integrated funtion
     self.root.bind("<Control-b><i>",self.buildI)
-  
-  # TODO
+
   def buildS(self, event = None):
+    self.buildOutputArea.config(state=NORMAL)
+    self.buildOutputArea.delete("1.0",END)
     self.status.set("building separately ...")
+    self.buildStage1()
+    self.buildStage2()
+    self.buildOutputArea.config(state=DISABLED)
 
   def buildI(self, event = None):
+    self.buildOutputArea.config(state=NORMAL)
+    self.buildOutputArea.delete("1.0",END)
     self.status.set("building integrated ...")
+    self.buildStage1()
+    codePart1 = "#ifndef _VM_PROTECTED_D\n#define _VM_PROTECTED_D\n#include \"main.hpp\"\nBYTE ProtectedData[] = { "
+    codePart2 = ""
+    fileNamePart1 = (self.filename.replace(self.filename.split("/")[-1],''))
+    fileNamePart2 = (self.filename.split("/")[-1]).split('.')[0]
+    with open(fileNamePart1 + fileNamePart2, mode='rb') as file:
+      codePart2 = file.read()
+    codePart2str = binascii.hexlify(bytearray(codePart2)).decode("utf-8")
+    codePart2final = ""
+    for i in range(0, len(codePart2str), 2):
+      s1,s2 = codePart2str[i:i+2]
+      codePart2final += "\"0x" + s1 + s2 + "\" "
+    codePart3 = "};\n#endif"
+    fullCode = codePart1 + codePart2final + codePart3
+    f = open("./VMCore/include/protected.hpp", 'w')
+    f.write(fullCode)
+    f.close()
+    time.sleep(5)
+    self.buildStage2()
+    self.buildOutputArea.config(state=DISABLED)
+  
+  def buildStage1(self):
+    cmdProcess = subprocess.Popen(['nasm', self.filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = cmdProcess.communicate()
+    self.buildOutputArea.insert(END, out)
+    self.buildOutputArea.insert(END, err)
+
+  def buildStage2(self):
+    cmdProcess = subprocess.Popen(['make', '-C', './VMCore', 'build'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = cmdProcess.communicate()
+    self.buildOutputArea.insert(END, out)
+    self.buildOutputArea.insert(END, err)
+    cmdProcess = subprocess.Popen(['make', '-C', './Debugger', 'build'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = cmdProcess.communicate()
+    self.buildOutputArea.insert(END, out)
+    self.buildOutputArea.insert(END, err)
+    cmdProcess = subprocess.Popen(['cp', '-v', './VMCore/VMPROTECT.exe', (self.filename.replace(self.filename.split("/")[-1],'')) + 'VMPROTECT.exe'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = cmdProcess.communicate()
+    self.buildOutputArea.insert(END, out)
+    self.buildOutputArea.insert(END, err)
+    cmdProcess = subprocess.Popen(['cp', '-v', './Debugger/VmprotDEBUGGER.exe', (self.filename.replace(self.filename.split("/")[-1],'')) + 'VmprotDEBUGGER.exe'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = cmdProcess.communicate()
+    self.buildOutputArea.insert(END, out)
+    self.buildOutputArea.insert(END, err)

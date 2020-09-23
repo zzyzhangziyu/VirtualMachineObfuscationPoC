@@ -47,5 +47,7 @@
 #define POCN 0xA1
 #define TIB 0xA2
 #define GIC 0xA3
+#define PIC 0xA4
+#define PICN 0xA5
 
 #endif
