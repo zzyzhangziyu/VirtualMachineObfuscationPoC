@@ -18,7 +18,7 @@ echo "version 0.2.200921.2026"
 echo "#####################################"
 
 echo ""
-echo "Write path to deploy"
+echo -n "Write path to deploy: "
 read pathToInstall
 
 # #####################################
@@ -26,30 +26,30 @@ read pathToInstall
 echo "STAGE 1 - check if require programs exist"
 if ! [ -x "$(command -v python3)" ];
 then
-        echo "  WARNING: python3 could not be found"
+        echo "  \e[1;31mWARNING: python3 could not be found\e[0m"
 else
-        echo "  python3 installed - check"
+        echo "  python3 installed - \e[96myes\e[0m"
 fi
 
 if ! [ -x "$(command -v make)" ];
 then
-        echo "  WARNING: make could not be found"
+        echo "  \e[1;31mWARNING: make could not be found\e[0m"
 else
-        echo "  make installed - check"
+        echo "  make installed - \e[96myes\e[0m"
 fi
 
 if ! [ -x "$(command -v g++)" ];
 then
-        echo "  WARNING: g++ could not be found"
+        echo "  \e[1;31mWARNING: g++ could not be found\e[0m"
 else
-        echo "  g++ installed - check"
+        echo "  g++ installed - \e[96myes\e[0m"
 fi
 
 if ! [ -x "$(command -v nasm)" ];
 then
-        echo "  WARNING: nasm could not be found"
+        echo "  \e[1;33mWARNING: nasm could not be found\e[0m"
 else
-        echo "  nasm installed - check"
+        echo "  nasm installed - \e[96myes\e[0m"
 fi
 # #####################################
 

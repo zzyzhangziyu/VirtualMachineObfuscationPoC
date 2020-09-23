@@ -38,7 +38,11 @@ run: ## Run project
 
 TEST_SRC_DIR = tests
 TEST_SOURCE = $(wildcard $(SRC_DIR)/vmcpu.cpp) $(wildcard $(TEST_SRC_DIR)/tests.cpp)
-TEST_EXEC = vmtests.exe
+TEST_EXEC = VMCoreTESTS.exe
 buildtests: ## Build tests
 	@echo "Building tests..."
 	$(CC) $(TEST_SOURCE) -o $(TEST_EXEC) $(CFLAGS) -DVMTESTS
+
+runtests: ## Run tests
+	@echo "Running tests..."
+	./$(TEST_EXEC) $(ARGS)
