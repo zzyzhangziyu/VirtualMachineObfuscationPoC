@@ -69,17 +69,6 @@ then
 else
         echo "  nasm installed - \e[96myes\e[0m"
 fi
-
-if ! [ -x "$(command -v valgrind)" ];
-then
-        echo "  \e[1;33mWARNING: valgrind could not be found\e[0m"
-        if [ "$EUID" != 0 ]; then
-                sudo "$0" "$@"
-        fi
-        sudo apt install valgrind -y
-else
-        echo "  valgrind installed - \e[96myes\e[0m"
-fi
 # #####################################
 
 # #####################################
