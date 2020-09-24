@@ -14,7 +14,7 @@ cat << "EOF"
  /__/\___|\__|\_,_| .__/ |_|_||_/__/\__\__,_|_|_\___|_|                                         
                   |_|                                                                           
 EOF
-echo "version 0.2.200924.0001"
+echo "version 0.1.200924.0730"
 echo "#####################################"
 
 echo ""
@@ -30,6 +30,10 @@ echo "STAGE 1 - check if require programs exist"
 if ! [ -x "$(command -v python3)" ];
 then
         echo "  \e[1;31mWARNING: python3 could not be found\e[0m"
+        if [ $EUID != 0 ]; then
+                sudo "$0" "$@"
+        fi
+        sudo apt install python3 -y
 else
         echo "  python3 installed - \e[96myes\e[0m"
 fi
@@ -37,6 +41,10 @@ fi
 if ! [ -x "$(command -v make)" ];
 then
         echo "  \e[1;31mWARNING: make could not be found\e[0m"
+        if [ $EUID != 0 ]; then
+                sudo "$0" "$@"
+        fi
+        sudo apt install build-essential -y
 else
         echo "  make installed - \e[96myes\e[0m"
 fi
@@ -44,6 +52,10 @@ fi
 if ! [ -x "$(command -v g++)" ];
 then
         echo "  \e[1;31mWARNING: g++ could not be found\e[0m"
+        if [ $EUID != 0 ]; then
+                sudo "$0" "$@"
+        fi
+        sudo apt install build-essential -y
 else
         echo "  g++ installed - \e[96myes\e[0m"
 fi
@@ -51,8 +63,23 @@ fi
 if ! [ -x "$(command -v nasm)" ];
 then
         echo "  \e[1;33mWARNING: nasm could not be found\e[0m"
+        if [ $EUID != 0 ]; then
+                sudo "$0" "$@"
+        fi
+        sudo apt install nasm -y
 else
         echo "  nasm installed - \e[96myes\e[0m"
+fi
+
+if ! [ -x "$(command -v valgrind)" ];
+then
+        echo "  \e[1;33mWARNING: valgrind could not be found\e[0m"
+        if [ "$EUID" != 0 ]; then
+                sudo "$0" "$@"
+        fi
+        sudo apt install valgrind -y
+else
+        echo "  valgrind installed - \e[96myes\e[0m"
 fi
 # #####################################
 
@@ -73,6 +100,7 @@ chmod +x $fullPathToDeploy/VMPROTECT.py
 echo "STAGE 3 - test environment"
 make -C $fullPathToDeploy/VMCore buildtests
 make -C $fullPathToDeploy/VMCore runtests
+echo "\n\n"
 make -C $fullPathToDeploy/VMCore clean
 make -C $fullPathToDeploy/VMCore build
 # #####################################

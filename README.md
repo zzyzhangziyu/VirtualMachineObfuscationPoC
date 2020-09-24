@@ -6,7 +6,7 @@
 <a href="https://github.com/eaglx/VMPROTECT/network/members"><img src="https://img.shields.io/github/forks/eaglx/VMPROTECT" alt="Forks Badge"/></a>
 <a href="https://github.com/eaglx/VMPROTECT/blob/master/LICENSE"><img src="https://img.shields.io/github/license/eaglx/VMPROTECT?color=2b9348" alt="License Badge"/></a>
 [![GitHub release](https://img.shields.io/github/release/eaglx/VMPROTECT)](https://GitHub.com/eaglx/VMPROTECT/releases/)
-![Progress](https://progress-bar.dev/62/?title=progress-v0.2)
+![Progress](https://progress-bar.dev/64/?title=progress-v0.2)
 
 A virtual machine simulates a CPU along with a few other hardware components, allowing it to perform arithmetic, read and write to memory and interact with I/O devices. It can understand a machine language which you can use to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random).
 
@@ -56,8 +56,13 @@ typedef uint8_t BYTE;
 typedef uint16_t WORD;
 typedef uint32_t DWORD;
 
-BYTE codeData[51200];
-DWORD stack[256];
+#define CODE_DATA_SIZE 51200
+#define STACK_SIZE 256
+#define INPUT_BUFFER_SIZE 1024
+
+BYTE codeData[CODE_DATA_SIZE];
+DWORD stack[STACK_SIZE];
+BYTE dataBuffer[INPUT_BUFFER_SIZE];
 ```
 
 #### Registers
