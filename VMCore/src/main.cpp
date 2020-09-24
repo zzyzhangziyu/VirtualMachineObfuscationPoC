@@ -1,3 +1,12 @@
+/*
+    VMCore - a virtual machine that simulates a CPU, allows to perform arithmetic operations, 
+    reads and writes to memory and interacts with I/O devices. It can understand a machine
+    language which can be used to program it.
+    
+    Copyright (C) eaglx.
+    version 0.2.200924.1423
+*/
+
 #include "../include/main.hpp"
 #include "../include/vmcpu.hpp"
 #include "../include/protected.hpp"
