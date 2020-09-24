@@ -1,6 +1,6 @@
 #include "../include/vmcpu.hpp"
 
-#define V_DEBUG
+// #define V_DEBUG
 // #include <bitset>
 
 VMCPU::VMCPU()
@@ -182,10 +182,7 @@ void VMCPU::debug()
             case CMD_WRITE_MEM:
                 {
                     int byteToWrite = msgFromDebg.buffer[0] - '0';
-                    for(int i = 0; i < byteToWrite; i++)
-                    {
-                        AS->codeData[REGS->PC++] = msgFromDebg.buffer[i + 1];
-                    }
+                    for(int i = 0; i < byteToWrite; i++) { AS->codeData[REGS->PC++] = msgFromDebg.buffer[i + 1]; }
                 }
                 break;
             default:

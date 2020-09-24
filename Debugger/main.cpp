@@ -47,7 +47,7 @@ ______ ___________ _   _ _____ _____  ___________
 |___/ \____/\____/ \___/ \____/\____/\____/\_| \_|       
                                                          
     )" << std::endl;
-    std::cout << "version 0.1.200924.1138\n" << std::endl;
+    std::cout << "version 0.1.200924.1423\n" << std::endl;
 
     int cliSocket = 0;
     struct sockaddr_in serv_addr;
@@ -259,21 +259,23 @@ SHOWOPTIONS:
             case 10:
                 {
                     std::string toModify = "";
-                    std::cout << "Data to modify: ";
+                    std::cout << "Data to modify (in bit, 1byte==8bit): ";
                     std::cin >> toModify;
-                    if(toModify.length() > MSG_FROM_DBG_SIZE) 
+                    if((toModify.length()/8) > MSG_FROM_DBG_SIZE) 
                     {
                         toModify = toModify.substr(0, MSG_FROM_DBG_SIZE);
                     }
-                    msgFromDebg.buffer[0] = toModify.length() + '0';
+                    msgFromDebg.buffer[0] = (toModify.length()/8) + '0';
+                    msgFromDebg.cmdFlag = CMD_WRITE_MEM;
                     int counter = 1;
-                    for(char const &c: toModify)
+                    for(int k = 0; k < toModify.length(); k+=8) 
                     {
-                        msgFromDebg.buffer[counter++] = c;
-                        serializeMSG(&msgFromDebg, bufferMSGfromDbg);
-                        retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
-                        if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                        std::string binary_num = toModify.substr(k, 8); 
+                        msgFromDebg.buffer[counter++] = std::stol(binary_num, nullptr, 2); 
                     }
+                    serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+                    retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+                    if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
                 }
                 break;
             default:
