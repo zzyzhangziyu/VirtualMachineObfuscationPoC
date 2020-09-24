@@ -299,6 +299,7 @@ class Editor:
     self.buildStage1()
     self.buildStage2()
     self.buildOutputArea.config(state=DISABLED)
+    self.status.set("build finished")
 
   def buildI(self, event = None):
     self.buildOutputArea.config(state=NORMAL)
@@ -315,7 +316,8 @@ class Editor:
     codePart2final = ""
     for i in range(0, len(codePart2str), 2):
       s1,s2 = codePart2str[i:i+2]
-      codePart2final += "\"0x" + s1 + s2 + "\" "
+      codePart2final += "0x" + s1 + s2 + ", "
+    codePart2final = codePart2final[:-2]
     codePart3 = "};\n#endif"
     fullCode = codePart1 + codePart2final + codePart3
     f = open("./VMCore/include/protected.hpp", 'w')
@@ -324,6 +326,7 @@ class Editor:
     time.sleep(5)
     self.buildStage2()
     self.buildOutputArea.config(state=DISABLED)
+    self.status.set("build finished")
   
   def buildStage1(self):
     cmdProcess = subprocess.Popen(['nasm', self.filename], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -332,6 +335,10 @@ class Editor:
     self.buildOutputArea.insert(END, err)
 
   def buildStage2(self):
+    cmdProcess = subprocess.Popen(['make', '-C', './VMCore', 'clean'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = cmdProcess.communicate()
+    self.buildOutputArea.insert(END, out)
+    self.buildOutputArea.insert(END, err)
     cmdProcess = subprocess.Popen(['make', '-C', './VMCore', 'build'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = cmdProcess.communicate()
     self.buildOutputArea.insert(END, out)

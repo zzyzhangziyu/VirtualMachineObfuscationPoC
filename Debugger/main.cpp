@@ -9,7 +9,7 @@ void printOptions()
     std::cout << "Options:\n"
                 << "\t1. Execute a prograom on the VM\n"
                 << "\t2. Step execution\n"
-                << "\t3. Exit and exit debug mode in the VM\n"
+                << "\t3. Exit debugger and exit debug mode in the VM\n"
                 << "\t4. Set a value in a register\n"
                 << "\t5. Set a flag\n"
                 << "\t6. Show the stack\n"

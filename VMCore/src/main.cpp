@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
             
             try{
                 vm->run();
+                return 0;
             } catch(...){
                 return -1;
             }

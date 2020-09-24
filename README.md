@@ -6,7 +6,7 @@
 <a href="https://github.com/eaglx/VMPROTECT/network/members"><img src="https://img.shields.io/github/forks/eaglx/VMPROTECT" alt="Forks Badge"/></a>
 <a href="https://github.com/eaglx/VMPROTECT/blob/master/LICENSE"><img src="https://img.shields.io/github/license/eaglx/VMPROTECT?color=2b9348" alt="License Badge"/></a>
 [![GitHub release](https://img.shields.io/github/release/eaglx/VMPROTECT)](https://GitHub.com/eaglx/VMPROTECT/releases/)
-![Progress](https://progress-bar.dev/70/?title=progress-v0.2)
+![Progress](https://progress-bar.dev/100/?title=progress-v0.2)
 
 A virtual machine that simulates a CPU along with a few other hardware components, allows to perform arithmetic operations, reads and writes to memory and interacts with I/O devices. It can understand a machine language which can be used to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random).
 
@@ -17,6 +17,7 @@ A virtual machine that simulates a CPU along with a few other hardware component
 * [Compiler](#compiler)
 * [Debugger](#debugger)
 * [VMCore](#vmcore)
+  * [Args](#args)
   * [Documentation](#documentation)
     * [Memory](#memory)
     * [Registers](#registers)
@@ -31,18 +32,107 @@ A virtual machine that simulates a CPU along with a few other hardware component
 * make [tested on 4.1]
 
 ## Setup
-todo
+A bash script was created for easier setup of the development environment. At the beginning the script checks and installs the necessary software. But not *tkinter* package, use e.g. this command *sudo apt-get install python3-tk* in Debian-based distributions to install it.
+
+<img src="doc/1.png" height="300">
+
+After setting up the environment, the directory structure looks like in the screenshot below. There are:
+* Debugger - the source code of the debugger,
+* Editor - the source code of the code editor,
+* VMCore - the source code of the virtual machine,
+* vm.inc - the file with definitions of opcodes,
+* VMPROTECT.py - start here :smile:
+
+<img src="doc/2.png" height="150">
 
 ## Editor
-todo
+The editor was written in *Python*. It is a plain text editor with no code syntax highlighting. You can write programs for *VMPROTECT* here. The window consists of a menu, a space for entering text and an output space for building the program. Additionally, the editor status is shown at the bottom.
+
+<img src="doc/3.png" height="300">
+
+There are two options for building a program. The first mode is to compile the program into a separate file and prepare the *VMPROTECT* and *VMPROTECT-DEBUGGER* executables. The second option differs from the previous one in that it merges the compiled code with *VMPROTECT*. *VMPROTECT* can then be executed without parameters.
+
+<img src="doc/4.png" height="300">
+
+Remember to save the source code with the extension because the editor doesn't support compiling without the extension. Which can lead to the unexpected operation of the program. The following files will be created in the folder where the file, with source code, was saved (please do not confuse the *exe* extension with *PE* files for the Windows operating system):
+* compiled program file
+* VMPROTECT.exe
+* VmprotDebugger.exe
+
+<img src="doc/5.png" height="300">
 
 ## Compiler
-todo
+The *nasm* as compiler is used for compilation a code. Remember to include the *vm.inc* file with definitions of opcodes in your written programs. Additionally, at the beginning of the code should be included magic number *0x566d*. An example program is shown below.
+
+```nasm
+%include "vm.inc"   ; Or full path to this file!
+
+start:
+    dw 0x6d56
+    movd r0, 0x5
+    advrd r0, 0x5
+    push r0
+    pxvn
+    ee
+```
 
 ## Debugger
-todo
+When debugging a program, you can use a dedicated debugger for *VMPROTECT*. The debugger has following options:
+1. Execute a prograom on the VM.
+2. Step execution.
+3. Exit debugger and exit debug mode in the *VMPROTECT*.
+4. Set a value in a register.
+5. Set a flag.
+6. Show the stack.
+7. Show the code data.
+8. Show the data buffer.
+9. Show all registers.
+10. Write to the code data.
+
+The debugger connects to the *VMPROTECT* using a TCP socket, default port *9313*. An example of debugging is seen in the screenshot below.
+
+<img src="doc/6.png" height="300">
+
+An example of debugging with the *V_DEBUG* option turned on is seen in the screenshot below.
+
+<img src="doc/7.png" height="300">
+
+In *vmcpu.cpp* change (uncomment *#define V_DEBUG*, see below code sample) to print more details.
+
+```c++
+#include "../include/vmcpu.hpp"
+
+// #define V_DEBUG  <- ****uncomment this to print debug****
+// #include <bitset>
+
+VMCPU::VMCPU()
+{
+```
 
 ## VMCore
+### Args
+The *VMPROTECT* can be start with no args but ther need to be set a code in *protected.hpp*.
+
+```c++
+BYTE ProtectedData[] = { 0xFF }; // <- HERE PASTE A CODE TO EXECUTE BY VMCPU.
+```
+
+Param *-m* set a program mode, that can be:
+* exec - normal execution,
+* debug - debugging mode, you need to run *VMPROTECT-Debugger*.
+
+Param *-p* describe a path to a file with a compiled code to execute.
+
+Example usage of *VMPROTECT* below.
+
+```ascii
+VMPROTECT.exe -m exec -p ./example-SumAndPrint
+
+# OR
+
+VMPROTECT.exe -m debug -p ./example-SumAndPrint
+```
+
 ### Documentation
 The VM will simulate a fictional cpu (32-bit). It has a custom instrucion set compared to x86-64.
 
