@@ -297,6 +297,10 @@ class Editor:
     self.buildOutputArea.delete("1.0",END)
     self.status.set("building separately ...")
     self.buildStage1()
+    codePart = "#ifndef _VM_PROTECTED_D\n#define _VM_PROTECTED_D\n#include \"main.hpp\"\nBYTE ProtectedData[] = { 0xFF };\n#endif"
+    f = open("./VMCore/include/protected.hpp", 'w')
+    f.write(codePart)
+    f.close()
     self.buildStage2()
     self.buildOutputArea.config(state=DISABLED)
     self.status.set("build finished")
