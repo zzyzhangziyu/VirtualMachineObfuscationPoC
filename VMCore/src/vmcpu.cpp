@@ -1,6 +1,6 @@
 #include "../include/vmcpu.hpp"
 
-#define V_DEBUG
+// #define V_DEBUG
 // #include <bitset>
 
 VMCPU::VMCPU()
