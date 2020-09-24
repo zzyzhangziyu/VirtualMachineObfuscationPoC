@@ -47,7 +47,7 @@ ______ ___________ _   _ _____ _____  ___________
 |___/ \____/\____/ \___/ \____/\____/\____/\_| \_|       
                                                          
     )" << std::endl;
-    std::cout << "version 0.1.200924.1052\n" << std::endl;
+    std::cout << "version 0.1.200924.1138\n" << std::endl;
 
     int cliSocket = 0;
     struct sockaddr_in serv_addr;
@@ -207,9 +207,11 @@ SHOWOPTIONS:
                     std::cout << "How many data to print: ";
                     std::cin >> numberDataToPrint;
                     if(numberDataToPrint > STACK_SIZE) numberDataToPrint = STACK_SIZE;
-                    for(DWORD i = DWORD(STACK_SIZE - 1); i >= DWORD(STACK_SIZE - numberDataToPrint); --i)
+                    int sti = STACK_SIZE - 1;
+                    while(sti >= (STACK_SIZE - numberDataToPrint))
                     {
-                        std::cout << i << ": " << std::bitset<32>(msgToDebg.stack[i]) << std::endl;
+                        std::cout << sti << ": " << std::bitset<32>(msgToDebg.stack[sti]) << std::endl;
+                        --sti;
                     }
                     std::cout << "\n";
                     goto SHOWOPTIONS;

@@ -1,6 +1,6 @@
 #include "../include/vmcpu.hpp"
 
-// #define V_DEBUG
+#define V_DEBUG
 // #include <bitset>
 
 VMCPU::VMCPU()
@@ -114,6 +114,7 @@ void VMCPU::debug()
         msgToDebg.PC = REGS->PC;
         msgToDebg.SP = REGS->SP;
         memcpy(msgToDebg.stack, AS->stack, STACK_SIZE);
+        for(int asStI = 0; asStI < STACK_SIZE; asStI++) { msgToDebg.stack[asStI] = AS->stack[asStI]; }
         msgToDebg.ZF = REGS->ZF;
         msgToDebg.CF = REGS->CF;
         memcpy(msgToDebg.codeData, AS->codeData, CODE_DATA_SIZE);

@@ -48,10 +48,9 @@ void serializeMSG(MESSAGE_TO_DEBUGGER *msgPacket, char *dataArray)
     *d1 = msgPacket->PC; ++d1;
     *d1 = msgPacket->SP; ++d1;
     // memcpy(d1, msgPacket->stack, STACK_SIZE);
-    for(DWORD i = 0; i <  DWORD(STACK_SIZE); i++)
+    for(DWORD i = 0; i < STACK_SIZE; i++)
     {
-        *d1 = msgPacket->stack[i];
-        d1 += DWORD(1);
+        *d1 = msgPacket->stack[i]; ++d1;
     }
     // d1 += DWORD(STACK_SIZE);
     char *d2 = (char *) d1;
@@ -71,10 +70,9 @@ void deserializeMSG(MESSAGE_TO_DEBUGGER *msgPacket, char *dataArray)
     msgPacket->PC = *d1; ++d1;
     msgPacket->SP = *d1; ++d1;
     // memcpy(msgPacket->stack, d1, STACK_SIZE);
-    for(DWORD i = 0; i <  DWORD(STACK_SIZE); i++)
+    for(DWORD i = 0; i < STACK_SIZE; i++)
     {
-        msgPacket->stack[i] = *d1;
-        d1 += DWORD(1);
+        msgPacket->stack[i] = *d1; ++d1;
     }
     // d1 += DWORD(STACK_SIZE);
 
