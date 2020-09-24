@@ -223,3 +223,11 @@ db 0xa4
 %macro picn 0
 db 0xa5
 %endmacro
+
+%macro pxv 0
+db 0xa6
+%endmacro
+
+%macro pxvn 0
+db 0xa7
+%endmacro

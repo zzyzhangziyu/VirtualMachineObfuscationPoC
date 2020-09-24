@@ -2,6 +2,7 @@
 #include "../VMCore/include/opcodes.hpp"
 #include "../VMCore/include/vmdebug.hpp"
 #include <arpa/inet.h>
+#include <bitset>
 
 void printOptions()
 {
@@ -46,7 +47,7 @@ ______ ___________ _   _ _____ _____  ___________
 |___/ \____/\____/ \___/ \____/\____/\____/\_| \_|       
                                                          
     )" << std::endl;
-    std::cout << "version 0.1.200924.0001\n" << std::endl;
+    std::cout << "version 0.1.200924.1052\n" << std::endl;
 
     int cliSocket = 0;
     struct sockaddr_in serv_addr;
@@ -89,6 +90,7 @@ ______ ___________ _   _ _____ _____  ___________
             close(cliSocket);
             exit(-1);
         }
+        deserializeMSG(&msgToDebg,bufferMSGtoDbg);
 SHOWOPTIONS:
         printOptions();
         std::cin >> cmdDBG;
@@ -118,7 +120,7 @@ SHOWOPTIONS:
                     int option;
                     DWORD val;
                     int regNr;
-                    std::cout << "Select a register to modify:"
+                    std::cout << "Select a register to modify:\n"
                                 << "\t1. PC\n"
                                 << "\t2. SP\n"
                                 << "\t3. Rx\n";
@@ -164,7 +166,7 @@ SHOWOPTIONS:
             case 5:
                 {
                     int option;
-                    std::cout << "Select a flag to modify:"
+                    std::cout << "Select a flag to modify:\n"
                                 << "\t1. ZF\n"
                                 << "\t2. CF\n";
                     std::cout << "Choice: ";
@@ -205,9 +207,9 @@ SHOWOPTIONS:
                     std::cout << "How many data to print: ";
                     std::cin >> numberDataToPrint;
                     if(numberDataToPrint > STACK_SIZE) numberDataToPrint = STACK_SIZE;
-                    for(int i = 0; i < numberDataToPrint; i++)
+                    for(DWORD i = DWORD(STACK_SIZE - 1); i >= DWORD(STACK_SIZE - numberDataToPrint); --i)
                     {
-                        std::cout << std::hex << msgToDebg.stack[i] << " ";
+                        std::cout << i << ": " << std::bitset<32>(msgToDebg.stack[i]) << std::endl;
                     }
                     std::cout << "\n";
                     goto SHOWOPTIONS;
@@ -221,7 +223,7 @@ SHOWOPTIONS:
                     if(numberDataToPrint > CODE_DATA_SIZE) numberDataToPrint = CODE_DATA_SIZE;
                     for(int i = 0; i < numberDataToPrint; i++)
                     {
-                        std::cout << std::hex << msgToDebg.codeData[i] << " ";
+                        std::cout << std::bitset<8>(msgToDebg.codeData[i]) << std::endl;
                     }
                     std::cout << "\n";
                     goto SHOWOPTIONS;
@@ -235,21 +237,21 @@ SHOWOPTIONS:
                     if(numberDataToPrint > INPUT_BUFFER_SIZE) numberDataToPrint = INPUT_BUFFER_SIZE;
                     for(int i = 0; i < numberDataToPrint; i++)
                     {
-                        std::cout << std::hex << msgToDebg.dataBuffer[i] << " ";
+                        std::cout << std::bitset<8>(msgToDebg.dataBuffer[i]) << std::endl;
                     }
                     std::cout << "\n";
                     goto SHOWOPTIONS;
                 }
                 break;
             case 9:
-                std::cout << "PC: " << std::hex << msgToDebg.PC << std::endl;
-                std::cout << "SP: " << std::hex << msgToDebg.SP << std::endl;
+                std::cout << "PC: " << std::bitset<32>(msgToDebg.PC) << std::endl;
+                std::cout << "SP: " << std::bitset<32>(msgToDebg.SP) << std::endl;
                 for(int i = 0; i < 8; i++) 
                 {
-                    std::cout << "R[" << i << "]: " << msgToDebg.R[i] << std::endl;
+                    std::cout << "R[" << i << "]: " << std::bitset<32>(msgToDebg.R[i]) << std::endl;
                 }
-                std::cout << "ZF: " << std::hex << msgToDebg.ZF << std::endl;
-                std::cout << "CF: " << std::hex << msgToDebg.CF << std::endl;
+                std::cout << "ZF: " << std::bitset<8>(msgToDebg.ZF) << std::endl;
+                std::cout << "CF: " << std::bitset<8>(msgToDebg.CF) << std::endl;
                 goto SHOWOPTIONS;
                 break;
             case 10:

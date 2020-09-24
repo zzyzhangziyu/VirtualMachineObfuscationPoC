@@ -49,5 +49,7 @@
 #define GIC 0xA3
 #define PIC 0xA4
 #define PICN 0xA5
+#define PXV 0xA6
+#define PXVN 0xA7
 
 #endif

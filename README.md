@@ -154,6 +154,8 @@ A2  |  TIB  | Take input and move to the data buffer, the length of the string i
 A3  |  GIC r<sub>src</sub> | Get a specific char from input, that is stored in the data buffer, the value will be stored in R[7], pass the position of char via a some register |
 A4  |  PIC  | Print char from input without new line, the value must be at the top of the stack |
 A5  |  PICN  | Print char from input with new line, the value must be at the top of the stack |
+A6  |  PXV  | Print a value in hex, the value must be at the top of the stack |
+A7  |  PXVN  | Print a value in hex with a new line, the value must be at the top of the stack |
 
 </details>
 

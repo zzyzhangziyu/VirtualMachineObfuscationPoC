@@ -1,6 +1,6 @@
 #include "../include/vmcpu.hpp"
 
-// #define V_DEBUG
+#define V_DEBUG
 // #include <bitset>
 
 VMCPU::VMCPU()
@@ -45,9 +45,19 @@ void VMCPU::vmPrint(BYTE s)
     std::cout << s;
 }
 
+void VMCPU::vmPrintHX(DWORD hx)
+{
+    std::cout << std::hex << hx;
+}
+
 void VMCPU::vmPrintN(BYTE s)
 {
     std::cout << s << std::endl;
+}
+
+void VMCPU::vmPrintHXN(DWORD hx)
+{
+    std::cout << std::hex << hx << std::endl;
 }
 
 void VMCPU::debug()
@@ -865,8 +875,7 @@ int VMCPU::executer(BYTE opcode)
             }
             AS->stack[REGS->SP] = REGS->R[bTmp_0];
             #ifdef V_DEBUG
-                if(bTmp_0 == 1)
-                    std::cout << REGS->R[bTmp_0] << std::endl;
+                std::cout <<"val: " << std::hex << AS->stack[REGS->SP] << std::endl;
             #endif
             break;
             /*
@@ -1056,6 +1065,49 @@ int VMCPU::executer(BYTE opcode)
             }
             bTmp_0 = AS->stack[REGS->SP++];
             vmPrintN(bTmp_0);
+            break;
+        /*
+            PXV - Print a value in hex;
+                the value must be at the top of the stack
+            A6 => PXV
+        */
+        case PXV:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] PXV" << std::endl;
+            #endif
+            if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(DWORD)]){
+                #ifdef _VM_CPU_TEST_
+                    vcpuFlag = VCpuFlag::UNDERFLOW;
+                #endif
+                #ifndef _VM_CPU_TEST_
+                    std::cout << "[ERROR] STACK UNDERFLOW!" << std::endl;
+                #endif
+                goto EXCEPTION;
+            }
+            dTmp_0 = AS->stack[REGS->SP++];
+            vmPrintHX(dTmp_0);
+            break;
+        /*
+            PXVN - Print a value in hex with a new line;
+                the value must be at the top of the stack
+            A7 => PXV
+        */
+        case PXVN:
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] PXVN" << std::endl;
+                // std::cout << std::bitset<32>(AS->stack[REGS->SP]) << std::endl;
+            #endif
+            if(&AS->stack[REGS->SP] == &AS->stack[sizeof(AS->stack)/sizeof(DWORD)]){
+                #ifdef _VM_CPU_TEST_
+                    vcpuFlag = VCpuFlag::UNDERFLOW;
+                #endif
+                #ifndef _VM_CPU_TEST_
+                    std::cout << "[ERROR] STACK UNDERFLOW!" << std::endl;
+                #endif
+                goto EXCEPTION;
+            }
+            dTmp_0 = AS->stack[REGS->SP++];
+            vmPrintHXN(dTmp_0);
             break;
         /*  
             ********************************

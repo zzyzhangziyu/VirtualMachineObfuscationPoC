@@ -1,4 +1,4 @@
-#include "../VMCore/include//nethelpers.hpp"
+#include "../VMCore/include/nethelpers.hpp"
 
 int sendData(int socket, void *buffer, size_t length)
 {
@@ -44,15 +44,19 @@ void serializeMSG(MESSAGE_TO_DEBUGGER *msgPacket, char *dataArray)
 {
     DWORD *d1 = (DWORD *) dataArray;
     memcpy(d1, msgPacket->R, 8);
-    d1 += 8;
-    *d1 = msgPacket->PC; d1++;
-    *d1 = msgPacket->SP; d1++;
-    memcpy(d1, msgPacket->stack, STACK_SIZE);
-    d1 += STACK_SIZE;
-
+    d1 += DWORD(8);
+    *d1 = msgPacket->PC; ++d1;
+    *d1 = msgPacket->SP; ++d1;
+    // memcpy(d1, msgPacket->stack, STACK_SIZE);
+    for(DWORD i = 0; i <  DWORD(STACK_SIZE); i++)
+    {
+        *d1 = msgPacket->stack[i];
+        d1 += DWORD(1);
+    }
+    // d1 += DWORD(STACK_SIZE);
     char *d2 = (char *) d1;
-    *d2 = msgPacket->ZF; d2++;
-    *d2 = msgPacket->CF; d2++;
+    *d2 = msgPacket->ZF; ++d2;
+    *d2 = msgPacket->CF; ++d2;
     memcpy(d2, msgPacket->codeData, CODE_DATA_SIZE);
     d2 += CODE_DATA_SIZE;
     memcpy(d2, msgPacket->dataBuffer, INPUT_BUFFER_SIZE);
@@ -63,11 +67,16 @@ void deserializeMSG(MESSAGE_TO_DEBUGGER *msgPacket, char *dataArray)
 {
     DWORD *d1 = (DWORD *) dataArray;
     memcpy(msgPacket->R, d1, 8);
-    d1 += 8;
+    d1 += DWORD(8);
     msgPacket->PC = *d1; ++d1;
     msgPacket->SP = *d1; ++d1;
-    memcpy(msgPacket->stack, d1, STACK_SIZE);
-    d1 += STACK_SIZE;
+    // memcpy(msgPacket->stack, d1, STACK_SIZE);
+    for(DWORD i = 0; i <  DWORD(STACK_SIZE); i++)
+    {
+        msgPacket->stack[i] = *d1;
+        d1 += DWORD(1);
+    }
+    // d1 += DWORD(STACK_SIZE);
 
     char *d2 = (char *) d1;
     msgPacket->ZF = *d2; ++d2;

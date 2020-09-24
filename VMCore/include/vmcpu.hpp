@@ -67,7 +67,9 @@ class VMCPU {
     private:
         int executer(BYTE);
         void vmPrint(BYTE s);
+        void vmPrintHX(DWORD);
         void vmPrintN(BYTE s);
+        void vmPrintHXN(DWORD);
         //void vmScan();
 
     public:
