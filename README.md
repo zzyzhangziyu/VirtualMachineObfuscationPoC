@@ -46,15 +46,15 @@ After setting up the environment, the directory structure looks like in the scre
 <img src="doc/2.png" height="150">
 
 ## Editor
-The editor was written in *Python*. It is a plain text editor with no code syntax highlighting. You can write programs for *VMPROTECT* here. The window consists of a menu, a space for entering text and an output space for building the program. Additionally, the editor status is shown at the bottom.
+The editor was written in *Python*. It is a plain text editor with no code syntax highlighting. You can write programs for *VMPROTECT* here. The window consists of a menu, a space for entering text and an output from compiling and building the program. Additionally, the editor status is shown at the bottom.
 
 <img src="doc/3.png" height="300">
 
-There are two options for building a program. The first mode is to compile the program into a separate file and prepare the *VMPROTECT* and *VMPROTECT-DEBUGGER* executables. The second option differs from the previous one in that it merges the compiled code with *VMPROTECT*. *VMPROTECT* can then be executed without parameters.
+There are two options for building a program. The first mode is to compile the program into a separate file and prepare the *VMPROTECT* and *VMPROTECT-DEBUGGER* executables. The second option differs from the previous one in that it merges the compiled code with *VMPROTECT*. Then *VMPROTECT* can be executed without passing arguments.
 
 <img src="doc/4.png" height="300">
 
-Remember to save the source code with the extension because the editor doesn't support compiling without the extension. Which can lead to the unexpected operation of the program. The following files will be created in the folder where the file, with source code, was saved (please do not confuse the *exe* extension with *PE* files for the Windows operating system):
+Remember to save the source code with the extension (e.g. *asm*) because the editor doesn't support compiling without the extension. Which can lead to the unexpected operation of the editor program. The following files will be created in the directory where the file, with source code, was saved (please do not confuse the *exe* extension with *PE* files for the Windows operating system):
 * compiled program file
 * VMPROTECT.exe
 * VmprotDebugger.exe
@@ -62,7 +62,7 @@ Remember to save the source code with the extension because the editor doesn't s
 <img src="doc/5.png" height="300">
 
 ## Compiler
-The *nasm* as compiler is used for compilation a code. Remember to include the *vm.inc* file with definitions of opcodes in your written programs. Additionally, at the beginning of the code should be included magic number *0x566d*. An example program is shown below.
+The *nasm* as compiler is used for compilation a code. Remember to include the *vm.inc* file with definitions of opcodes in your programs. Additionally, at the beginning of the code should be included magic number *0x566d*. An example program for virtual machine below.
 
 ```nasm
 %include "vm.inc"   ; Or full path to this file!
@@ -77,8 +77,8 @@ start:
 ```
 
 ## Debugger
-When debugging a program, you can use a dedicated debugger for *VMPROTECT*. The debugger has following options:
-1. Execute a prograom on the VM.
+When debugging a program you can use a dedicated debugger for *VMPROTECT*. The debugger has following options:
+1. Execute a program on the VM.
 2. Step execution.
 3. Exit debugger and exit debug mode in the *VMPROTECT*.
 4. Set a value in a register.
@@ -111,13 +111,13 @@ VMCPU::VMCPU()
 
 ## VMCore
 ### Args
-The *VMPROTECT* can be start with no args but ther need to be set a code in *protected.hpp*.
+The *VMPROTECT* can be start with no arguments but there need to be set a code to execute in *protected.hpp*.
 
 ```c++
 BYTE ProtectedData[] = { 0xFF }; // <- HERE PASTE A CODE TO EXECUTE BY VMCPU.
 ```
 
-Param *-m* set a program mode, that can be:
+Param *-m* set a program mode. Possible program execution modes:
 * exec - normal execution,
 * debug - debugging mode, you need to run *VMPROTECT-Debugger*.
 
