@@ -110,7 +110,7 @@ void VMCPU::debug()
     int retValFromFunc;
     while(debugLoop)
     {
-        memcpy(msgToDebg.R, REGS->R, 8);
+        memcpy(msgToDebg.R, REGS->R, 32);
         msgToDebg.PC = REGS->PC;
         msgToDebg.SP = REGS->SP;
         memcpy(msgToDebg.stack, AS->stack, STACK_SIZE);

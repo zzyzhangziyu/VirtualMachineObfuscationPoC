@@ -160,6 +160,7 @@ SHOWOPTIONS:
                             break;
                         default:
                             std::cout << "Unkonown command!\n";
+                            goto SHOWOPTIONS;
                     }
                 }
                 break;
@@ -198,6 +199,7 @@ SHOWOPTIONS:
                             break;
                         default:
                             std::cout << "Unkonown command!\n";
+                            goto SHOWOPTIONS;
                     }
                 }
                 break;
@@ -280,6 +282,7 @@ SHOWOPTIONS:
                 break;
             default:
                 std::cout << "Unkonown command!\n";
+                goto SHOWOPTIONS;
         }
     }
 
