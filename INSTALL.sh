@@ -30,7 +30,7 @@ echo "STAGE 1 - check if required programs are installed"
 echo "*****************************"
 if ! [ -x "$(command -v python3)" ];
 then
-        echo -e "  \e[1;31mWARNING: python3 could not be found\e[0m"
+        echo -e "  \e[1;33mWARNING: python3 could not be found\e[0m"
         if [ $EUID != 0 ]; then
                 sudo "$0" "$@"
         fi
@@ -42,7 +42,7 @@ fi
 if python3 -c 'import pkgutil; exit(not pkgutil.find_loader("tkinter"))'; then
         echo -e '  tkinter is installed - \e[96myes\e[0m'
 else
-        echo -e '  \e[1;31mWARNING: tkinter could not be found\e[0m'
+        echo -e '  \e[1;33mWARNING: tkinter could not be found\e[0m'
         if [ $EUID != 0 ]; then
                 sudo "$0" "$@"
         fi 
@@ -51,7 +51,7 @@ fi
 
 if ! [ -x "$(command -v make)" ];
 then
-        echo -e "  \e[1;31mWARNING: make could not be found\e[0m"
+        echo -e "  \e[1;33mWARNING: make could not be found\e[0m"
         if [ $EUID != 0 ]; then
                 sudo "$0" "$@"
         fi
@@ -62,7 +62,7 @@ fi
 
 if ! [ -x "$(command -v g++)" ];
 then
-        echo -e "  \e[1;31mWARNING: g++ could not be found\e[0m"
+        echo -e "  \e[1;33mWARNING: g++ could not be found\e[0m"
         if [ $EUID != 0 ]; then
                 sudo "$0" "$@"
         fi
