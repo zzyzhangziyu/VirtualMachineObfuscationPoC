@@ -32,7 +32,7 @@ A virtual machine that simulates a CPU along with a few other hardware component
 * make [tested on 4.1]
 
 ## Setup
-A bash script was created for easier setup of the development environment. At the beginning the script checks and installs the necessary software. But not *tkinter* package, use e.g. this command *sudo apt-get install python3-tk* in Debian-based distributions to install it.
+A bash script was created for easier setup of the development environment. At the beginning the script checks and installs the necessary software. Next, copy files and run some unit tests. The bash script is compatible with Debian-based distributions and *Advanced Package Tool*, which handle the installation and removal of software.
 
 <img src="doc/1.png" height="300">
 

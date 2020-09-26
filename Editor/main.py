@@ -327,7 +327,7 @@ class Editor:
     f = open("./VMCore/include/protected.hpp", 'w')
     f.write(fullCode)
     f.close()
-    time.sleep(5)
+    time.sleep(2)
     self.buildStage2()
     self.buildOutputArea.config(state=DISABLED)
     self.status.set("build finished")
