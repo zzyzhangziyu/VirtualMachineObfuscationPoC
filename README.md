@@ -90,7 +90,7 @@ When debugging a program you can use a dedicated debugger for *VMPROTECT*. The d
 9. Show all registers.
 10. Write to the code data.
 
-The debugger connects to the *VMPROTECT* using a TCP socket, default port *9313*. An example of debugging is seen in the screenshot below.
+In case of option *10*, the overwritten data will start from where the *PC* register points. The debugger connects to the *VMPROTECT* using a TCP socket, default port *9313*. An example of debugging is seen in the screenshot below.
 
 <img src="doc/6.png" height="300">
 

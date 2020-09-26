@@ -4,7 +4,7 @@
     language which can be used to program it.
     
     Copyright (C) eaglx.
-    version 0.2.200926.1401
+    version 0.2.200926.1921
 */
 
 #include "../include/main.hpp"
@@ -27,7 +27,7 @@ void show_usage()
 int main(int argc, char *argv[])
 {
 #ifdef _LINUX_SEC_ENV
-    int offset = 0;
+    int offset = 10;
     if (ptrace(PTRACE_TRACEME, 0, 1, 0) == 0) offset = 66;
     if (ptrace(PTRACE_TRACEME, 0, 1, 0) == -1) offset *= 23;
     if (offset != 66 * 23) 
