@@ -18,6 +18,7 @@ A virtual machine that simulates a CPU along with a few other hardware component
 * [Debugger](#debugger)
 * [VMCore](#vmcore)
   * [Args](#args)
+  * [Security](#security)
   * [Documentation](#documentation)
     * [Memory](#memory)
     * [Registers](#registers)
@@ -131,6 +132,16 @@ VMPROTECT.exe -m exec -p ./example-SumAndPrint
 # OR
 
 VMPROTECT.exe -m debug -p ./example-SumAndPrint
+```
+
+### Security
+The *VMCore* use (only in *Linux*) the ptrace syscall in order to implement a resistent anti debugging techniques. Patching the code wit *NOP's* will not work out of the box either, because the offset calculation must not be destroyed in order to guarantee normal execution.
+
+```c++
+offset = value;
+if (ptrace(PTRACE_TRACEME, 0, 1, 0) == 0) offset = value;
+if (ptrace(PTRACE_TRACEME, 0, 1, 0) == -1) offset *= value;
+if (offset != value) return 0;
 ```
 
 ### Documentation
