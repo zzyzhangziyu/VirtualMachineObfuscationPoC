@@ -4,9 +4,9 @@
     language which can be used to program it.
     
     Copyright (C) eaglx.
-    version 0.2.200926.1921
+    version 0.2.200930.1521
 */
-
+#include "../include/global.hpp"
 #include "../include/main.hpp"
 #include "../include/vmcpu.hpp"
 #include "../include/protected.hpp"
@@ -19,14 +19,15 @@ void show_usage()
                 << "\t-p filename\t\tPath to a file to execute"
                 << std::endl;
 }
-#define _LINUX_SEC_ENV
-#ifdef _LINUX_SEC_ENV
+
+#ifdef _LINUX_DEV_ENVIRONMENT
     #include <unistd.h>
     #include <sys/ptrace.h>
 #endif
+
 int main(int argc, char *argv[])
 {
-#ifdef _LINUX_SEC_ENV
+#ifdef _LINUX_DEV_ENVIRONMENT
     int offset = 10;
     if (ptrace(PTRACE_TRACEME, 0, 1, 0) == 0) offset = 66;
     if (ptrace(PTRACE_TRACEME, 0, 1, 0) == -1) offset *= 23;
