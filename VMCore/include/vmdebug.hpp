@@ -11,10 +11,8 @@ Not support development on Windows right now!
 
 #ifndef VMTESTS
     #ifdef _LINUX_DEV_ENVIRONMENT
-
-    #define PORT 9313
-    #include "./nethelpers.hpp"
-
+        #define PORT 9313
+        #include "./nethelpers.hpp"
     #endif
 #endif
 
