@@ -126,4 +126,4 @@ data1:
 data2:
     db "FAILED", 0
 data3:
-    db "PASSVWORD: ", 0x3, 0
+    db "PASSWORD: ", 0x3, 0
