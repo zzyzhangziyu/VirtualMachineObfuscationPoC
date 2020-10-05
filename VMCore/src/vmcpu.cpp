@@ -272,7 +272,7 @@ int VMCPU::executer(VBYTE opcode)
             else goto EXCEPTION;
             break;
         /* 
-            MOVMB - move and extend VBYTE from memory to register 
+            MOVMB - move and extend byte from memory to register 
             02 03 04 01 => MOVMB R3, 0104
         */
         case MOVMB:
@@ -288,7 +288,7 @@ int VMCPU::executer(VBYTE opcode)
             *(VBYTE*) &REGS->R[bTmp_0] = AS->codeData[wTmp_0];
             break;  
         /* 
-            MOVMW - move and extend VWORD from memory to register 
+            MOVMW - move and extend word from memory to register 
             03 03 04 01 => MOVMW R3, 0104
         */
         case MOVMW:
@@ -303,7 +303,7 @@ int VMCPU::executer(VBYTE opcode)
             *(VWORD*) &REGS->R[bTmp_0] = *(VWORD*) &AS->codeData[wTmp_0];
             break;  
         /* 
-            MOVB - move and extend VBYTE to register 
+            MOVB - move and extend byte to register 
             04 02 43 => MOVB R2, 43
         */
         case MOVB:
@@ -316,7 +316,7 @@ int VMCPU::executer(VBYTE opcode)
             *(VBYTE *) &REGS->R[bTmp_0] = AS->codeData[REGS->PC++];
             break; 
         /* 
-            MOVW - move and extend VWORD to register 
+            MOVW - move and extend word to register 
             05 01 15 28 => MOVW R1, 2815
         */
         case MOVW:
@@ -329,7 +329,7 @@ int VMCPU::executer(VBYTE opcode)
             REGS->PC += 2;
             break; 
         /* 
-            MOVBM - move VBYTE from register to memory location 
+            MOVBM - move byte from register to memory location 
             06 04 43 13 => MOVBM 1343, R4
         */
         case MOVBM:
@@ -344,7 +344,7 @@ int VMCPU::executer(VBYTE opcode)
             AS->codeData[wTmp_0] = *(VBYTE*) &REGS->R[bTmp_0];
             break;  
         /* 
-            MOVWM - move VWORD from register to memory location 
+            MOVWM - move word from register to memory location 
             07 04 43 13 => MOVWM 1343, R4
         */
         case MOVWM:
@@ -359,7 +359,7 @@ int VMCPU::executer(VBYTE opcode)
             *(VWORD*) &AS->codeData[wTmp_0] = REGS->R[bTmp_0];
             break;
         /* 
-            MOVMRB - move and extend VBYTE from memory to register
+            MOVMRB - move and extend byte from memory to register
                     get addr from register
             08 02 01 => MOVMRB R2, R1
         */
@@ -376,7 +376,7 @@ int VMCPU::executer(VBYTE opcode)
             *(VBYTE*) &REGS->R[bTmp_0] = AS->codeData[REGS->R[bTmp_1]];
             break;
         /* 
-            MOVMRW - move and extend VWORD from memory to register
+            MOVMRW - move and extend word from memory to register
                     get addr from register
             09 02 01 => MOVMRW R2, R1
         */
@@ -392,7 +392,7 @@ int VMCPU::executer(VBYTE opcode)
             *(VWORD*) REGS->R[bTmp_0] = *(VWORD*) &AS->codeData[REGS->R[bTmp_1]];
             break;
         /* 
-            MOVMD - move double VWORD from memory to register 
+            MOVMD - move double word from memory to register 
             0A 03 04 01 => MOVMW R3, 0104
         */
         case MOVMD:
@@ -420,7 +420,7 @@ int VMCPU::executer(VBYTE opcode)
             REGS->PC += 4;
             break;  
         /* 
-            MOVDM - move double VWORD from register to memory location 
+            MOVDM - move double word from register to memory location 
             0C 04 43 13 => MOVWM 1343, R4
         */
         case MOVDM:
@@ -435,7 +435,7 @@ int VMCPU::executer(VBYTE opcode)
             *(VDWORD*) &AS->codeData[wTmp_0] = REGS->R[bTmp_0];
             break;
         /* 
-            MOVMRD - move double VWORD from memory to register
+            MOVMRD - move double word from memory to register
                     get addr from register
             0D 02 01 => MOVMRW R2, R1
         */
@@ -550,7 +550,7 @@ int VMCPU::executer(VBYTE opcode)
             ********************************
         */
         /*
-            ADVR - Add VWORD value to register
+            ADVR - Add word value to register
             30 02 10 00 => ADVR R2, 10
         */
         case ADVR:
@@ -591,7 +591,7 @@ int VMCPU::executer(VBYTE opcode)
             else REGS->CF = 0;
             break;
         /*
-            ADRRL - Add two registers (low VBYTE)
+            ADRRL - Add two registers (low byte)
                     and save result in first
             32 02 01 => ADRR R2, R1
         */
@@ -613,7 +613,7 @@ int VMCPU::executer(VBYTE opcode)
             else REGS->CF = 0;
             break;
         /*
-            SUBVR - Substract VWORD value from register
+            SUBVR - Substract word value from register
             33 02 10 00 => SUBVR R2, 10
         */
         case SUBVR:
@@ -654,7 +654,7 @@ int VMCPU::executer(VBYTE opcode)
             else REGS->CF = 0;
             break;
         /*
-            SUBRRL - Substract two registers (low VBYTE)
+            SUBRRL - Substract two registers (low byte)
                     and save result in first
             35 02 01 => ADRR R2, R1
         */
@@ -697,7 +697,7 @@ int VMCPU::executer(VBYTE opcode)
             REGS->CF = 0;
             break;
         /*
-            XORL - Xor two registers (lower VBYTEs)
+            XORL - Xor two registers (lower bytes)
                 and save result in first
             37 02 01 => XOR R2, R1
         */
@@ -731,7 +731,7 @@ int VMCPU::executer(VBYTE opcode)
             REGS->R[bTmp_0] = ~ REGS->R[bTmp_0];
             break;
         /*
-            NOTB - Bitwise not on value in a register (lower VBYTEs)
+            NOTB - Bitwise not on value in a register (lower bytes)
                 and save result in this register
             39 02 => NOT R2
         */
@@ -744,7 +744,7 @@ int VMCPU::executer(VBYTE opcode)
             *(VBYTE *) &REGS->R[bTmp_0] = ~ (*(VBYTE *) &REGS->R[bTmp_0]);
             break;
         /*
-            ADVRD - Add double VWORD value to register
+            ADVRD - Add double word value to register
             3A 02 10 00 00 00 => ADVR R2, 10
         */
         case ADVRD:
@@ -763,7 +763,7 @@ int VMCPU::executer(VBYTE opcode)
             REGS->R[bTmp_0] = dTmp_1;
             break;
             /*
-            SUBVRD - Substract double VWORD value from register
+            SUBVRD - Substract double word value from register
             3B 02 10 00 00 00 => SUBVR R2, 10
         */
         case SUBVRD:
@@ -837,7 +837,7 @@ int VMCPU::executer(VBYTE opcode)
             else REGS->CF = 0;
             break;
         /*
-            CMPL - compare two registers (lower VBYTE)
+            CMPL - compare two registers (lower byte)
             51 02 01 => CMP R2, R1
         */
         case CMPL:
