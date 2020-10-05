@@ -1,8 +1,7 @@
 #include "main.hpp"
-
+#ifdef _LINUX_DEV_ENVIRONMENT
 int setLinuxConnection()
 {
-#ifdef _LINUX_DEV_ENVIRONMENT
     int cliSocket = 0;
     struct sockaddr_in serv_addr;
 
@@ -28,6 +27,5 @@ int setLinuxConnection()
     }
 
    return cliSocket;
-#endif
-    return -1;
 }
+#endif
