@@ -67,12 +67,54 @@ void VMCPU::vmPrintHXN(VDWORD hx)
 void VMCPU::debug()
 {
 #ifndef VMTESTS
+    bool debugLoop = true;
+    
     #ifdef _WIN32_DEV_ENVIRONMENT
-    // TODO
-    #else _LINUX_DEV_ENVIRONMENT
-        bool debugLoop = true;
+        //Initialize Winsock
+        WSADATA wsaData;
+        int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+        if (iResult != NO_ERROR)
+        {
+            std::cout << "[ERROR " << iResult << "] WSAStartup failed" << std::endl;
+            exit(iResult);;
+        }
+        //Create a SOCKET for listening for incoming connections request
+        SOCKET serverSocket, debuggerSocket;
+        serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        if (serverSocket == INVALID_SOCKET)
+        {
+            std::cout << "[ERROR " << WSAGetLastError() << "] Socket failed" << std::endl;
+            WSACleanup();
+            exit(WSAGetLastError());
+        }
 
-        int serverSocket, debuggerSocket; 
+        sockaddr_in addrServer;
+        addrServer.sin_family = AF_INET;
+        InetPton(AF_INET, _T("127.0.0.1"), &addrServer.sin_addr.s_addr);
+        addrServer.sin_port = htons(PORT);
+        memset(&(addrServer.sin_zero), '\0', 8);
+
+        //Bind socket
+        if (bind(serverSocket, (SOCKADDR*)&addrServer, sizeof(addrServer)) == SOCKET_ERROR)
+        {
+            std::cout << "[ERROR " << WSAGetLastError() << "] Bind failed" << std::endl;
+            closesocket(serverSocket);
+            WSACleanup();
+            exit(WSAGetLastError());
+        }
+
+        debuggerSocket = accept(serverSocket, NULL, NULL);
+        if (debuggerSocket == INVALID_SOCKET)
+        {
+            std::cout << "[ERROR " << WSAGetLastError() << "] Accept failed" << std::endl;
+            closesocket(serverSocket);
+            WSACleanup();
+            exit(WSAGetLastError());
+        }
+
+        closesocket(serverSocket);
+    #else _LINUX_DEV_ENVIRONMENT
+        int serverSocket, debuggerSocket;
         struct sockaddr_in address;
         int opt = 1; 
         int addrlen = sizeof(address);
@@ -108,6 +150,7 @@ void VMCPU::debug()
             std::cout << "[ERROR 101006] Accept failed in debug\n";
             exit(EXIT_FAILURE);
         }
+    #endif
 
         VBYTE opcode;
         MESSAGE_TO_DEBUGGER msgToDebg;
@@ -132,8 +175,13 @@ void VMCPU::debug()
             if(retValFromFunc == SEND_ERROR)
             {
                 std::cout << "[ERROR 101007] Failed send data in debug\n";
-                close(debuggerSocket);
-                close(serverSocket);
+                #ifdef _WIN32_DEV_ENVIRONMENT
+                    closesocket(debuggerSocket);
+                    WSACleanup();
+                #else _LINUX_DEV_ENVIRONMENT
+                    close(debuggerSocket);
+                    close(serverSocket);
+                #endif
                 debugLoop = false;
                 exit(-101007);
             }
@@ -142,8 +190,13 @@ void VMCPU::debug()
             if(retValFromFunc == RECIVE_ERROR)
             {
                 std::cout << "[ERROR 101008] Failed receive data in debug\n";
-                close(debuggerSocket);
-                close(serverSocket);
+                #ifdef _WIN32_DEV_ENVIRONMENT
+                    closesocket(debuggerSocket);
+                    WSACleanup();
+                #else _LINUX_DEV_ENVIRONMENT
+                    close(debuggerSocket);
+                    close(serverSocket);
+                #endif
                 debugLoop = false;
                 exit(-101008);
             }
@@ -196,6 +249,11 @@ void VMCPU::debug()
                     std::cout << "[ERROR 101009] Unkonown command!\n";
             }
         }
+
+    #ifdef _WIN32_DEV_ENVIRONMENT
+        closesocket(debuggerSocket);
+        WSACleanup();
+    #else _LINUX_DEV_ENVIRONMENT
         close(debuggerSocket);
         close(serverSocket);
     #endif
