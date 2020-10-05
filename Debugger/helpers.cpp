@@ -19,7 +19,7 @@ ______ ___________ _   _ _____ _____  ___________
 |___/ \____/\____/ \___/ \____/\____/\____/\_| \_|       
                                                          
     )" << std::endl;
-    std::cout << "version 0.2.201003.2000\n" << std::endl;
+    std::cout << "version 0.2.201005.2009\n" << std::endl;
 }
 
 void printOptions()
@@ -39,11 +39,15 @@ void printOptions()
     std::cout << "Choice: ";
 }
 
-#ifdef _LINUX_DEV_ENVIRONMENT
-    void errorSend(int cliSocket)
-    {
-        std::cout << "Failed send data in debug\n";
-        close(cliSocket);
-        exit(-1);
-    }
+
+void errorSend(int cliSocket)
+{
+    std::cout << "Failed send data in debug\n";
+#ifdef  _LINUX_DEV_ENVIRONMENT
+    close(cliSocket);
+#else _WIN32_DEV_ENVIRONMENT
+    closesocket(cliSocket);
+    WSACleanup();
 #endif
+    exit(-1);
+}

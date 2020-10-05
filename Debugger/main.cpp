@@ -3,9 +3,13 @@
 int main()
 {
     printIntro();
+    int cliSocket;
 #ifdef _WIN32_DEV_ENVIRONMENT
-    return 0;
+    cliSocket = setWin32Connection();
 #else _LINUX_DEV_ENVIRONMENT
-    return setLinuxConnection();
+    cliSocket = setLinuxConnection();
 #endif
+    if(cliSocket == -1) return -1;
+    else conn(cliSocket);
+    return 0;
 }

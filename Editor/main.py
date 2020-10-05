@@ -298,7 +298,7 @@ class Editor:
     self.buildOutputArea.delete("1.0",END)
     self.status.set("building separately ...")
     self.buildStage1()
-    codePart = "#ifndef _VM_PROTECTED_D\n#define _VM_PROTECTED_D\n#include \"main.hpp\"\nBYTE ProtectedData[] = { 0xFF };\n#endif"
+    codePart = "#ifndef _VM_PROTECTED_D\n#define _VM_PROTECTED_D\n#include \"main.hpp\"\nVBYTE ProtectedData[] = { 0xFF };\n#endif"
     thread = threading.Thread(target = self.buildStage2, args = (codePart,))
     thread.start()
 
@@ -307,13 +307,13 @@ class Editor:
     self.buildOutputArea.delete("1.0",END)
     self.status.set("building integrated ...")
     self.buildStage1()
-    codePart1 = "#ifndef _VM_PROTECTED_D\n#define _VM_PROTECTED_D\n#include \"main.hpp\"\nBYTE ProtectedData[] = { "
+    codePart1 = "#ifndef _VM_PROTECTED_D\n#define _VM_PROTECTED_D\n#include \"main.hpp\"\nVBYTE ProtectedData[] = { "
     codePart2 = ""
     fileNamePart1 = (self.filename.replace(self.filename.split("/")[-1],''))
     fileNamePart2 = (self.filename.split("/")[-1]).split('.')[0]
     with open(fileNamePart1 + fileNamePart2, mode='rb') as file:
       codePart2 = file.read()
-    codePart2str = binascii.hexlify(bytearray(codePart2)).decode("utf-8")
+    codePart2str = binascii.hexlify(VBYTEarray(codePart2)).decode("utf-8")
     codePart2final = ""
     for i in range(0, len(codePart2str), 2):
       s1,s2 = codePart2str[i:i+2]

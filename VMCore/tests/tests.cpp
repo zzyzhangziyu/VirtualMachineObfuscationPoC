@@ -87,7 +87,7 @@ bool VMTest::testVM()
     }
     if(T_AS->codeData[T_REGS->PC] == 0x00) {
         for(int i = 0; i < 6; i++){
-            if(T_REGS->R[i] != (DWORD) 0) {
+            if(T_REGS->R[i] != (VDWORD) 0) {
                 bTestPass = false;
                 goto FINISH_TESTS;
             }
@@ -105,7 +105,7 @@ bool VMTest::testVM()
     }
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
-    T_REGS->PC = (DWORD) 0;
+    T_REGS->PC = (VDWORD) 0;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
         /* TEST 2
@@ -113,8 +113,8 @@ bool VMTest::testVM()
         */
     /* ************************* */
     ++currentTestNumber;
-    T_REGS->R[1] = (DWORD) 5;
-    T_REGS->R[2] = (DWORD) 1;
+    T_REGS->R[1] = (VDWORD) 5;
+    T_REGS->R[2] = (VDWORD) 1;
     T_AS->codeData[0] = MOV;
     T_AS->codeData[1] = 0x01; // R1
     T_AS->codeData[2] = 0x02; // R2
@@ -125,8 +125,8 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    if(T_REGS->R[2] == (DWORD) 1) {
-        if(T_REGS->R[1] != (DWORD) 1) {
+    if(T_REGS->R[2] == (VDWORD) 1) {
+        if(T_REGS->R[1] != (VDWORD) 1) {
             bTestPass = false;
             goto FINISH_TESTS;
         }
@@ -135,21 +135,21 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    T_REGS->R[1] = (DWORD) 0;
-    T_REGS->R[2] = (DWORD) 0;
+    T_REGS->R[1] = (VDWORD) 0;
+    T_REGS->R[2] = (VDWORD) 0;
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
     T_AS->codeData[2] = 0x00;
     T_AS->codeData[3] = 0x00;
-    T_REGS->PC = (DWORD) 0;
+    T_REGS->PC = (VDWORD) 0;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
         /* TEST 3
-        desc: check the correctness of data transfer (BYTE and extend to WORD) from memory to a register
+        desc: check the correctness of data transfer (VBYTE and extend to VWORD) from memory to a register
         */
     /* ************************* */
     ++currentTestNumber;
-    T_REGS->R[2] = (DWORD) 6;
+    T_REGS->R[2] = (VDWORD) 6;
     T_AS->codeData[0] = MOVMB;
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0x07;
@@ -162,27 +162,27 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    if(T_REGS->R[2] != (DWORD) 3){
+    if(T_REGS->R[2] != (VDWORD) 3){
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    T_REGS->R[2] = (DWORD) 0;
+    T_REGS->R[2] = (VDWORD) 0;
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
     T_AS->codeData[2] = 0x00;
     T_AS->codeData[3] = 0x00;
     T_AS->codeData[4] = 0x00;
     T_AS->codeData[7] = 0x00;
-    T_REGS->PC = (DWORD) 0;
+    T_REGS->PC = (VDWORD) 0;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
         /* TEST 4
-        desc: check the correctness of data transfer (WORD) from memory to a register
+        desc: check the correctness of data transfer (VWORD) from memory to a register
         */
     /* ************************* */
     ++currentTestNumber;
-    T_REGS->R[2] = (DWORD) 0;
-    T_REGS->R[2] = (WORD) 6;
+    T_REGS->R[2] = (VDWORD) 0;
+    T_REGS->R[2] = (VWORD) 6;
     T_AS->codeData[0] = MOVMW;
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0x07;
@@ -196,11 +196,11 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    if(T_REGS->R[2] != (WORD) 0x0403){
+    if(T_REGS->R[2] != (VWORD) 0x0403){
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    T_REGS->R[2] = (DWORD) 0;
+    T_REGS->R[2] = (VDWORD) 0;
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
     T_AS->codeData[2] = 0x00;
@@ -208,15 +208,15 @@ bool VMTest::testVM()
     T_AS->codeData[4] = 0x00;
     T_AS->codeData[7] = 0x00;
     T_AS->codeData[8] = 0x00;
-    T_REGS->PC = (DWORD) 0;
+    T_REGS->PC = (VDWORD) 0;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
         /* TEST 5
-        desc: check the correctness of data transfer (BYTE) from a register to memory
+        desc: check the correctness of data transfer (VBYTE) from a register to memory
         */
     /* ************************* */
     ++currentTestNumber;
-    T_REGS->R[2] = (DWORD) 6;
+    T_REGS->R[2] = (VDWORD) 6;
     T_AS->codeData[0] = MOVBM;
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0x07;
@@ -229,7 +229,7 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    if(T_REGS->R[2] == (DWORD) 6) {
+    if(T_REGS->R[2] == (VDWORD) 6) {
         if(T_AS->codeData[7] == 0x06) {
             if(T_AS->codeData[8] != 0x00) {
                 bTestPass = false;
@@ -245,22 +245,22 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    T_REGS->R[2] = (DWORD) 0;
+    T_REGS->R[2] = (VDWORD) 0;
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
     T_AS->codeData[2] = 0x00;
     T_AS->codeData[3] = 0x00;
     T_AS->codeData[4] = 0x00;
     T_AS->codeData[7] = 0x00;
-    T_REGS->PC = (DWORD) 0;
+    T_REGS->PC = (VDWORD) 0;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
         /* TEST 6
-        desc: check the correctness of data transfer (WORD) from a register to memory
+        desc: check the correctness of data transfer (VWORD) from a register to memory
         */
     /* ************************* */
     ++currentTestNumber;
-    T_REGS->R[2] = (DWORD) 6;
+    T_REGS->R[2] = (VDWORD) 6;
     T_AS->codeData[0] = MOVWM;
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = 0x07;
@@ -274,7 +274,7 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    if(T_REGS->R[2] == (DWORD) 6) {
+    if(T_REGS->R[2] == (VDWORD) 6) {
         if(T_AS->codeData[7] == 0x06) {
             if(T_AS->codeData[8] != 0x00) {
                 bTestPass = false;
@@ -290,7 +290,7 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    T_REGS->R[2] = (DWORD) 0;
+    T_REGS->R[2] = (VDWORD) 0;
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
     T_AS->codeData[2] = 0x00;
@@ -298,7 +298,7 @@ bool VMTest::testVM()
     T_AS->codeData[4] = 0x00;
     T_AS->codeData[7] = 0x00;
     T_AS->codeData[8] = 0x00;
-    T_REGS->PC = (DWORD) 0;
+    T_REGS->PC = (VDWORD) 0;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
         /* TEST 7
@@ -306,7 +306,7 @@ bool VMTest::testVM()
         */
     /* ************************* */
     ++currentTestNumber;
-    T_REGS->R[2] = (DWORD) 6;
+    T_REGS->R[2] = (VDWORD) 6;
     T_AS->codeData[0] = POP;
     T_AS->codeData[1] = 0x02; // R2
     T_AS->codeData[2] = EE;
@@ -321,16 +321,16 @@ bool VMTest::testVM()
         goto FINISH_TESTS;
     }
     else if(vm->vcpuFlag == VCpuFlag::UNDERFLOW){
-        if(T_REGS->R[2] != (DWORD) 6) {
+        if(T_REGS->R[2] != (VDWORD) 6) {
             bTestPass = false;
             goto FINISH_TESTS;
         }
     }
-    T_REGS->R[2] = (DWORD) 0;
+    T_REGS->R[2] = (VDWORD) 0;
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
     T_AS->codeData[2] = 0x00;
-    T_REGS->PC = (DWORD) 0;
+    T_REGS->PC = (VDWORD) 0;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
         /* TEST 8
@@ -338,7 +338,7 @@ bool VMTest::testVM()
         */
     /* ************************* */
     ++currentTestNumber;
-    T_REGS->R[2] = (DWORD) 6;
+    T_REGS->R[2] = (VDWORD) 6;
     T_REGS->SP = 0;
     T_AS->codeData[0] = PUSH;
     T_AS->codeData[1] = 0x02; // R2
@@ -350,7 +350,7 @@ bool VMTest::testVM()
         goto FINISH_TESTS;
     }
     else if(vm->vcpuFlag == VCpuFlag::OVERFLOW){
-        if(T_REGS->R[2] != (DWORD) 6) {
+        if(T_REGS->R[2] != (VDWORD) 6) {
             bTestPass = false;
             goto FINISH_TESTS;
         }
@@ -359,12 +359,12 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    T_REGS->R[2] = (DWORD) 0;
+    T_REGS->R[2] = (VDWORD) 0;
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
     T_AS->codeData[2] = 0x00;
-    T_REGS->SP = sizeof(T_AS->stack) / sizeof(DWORD);
-    T_REGS->PC = (DWORD) 0;
+    T_REGS->SP = sizeof(T_AS->stack) / sizeof(VDWORD);
+    T_REGS->PC = (VDWORD) 0;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
         /* TEST 8
@@ -372,7 +372,7 @@ bool VMTest::testVM()
         */
     /* ************************* */
     ++currentTestNumber;
-    T_REGS->R[2] = (DWORD) 4;
+    T_REGS->R[2] = (VDWORD) 4;
     T_AS->codeData[0] = SHR;
     T_AS->codeData[1] = 0x02;
     T_AS->codeData[2] = 0x01;
@@ -383,12 +383,12 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    if(T_REGS->R[2] != (DWORD) 2){
+    if(T_REGS->R[2] != (VDWORD) 2){
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    T_REGS->R[2] = (DWORD) 0;
-    T_REGS->PC = (DWORD) 0;
+    T_REGS->R[2] = (VDWORD) 0;
+    T_REGS->PC = (VDWORD) 0;
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
     T_AS->codeData[2] = 0x00;
@@ -400,7 +400,7 @@ bool VMTest::testVM()
         */
     /* ************************* */
     ++currentTestNumber;
-    T_REGS->R[2] = (DWORD) 4;
+    T_REGS->R[2] = (VDWORD) 4;
     T_AS->codeData[0] = SHL;
     T_AS->codeData[1] = 0x02;
     T_AS->codeData[2] = 0x01;
@@ -411,12 +411,12 @@ bool VMTest::testVM()
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    if(T_REGS->R[2] != (DWORD) 8){
+    if(T_REGS->R[2] != (VDWORD) 8){
         bTestPass = false;
         goto FINISH_TESTS;
     }
-    T_REGS->R[2] = (DWORD) 0;
-    T_REGS->PC = (DWORD) 0;
+    T_REGS->R[2] = (VDWORD) 0;
+    T_REGS->PC = (VDWORD) 0;
     T_AS->codeData[0] = 0x00;
     T_AS->codeData[1] = 0x00;
     T_AS->codeData[2] = 0x00;

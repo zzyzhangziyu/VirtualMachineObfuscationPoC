@@ -4,7 +4,7 @@
     language which can be used to program it.
     
     Copyright (C) eaglx.
-    version 0.2.200930.1521
+    version 0.2.201005.2009
 */
 #include "../include/global.hpp"
 #include "../include/main.hpp"
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
         
     }
 
-    BYTE *mc;
+    VBYTE *mc;
     int mcsize = -1;
     try
     {

@@ -11,9 +11,9 @@
     #include "./test.hpp"
 #endif //VMTESTS
 
-typedef uint8_t BYTE;
-typedef uint16_t WORD;
-typedef uint32_t DWORD;
+typedef uint8_t VBYTE;
+typedef uint16_t VWORD;
+typedef uint32_t VDWORD;
 
 #define CODE_DATA_SIZE 51200
 #define STACK_SIZE 256
@@ -23,19 +23,19 @@ typedef uint32_t DWORD;
 
 typedef struct {
     /* Here will be a code to execute and other data - 50KB*/
-    BYTE codeData[CODE_DATA_SIZE];
+    VBYTE codeData[CODE_DATA_SIZE];
 
-    /* Size of one element is DWORD 
+    /* Size of one element is VDWORD 
     in order to be able to push addresses. */
-    DWORD stack[STACK_SIZE];
+    VDWORD stack[STACK_SIZE];
 
     /* Here will be a user input*/
-    BYTE dataBuffer[INPUT_BUFFER_SIZE];
+    VBYTE dataBuffer[INPUT_BUFFER_SIZE];
 } ADDRESS_SPACE, *PADDRESS_SPACE;
 
 typedef struct {
     /* General Purpose Registers R0 -> R7 */
-    DWORD R[8];
+    VDWORD R[8];
     struct {
         /* Zero Flag 
             value 1 - flag is set if the result of the last comparison was zero
@@ -49,9 +49,9 @@ typedef struct {
         unsigned char CF : 1;
     };
     /* Program Counter */
-    DWORD PC;
+    VDWORD PC;
     /* Stack Pointer */
-    DWORD SP;
+    VDWORD SP;
 } REGISTERSS, *PREGISTERSS;
 
 
@@ -65,11 +65,11 @@ class VMCPU {
         PREGISTERSS REGS;
 
     private:
-        int executer(BYTE);
-        void vmPrint(BYTE s);
-        void vmPrintHX(DWORD);
-        void vmPrintN(BYTE s);
-        void vmPrintHXN(DWORD);
+        int executer(VBYTE);
+        void vmPrint(VBYTE s);
+        void vmPrintHX(VDWORD);
+        void vmPrintN(VBYTE s);
+        void vmPrintHXN(VDWORD);
         //void vmScan();
 
     public:
@@ -77,7 +77,7 @@ class VMCPU {
         ~VMCPU();
         void run();
         void debug();
-        bool loadCode(BYTE *, int);
+        bool loadCode(VBYTE *, int);
 
     #ifdef _VM_CPU_TEST_
     public:
