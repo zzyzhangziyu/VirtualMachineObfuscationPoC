@@ -1,8 +1,7 @@
 #include "main.hpp"
-
+#ifdef _WIN32_DEV_ENVIRONMENT
 int setWin32Connection()
 {
-#ifdef _WIN32_DEV_ENVIRONMENT
     //Initialize Winsock
 	WSADATA wsaData;
 	int status = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -37,6 +36,5 @@ int setWin32Connection()
 	}
 
     return cliSocket;
-#endif
-	return -1;
 }
+#endif
