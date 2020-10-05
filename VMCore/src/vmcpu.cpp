@@ -63,134 +63,138 @@ void VMCPU::vmPrintHXN(DWORD hx)
 void VMCPU::debug()
 {
 #ifndef VMTESTS
-    bool debugLoop = true;
+    #ifdef _WIN32_DEV_ENVIRONMENT
+    // TODO
+    #else _LINUX_DEV_ENVIRONMENT
+        bool debugLoop = true;
 
-    int serverSocket, debuggerSocket; 
-    struct sockaddr_in address;
-    int opt = 1; 
-    int addrlen = sizeof(address);
+        int serverSocket, debuggerSocket; 
+        struct sockaddr_in address;
+        int opt = 1; 
+        int addrlen = sizeof(address);
 
-    if((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
-    { 
-        std::cout << "[ERROR 101002] Socket failed in debug\n";
-        exit(EXIT_FAILURE); 
-    }
-
-    if(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) 
-    { 
-        std::cout << "[ERROR 101003] setsockopt in debug\n";
-        exit(EXIT_FAILURE); 
-    }
-
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(PORT);
-
-    if(bind(serverSocket, (struct sockaddr *)&address, sizeof(address))<0) 
-    { 
-        std::cout << "[ERROR 101004] Bind failed in debug\n";
-        exit(EXIT_FAILURE);
-    } 
-    if (listen(serverSocket, 3) < 0) 
-    { 
-        std::cout << "[ERROR 101005] Listen failed in debug\n";
-        exit(EXIT_FAILURE);
-    } 
-    if ((debuggerSocket = accept(serverSocket, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) 
-    { 
-        std::cout << "[ERROR 101006] Accept failed in debug\n";
-        exit(EXIT_FAILURE);
-    }
-
-    BYTE opcode;
-    MESSAGE_TO_DEBUGGER msgToDebg;
-    MESSAGE_FROM_DEBUGGER msgFromDebg;
-    char bufferMSGtoDbg[PACKET_TO_DEBUGGER_SIZE];
-    char bufferMSGfromDbg[PACKET_FROM_DEBUGGER_SIZE];
-    int retValFromFunc;
-    while(debugLoop)
-    {
-        memcpy(msgToDebg.R, REGS->R, 32);
-        msgToDebg.PC = REGS->PC;
-        msgToDebg.SP = REGS->SP;
-        memcpy(msgToDebg.stack, AS->stack, STACK_SIZE);
-        for(int asStI = 0; asStI < STACK_SIZE; asStI++) { msgToDebg.stack[asStI] = AS->stack[asStI]; }
-        msgToDebg.ZF = REGS->ZF;
-        msgToDebg.CF = REGS->CF;
-        memcpy(msgToDebg.codeData, AS->codeData, CODE_DATA_SIZE);
-        memcpy(msgToDebg.dataBuffer, AS->dataBuffer, INPUT_BUFFER_SIZE);
-        serializeMSG(&msgToDebg, bufferMSGtoDbg);
-
-        retValFromFunc = sendData(debuggerSocket, bufferMSGtoDbg, PACKET_TO_DEBUGGER_SIZE);
-        if(retValFromFunc == SEND_ERROR)
-        {
-            std::cout << "[ERROR 101007] Failed send data in debug\n";
-            close(debuggerSocket);
-            close(serverSocket);
-            debugLoop = false;
-            exit(-101007);
+        if((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) == 0) 
+        { 
+            std::cout << "[ERROR 101002] Socket failed in debug\n";
+            exit(EXIT_FAILURE); 
         }
 
-        retValFromFunc = recvData(debuggerSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
-        if(retValFromFunc == RECIVE_ERROR)
-        {
-            std::cout << "[ERROR 101008] Failed receive data in debug\n";
-            close(debuggerSocket);
-            close(serverSocket);
-            debugLoop = false;
-            exit(-101008);
+        if(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) 
+        { 
+            std::cout << "[ERROR 101003] setsockopt in debug\n";
+            exit(EXIT_FAILURE); 
         }
-        deserializeMSG(&msgFromDebg, bufferMSGfromDbg);
 
-        switch(msgFromDebg.cmdFlag)
+        address.sin_family = AF_INET;
+        address.sin_addr.s_addr = INADDR_ANY;
+        address.sin_port = htons(PORT);
+
+        if(bind(serverSocket, (struct sockaddr *)&address, sizeof(address))<0) 
+        { 
+            std::cout << "[ERROR 101004] Bind failed in debug\n";
+            exit(EXIT_FAILURE);
+        } 
+        if (listen(serverSocket, 3) < 0) 
+        { 
+            std::cout << "[ERROR 101005] Listen failed in debug\n";
+            exit(EXIT_FAILURE);
+        } 
+        if ((debuggerSocket = accept(serverSocket, (struct sockaddr *)&address, (socklen_t*)&addrlen))<0) 
+        { 
+            std::cout << "[ERROR 101006] Accept failed in debug\n";
+            exit(EXIT_FAILURE);
+        }
+
+        BYTE opcode;
+        MESSAGE_TO_DEBUGGER msgToDebg;
+        MESSAGE_FROM_DEBUGGER msgFromDebg;
+        char bufferMSGtoDbg[PACKET_TO_DEBUGGER_SIZE];
+        char bufferMSGfromDbg[PACKET_FROM_DEBUGGER_SIZE];
+        int retValFromFunc;
+        while(debugLoop)
         {
-            case CMD_RUN:
-                {
-                    bool exit = false;
-                    while(!exit)
-                    {
-                        opcode = AS->codeData[REGS->PC++];
-                        exit = executer(opcode);
-                    }
-                }
-                break;
-            case CMD_STEP:
-                opcode = AS->codeData[REGS->PC++];
-                executer(opcode);
-                break;
-            case CMD_EXIT:
+            memcpy(msgToDebg.R, REGS->R, 32);
+            msgToDebg.PC = REGS->PC;
+            msgToDebg.SP = REGS->SP;
+            memcpy(msgToDebg.stack, AS->stack, STACK_SIZE);
+            for(int asStI = 0; asStI < STACK_SIZE; asStI++) { msgToDebg.stack[asStI] = AS->stack[asStI]; }
+            msgToDebg.ZF = REGS->ZF;
+            msgToDebg.CF = REGS->CF;
+            memcpy(msgToDebg.codeData, AS->codeData, CODE_DATA_SIZE);
+            memcpy(msgToDebg.dataBuffer, AS->dataBuffer, INPUT_BUFFER_SIZE);
+            serializeMSG(&msgToDebg, bufferMSGtoDbg);
+
+            retValFromFunc = sendData(debuggerSocket, bufferMSGtoDbg, PACKET_TO_DEBUGGER_SIZE);
+            if(retValFromFunc == SEND_ERROR)
+            {
+                std::cout << "[ERROR 101007] Failed send data in debug\n";
+                close(debuggerSocket);
+                close(serverSocket);
                 debugLoop = false;
-                break;
-            case CMD_SET_PC:
-                REGS->PC = *(DWORD*) &msgFromDebg.buffer[0];
-                break;
-            case CMD_SET_SP:
-                REGS->SP = *(DWORD*) &msgFromDebg.buffer[0];
-                break;
-            case CMD_SET_R:
-                {
-                    int regNr = msgFromDebg.buffer[0] - '0';
-                    REGS->R[regNr] = *(DWORD*) &msgFromDebg.buffer[1];
-                }
-                break;
-            case CMD_SET_ZF:
-                if(msgFromDebg.buffer[0] == '0'|| msgFromDebg.buffer[0] == '1') REGS->ZF = msgFromDebg.buffer[0];
-                break;
-            case CMD_SET_CF:
-                if(msgFromDebg.buffer[0] == '0'|| msgFromDebg.buffer[0] == '1') REGS->CF = msgFromDebg.buffer[0];
-                break;
-            case CMD_WRITE_MEM:
-                {
-                    int byteToWrite = msgFromDebg.buffer[0] - '0';
-                    for(int i = 0; i < byteToWrite; i++) { AS->codeData[REGS->PC++] = msgFromDebg.buffer[i + 1]; }
-                }
-                break;
-            default:
-                std::cout << "[ERROR 101009] Unkonown command!\n";
+                exit(-101007);
+            }
+
+            retValFromFunc = recvData(debuggerSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+            if(retValFromFunc == RECIVE_ERROR)
+            {
+                std::cout << "[ERROR 101008] Failed receive data in debug\n";
+                close(debuggerSocket);
+                close(serverSocket);
+                debugLoop = false;
+                exit(-101008);
+            }
+            deserializeMSG(&msgFromDebg, bufferMSGfromDbg);
+
+            switch(msgFromDebg.cmdFlag)
+            {
+                case CMD_RUN:
+                    {
+                        bool exit = false;
+                        while(!exit)
+                        {
+                            opcode = AS->codeData[REGS->PC++];
+                            exit = executer(opcode);
+                        }
+                    }
+                    break;
+                case CMD_STEP:
+                    opcode = AS->codeData[REGS->PC++];
+                    executer(opcode);
+                    break;
+                case CMD_EXIT:
+                    debugLoop = false;
+                    break;
+                case CMD_SET_PC:
+                    REGS->PC = *(DWORD*) &msgFromDebg.buffer[0];
+                    break;
+                case CMD_SET_SP:
+                    REGS->SP = *(DWORD*) &msgFromDebg.buffer[0];
+                    break;
+                case CMD_SET_R:
+                    {
+                        int regNr = msgFromDebg.buffer[0] - '0';
+                        REGS->R[regNr] = *(DWORD*) &msgFromDebg.buffer[1];
+                    }
+                    break;
+                case CMD_SET_ZF:
+                    if(msgFromDebg.buffer[0] == '0'|| msgFromDebg.buffer[0] == '1') REGS->ZF = msgFromDebg.buffer[0];
+                    break;
+                case CMD_SET_CF:
+                    if(msgFromDebg.buffer[0] == '0'|| msgFromDebg.buffer[0] == '1') REGS->CF = msgFromDebg.buffer[0];
+                    break;
+                case CMD_WRITE_MEM:
+                    {
+                        int byteToWrite = msgFromDebg.buffer[0] - '0';
+                        for(int i = 0; i < byteToWrite; i++) { AS->codeData[REGS->PC++] = msgFromDebg.buffer[i + 1]; }
+                    }
+                    break;
+                default:
+                    std::cout << "[ERROR 101009] Unkonown command!\n";
+            }
         }
-    }
-    close(debuggerSocket);
-    close(serverSocket);
+        close(debuggerSocket);
+        close(serverSocket);
+    #endif
 #endif
     return;
 }
