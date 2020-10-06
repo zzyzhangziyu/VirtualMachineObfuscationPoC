@@ -16,6 +16,15 @@
     #include <sys/stat.h>
     #include <unistd.h>
 
+    #include <stdio.h>
+    #include <string.h>
+    #include <stdlib.h>
+
+    // POSIX dependencies
+    #include <dirent.h>
+    #include <sys/stat.h>
+    #include <unistd.h>
+
     #define DIR_CREATED 200000
     #define DIR_EXIST 200001
     #define MKDIR_ERROR 200002
@@ -23,12 +32,12 @@
 
 class SYSBUS {
     private:
-
+        int rmtree(const char *);
     public:
         SYSBUS();
         ~SYSBUS();
         int createDirectory(std::string, int);
-        // int deleteDirectory(std::string);
+        int deleteDirectory(std::string);
         // int moveDirectory(std::string);
         // int copyDirectory(std::string);
 
