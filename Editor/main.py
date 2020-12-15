@@ -318,6 +318,7 @@ class Editor:
     # Binding Ctrl+b+i to build integrated funtion
     self.root.bind("<Control-b><i>",self.buildI)
 
+  # Build a program separately to VMCore
   def buildS(self, event = None):
     self.buildOutputArea.config(state=NORMAL)
     self.buildOutputArea.delete("1.0",END)
@@ -327,6 +328,7 @@ class Editor:
     thread = threading.Thread(target = self.buildStage2, args = (codePart,))
     thread.start()
 
+  # Build a program integrated to VMCore
   def buildI(self, event = None):
     self.buildOutputArea.config(state=NORMAL)
     self.buildOutputArea.delete("1.0",END)
@@ -376,7 +378,8 @@ class Editor:
 
   def buildStage3(self):
     if os.name == 'nt':
-      # cl /EHsc 
+      # TODO:
+      # cl /EHsc or msbuild project.sln/Flags 
       # self.pathToCompiler
       # self.pathToNASM
       pass
