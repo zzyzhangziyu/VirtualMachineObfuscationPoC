@@ -1,17 +1,35 @@
 #include "../../include/drivers/sysbus.hpp"
 
 #ifdef _LINUX_DEV_ENVIRONMENT
-    SYSBUS::SYSBUS()
+    class UNIX: public SYSBUS {
+        public:
+            UNIX();
+            ~UNIX();
+            int createDirectory();
+            int deleteDirectory();
+            int moveDirectory();
+            int copyDirectory();
+            int createFile();
+            int deleteFile();
+            int moveFile();
+            int copyFile();
+
+        private:
+            int rmtree(const char *path);
+
+    };
+
+    UNIX::UNIX()
     {
 
     }
 
-    SYSBUS::~SYSBUS()
+    UNIX::~UNIX()
     {
         
     }
 
-    int SYSBUS::createDirectory(std::string dirName, int dirMode)
+    int UNIX::createDirectory()
     {
         struct stat st = {0};
         int status;
@@ -28,12 +46,12 @@
         }
     }
 
-    int SYSBUS::deleteDirectory(std::string dirName)
+    int UNIX::deleteDirectory()
     {
         return rmtree(dirName.c_str());
     }
 
-    int SYSBUS::rmtree(const char *path)
+    int UNIX::rmtree(const char *path)
     {
         size_t path_len;
         char *full_path;
