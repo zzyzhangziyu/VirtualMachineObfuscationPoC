@@ -5,8 +5,8 @@
         public:
             UNIX();
             ~UNIX();
-            int createDirectory();
-            int deleteDirectory();
+            int createDirectory(std::string, int);
+            int deleteDirectory(std::string);
             int moveDirectory();
             int copyDirectory();
             int createFile();
@@ -29,7 +29,7 @@
         
     }
 
-    int UNIX::createDirectory()
+    int UNIX::createDirectory(std::string dirName, int dirMode)
     {
         struct stat st = {0};
         int status;
@@ -37,7 +37,7 @@
         if (stat(dirName.c_str(), &st) == -1) // checking if the directory exists
         {
             status = mkdir(dirName.c_str(), dirMode);
-            if(status != 0) return MKDIR_ERROR;
+            if(status != 0) return DIR_CREATED_ERROR;
             return DIR_CREATED;
         }
         else 
@@ -46,12 +46,12 @@
         }
     }
 
-    int UNIX::deleteDirectory()
+    int UNIX::deleteDirectory(std::string dirName)
     {
         return rmtree(dirName.c_str());
     }
 
-    int UNIX::rmtree(const char *path)
+    int UNIX::rmtree(const char *path) // TODO!!!!!!!!!!
     {
         size_t path_len;
         char *full_path;
