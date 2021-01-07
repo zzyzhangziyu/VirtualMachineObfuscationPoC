@@ -3,6 +3,6 @@
 
 #include "main.hpp"
 
-BYTE ProtectedData[] = { 0xFF };
+VBYTE ProtectedData[] = { 0xFF };
 
 #endif

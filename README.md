@@ -121,7 +121,7 @@ VMCPU::VMCPU()
 The *VMPROTECT* can be start with no arguments but there need to be set a code to execute in *protected.hpp*.
 
 ```c++
-BYTE ProtectedData[] = { 0xFF }; // <- HERE PASTE A CODE TO EXECUTE BY VMCPU.
+VBYTE ProtectedData[] = { 0xFF }; // <- HERE PASTE A CODE TO EXECUTE BY VMCPU.
 ```
 
 Param *-m* set a program mode. Possible program execution modes:
@@ -159,17 +159,17 @@ The VM has 51,200 memory locations, each of which stores a 8-bit value (it can s
 Also, there is a data buffer which has 1024 memory locations, each of which stores a 1-bit value. This buffer will store user input.
 
 ```c++
-typedef uint8_t BYTE;
-typedef uint16_t WORD;
-typedef uint32_t DWORD;
+typedef uint8_t VBYTE;
+typedef uint16_t VWORD;
+typedef uint32_t VDWORD;
 
 #define CODE_DATA_SIZE 51200
 #define STACK_SIZE 256
 #define INPUT_BUFFER_SIZE 1024
 
-BYTE codeData[CODE_DATA_SIZE];
-DWORD stack[STACK_SIZE];
-BYTE dataBuffer[INPUT_BUFFER_SIZE];
+VBYTE codeData[CODE_DATA_SIZE];
+VDWORD stack[STACK_SIZE];
+VBYTE dataBuffer[INPUT_BUFFER_SIZE];
 ```
 
 #### Drivers
@@ -184,7 +184,7 @@ A register is a slot for storing value on the CPU. The VM has 10 total registers
 
 ```c++
 /* General Purpose Registers R0 -> R7 */
-DWORD R[8];
+VDWORD R[8];
 struct {
     /* Zero Flag 
         value 1 - flag is set if the result of the last comparison was zero
@@ -198,9 +198,9 @@ struct {
     unsigned char CF : 1;
 };
 /* Program Counter */
-DWORD PC;
+VDWORD PC;
 /* Stack Pointer */
-DWORD SP;
+VDWORD SP;
 ```
 
 #### Instructions

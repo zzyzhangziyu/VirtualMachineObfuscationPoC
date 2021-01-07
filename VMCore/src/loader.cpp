@@ -3,10 +3,10 @@
 #include <fstream>
 //#include <bitset>
 
-BYTE* loadProtectedCode(int &mcsize, std::string fileName)
+VBYTE* loadProtectedCode(int &mcsize, std::string fileName)
 {
     int codeSize;
-    BYTE *mc;
+    VBYTE *mc;
     std::ifstream fileBinToRead;
     
     fileBinToRead.open(fileName, std::ios::binary);
@@ -23,15 +23,15 @@ BYTE* loadProtectedCode(int &mcsize, std::string fileName)
             throw 100011;
         }
 
-        WORD highByte = fileBinToRead.get();
-        WORD lowByte = fileBinToRead.get();
+        VWORD highVBYTE = fileBinToRead.get();
+        VWORD lowVBYTE = fileBinToRead.get();
 
-        // std::cout << std::bitset<8>(highByte) << std::endl;
-        // std::cout << std::bitset<8>(lowByte) << std::endl;
-        // std::cout << std::hex << highByte << std::endl;
-        // std::cout << std::hex << lowByte << std::endl;
+        // std::cout << std::bitset<8>(highVBYTE) << std::endl;
+        // std::cout << std::bitset<8>(lowVBYTE) << std::endl;
+        // std::cout << std::hex << highVBYTE << std::endl;
+        // std::cout << std::hex << lowVBYTE << std::endl;
 
-        DWORD magicNumber = (highByte << 8) | lowByte;
+        VDWORD magicNumber = (highVBYTE << 8) | lowVBYTE;
 
         if(magicNumber != MAGIC_NUMBER)
         {
@@ -41,14 +41,14 @@ BYTE* loadProtectedCode(int &mcsize, std::string fileName)
 
         fileBinToRead.seekg(0, fileBinToRead.beg);
 
-        mc = new BYTE[codeSize];
-        char byte;
+        mc = new VBYTE[codeSize];
+        char VBYTE;
         int counter = 0;
 
         //std::cout << "[DEBUG] *************" << std::endl;
-        while(fileBinToRead.get(byte))
+        while(fileBinToRead.get(VBYTE))
         {
-            mc[counter++] = byte;
+            mc[counter++] = VBYTE;
             //std::cout << "\t<READ> : " << static_cast<uint16_t>(mc[counter - 1]) << std::endl;
         }
         //std::cout << "[DEBUG] *************" << std::endl;

@@ -3,14 +3,14 @@
 
 #include <iostream>
 
-typedef uint8_t BYTE;
-typedef uint16_t WORD;
-typedef uint32_t DWORD;
+typedef uint8_t VBYTE;
+typedef uint16_t VWORD;
+typedef uint32_t VDWORD;
 
 #define MAGIC_NUMBER (uint16_t)0x566d
 #define MODE_DEBUG "debug"
 #define MODE_EXEC "exec"
 
-BYTE* loadProtectedCode(int &, std::string);
+VBYTE* loadProtectedCode(int &, std::string);
 
 #endif //_MAIN_HPP
