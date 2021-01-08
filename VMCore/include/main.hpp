@@ -11,6 +11,7 @@ typedef uint32_t VDWORD;
 #define MODE_DEBUG "debug"
 #define MODE_EXEC "exec"
 
-VBYTE* loadProtectedCode(int &, std::string);
+VBYTE* loadProtectedCode(int &, std::string, bool&, int&, int*);
+int checkOpcodeSize(VBYTE);
 
 #endif //_MAIN_HPP

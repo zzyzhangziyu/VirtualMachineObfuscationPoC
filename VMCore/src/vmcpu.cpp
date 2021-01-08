@@ -16,22 +16,28 @@ VMCPU::VMCPU()
 
     REGS->PC = 0;
     REGS->SP = sizeof(AS->stack) / sizeof(VDWORD);
+
+    isVMcpuTurnOff = false;
+    areFramesNeeded = false;
 }
 
 VMCPU::~VMCPU()
 {
     delete AS;
     delete REGS;
+    if(areFramesNeeded) = delete framesSizeArray;
 }
 
 bool VMCPU::loadCode(VBYTE *mcode, int mcsize)
 {
+    memMutex.lock();
     memset(AS->codeData, 0, CODE_DATA_SIZE*sizeof(*(AS->codeData)));
     memset(AS->stack, 0, STACK_SIZE*sizeof(*(AS->stack)));
     memset(AS->dataBuffer, 0, INPUT_BUFFER_SIZE*sizeof(*(AS->dataBuffer)));
     if((unsigned) (mcsize) > (sizeof(AS->codeData) / sizeof(AS->codeData[0]))) 
     {
         std::cout << "[ERROR 101001] TOO BIG A CODE TO EXECUTE!\n";
+        memMutex.unlock();
         return false;
     }
     memcpy(AS->codeData, mcode, mcsize);
@@ -41,6 +47,7 @@ bool VMCPU::loadCode(VBYTE *mcode, int mcsize)
     }
     REGS->CF = 0;
     REGS->ZF = 0;
+    memMutex.unlock();
     return true;
 }
 
@@ -71,8 +78,13 @@ void VMCPU::run()
 
     while(!exit)
     {
-        opcode = AS->codeData[REGS->PC++];
-        exit = executer(opcode);
+        memMutex.lock();
+        {
+            opcode = AS->codeData[REGS->PC++];
+            exit = executer(opcode);
+        }
+        memMutex.unlock();
     }
+    isCpuTurnOff = true;
     return;
 }

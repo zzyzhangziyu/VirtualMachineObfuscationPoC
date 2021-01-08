@@ -5,6 +5,15 @@
 #include <string.h>
 #include <stdint.h>
 
+#ifdef _WIN32_DEV_ENVIRONMENT
+    #include <Windows.h>
+#else _LINUX_DEV_ENVIRONMENT
+    #include <unistd.h>
+#endif
+
+#include <mutex>
+#include <thread>
+
 #include "./opcodes.hpp"
 
 #ifdef VMTESTS
@@ -60,9 +69,19 @@ typedef struct {
 #endif // _VM_CPU_TEST_
 
 class VMCPU {
+    public:
+        bool areFramesNeeded;
+        int countFrames;
+        int *framesSizeArray;
+
     private:
         PADDRESS_SPACE AS;
         PREGISTERSS REGS;
+
+        std::mutex memMutex;
+        bool isVMcpuTurnOff;
+
+        bool areFrames;
 
     private:
         int executer(VBYTE);
@@ -71,6 +90,8 @@ class VMCPU {
         void vmPrintN(VBYTE s);
         void vmPrintHXN(VDWORD);
         //void vmScan();
+
+        void memoryManager();
 
     public:
         VMCPU();
