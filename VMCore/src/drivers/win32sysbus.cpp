@@ -9,15 +9,11 @@
             int deleteDirectory(std::string);
             int moveDirectory(std::string, std::string);
             int copyDirectory(std::string, std::string);
-
-            int createFile(); // TODO!!!!!!!!!!!!
-
             int deleteFile(std::string);
             int moveFile(std::string, std::string);
             int copyFile(std::string, std::string);
 
         private:
-            int rmtree(const char *path);
             bool deleteDir(LPCTSTR);
             bool copyDir(std::wstring, std::wstring);
             std::wstringstringToWString(const std::string&);

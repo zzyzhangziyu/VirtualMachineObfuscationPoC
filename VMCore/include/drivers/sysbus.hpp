@@ -6,6 +6,8 @@
 #include <string>
 #include <fstream>
 
+#include "../../../SharedCode/datatypes.hpp"
+
 #ifdef _WIN32_DEV_ENVIRONMENT
     #include <Windows.h>
     #include <tchar.h>
@@ -41,13 +43,21 @@
 
 class SYSBUS {
     public:
-        virtual int createDirectory() = 0;
-        virtual int deleteDirectory() = 0;
-        
-        virtual int createFile() = 0;
-        virtual int deleteFile() = 0;
-        virtual int moveFile() = 0;
-        virtual int copyFile() = 0;
+        virtual int createDirectory(std::string, int)) = 0;
+        virtual int deleteDirectory(std::string) = 0;
+        virtual int moveDirectory(std::string, std::string) = 0;
+        virtual int copyDirectory(std::string, std::string) = 0;
+        int createFile(std::string fileName, VBYTE *dataToWrite)
+        {
+            int dataSize = sizeof(data);
+            fs.open(fileName.c_str(), std::fstream::out | std::fstream::binary);
+            fs.write((char*)data, dataSize);
+	        fs.close();
+            return 0;
+        }
+        virtual int deleteFile(std::string) = 0;
+        virtual int moveFile(std::string, std::string) = 0;
+        virtual int copyFile(std::string, std::string) = 0;
 };
 
 #endif

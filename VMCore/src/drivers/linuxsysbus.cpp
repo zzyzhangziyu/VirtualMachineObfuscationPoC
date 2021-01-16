@@ -7,12 +7,11 @@
             ~UNIX();
             int createDirectory(std::string, int);
             int deleteDirectory(std::string);
-            int moveDirectory();
-            int copyDirectory();
-            int createFile();
-            int deleteFile();
-            int moveFile();
-            int copyFile();
+            int moveDirectory(std::string, std::string);
+            int copyDirectory(std::string, std::string);
+            int deleteFile(std::string);
+            int moveFile(std::string, std::string);
+            int copyFile(std::string, std::string);
 
         private:
             int rmtree(const char *path);
