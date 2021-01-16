@@ -11,9 +11,7 @@
     #include "./test.hpp"
 #endif //VMTESTS
 
-typedef uint8_t VBYTE;
-typedef uint16_t VWORD;
-typedef uint32_t VDWORD;
+#include "../../SharedCode/datatypes.hpp"
 
 #define CODE_DATA_SIZE 51200
 #define STACK_SIZE 256

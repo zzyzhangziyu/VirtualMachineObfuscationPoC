@@ -2,10 +2,7 @@
 #define _MAIN_HPP
 
 #include <iostream>
-
-typedef uint8_t VBYTE;
-typedef uint16_t VWORD;
-typedef uint32_t VDWORD;
+#include "../../SharedCode/datatypes.hpp"
 
 #define MAGIC_NUMBER (uint16_t)0x566d
 #define MODE_DEBUG "debug"
