@@ -50,6 +50,7 @@ class SYSBUS {
         int createFile(std::string fileName, VBYTE *dataToWrite)
         {
             int dataSize = sizeof(data);
+            std::fstream fs;
             fs.open(fileName.c_str(), std::fstream::out | std::fstream::binary);
             fs.write((char*)data, dataSize);
 	        fs.close();
