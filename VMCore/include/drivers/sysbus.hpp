@@ -16,15 +16,8 @@
     #include <sys/types.h>
     #include <sys/stat.h>
     #include <unistd.h>
-
     #include <stdio.h>
-    #include <string.h>
     #include <stdlib.h>
-
-    // POSIX dependencies
-    #include <dirent.h>
-    #include <sys/stat.h>
-    #include <unistd.h>
 #endif
 
 #define DIR_CREATED 200000
