@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 #include "./opcodes.hpp"
+#include "./advancesecurity.hpp"
 
 #ifdef VMTESTS
     #include "./test.hpp"

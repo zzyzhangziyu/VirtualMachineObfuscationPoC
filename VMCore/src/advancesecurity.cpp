@@ -1,9 +1,6 @@
-#include <iostream>
+#include "../include/advancesecurity.hpp"
 
 #ifdef _LINUX_DEV_ENVIRONMENT
-    #include <unistd.h>
-    #include <sys/ptrace.h>
-
     void checkPtrace()
     {
         int offset = 10;
