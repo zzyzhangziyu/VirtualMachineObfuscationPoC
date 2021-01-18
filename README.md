@@ -26,7 +26,6 @@ A virtual machine that simulates a CPU along with a few other hardware component
     * [Memory](#memory)
     * [Drivers](#drivers)
       * [Sysbus](#sysbus)
-      * [Netbus](#netbus)
     * [Registers](#registers)
     * [Instructions](#instructions)
 * [Disclaimer](#disclaimer)
@@ -176,9 +175,6 @@ VBYTE dataBuffer[INPUT_BUFFER_SIZE];
 #### Sysbus
 todo
 
-#### Netbus
-todo
-
 #### Registers
 A register is a slot for storing value on the CPU. The VM has 10 total registers, each of which is 4 bytes (32 bits). The six of them are general purpose, one has designated role as program counter and another has role as stack pointer. The VM has also two regisers ZF (Zero Flag) and CF (Carry Flag). These two provide information about the most recently executed calculation (allows to check logical conditions such as *AND*).
 
@@ -258,7 +254,6 @@ EE  | EE | End of code and end of the VM's cpu |
 51  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
   | | |
 60  |  SYSBUS id<sub>byte</sub> | todo |
-61  |  NETBUS id<sub>byte</sub> | todo |
   | | |
 90  |  PUSH r<sub>src</sub> | Push value from a register to stack |
 91  |  POP r<sub>dst</sub> | Pop value from stack to a register |

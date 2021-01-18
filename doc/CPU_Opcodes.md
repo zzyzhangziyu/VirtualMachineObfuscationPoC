@@ -45,7 +45,6 @@ EE  | EE | End of code and end of the VM's cpu |
 51  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
   | | |
 60  |  SYSBUS id<sub>byte</sub> | todo |
-61  |  NETBUS id<sub>byte</sub> | todo |
   | | |
 90  |  PUSH r<sub>src</sub> | Push value from a register to stack |
 91  |  POP r<sub>dst</sub> | Pop value from stack to a register |
