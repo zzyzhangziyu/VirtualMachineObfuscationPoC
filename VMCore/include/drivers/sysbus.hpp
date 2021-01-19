@@ -15,9 +15,12 @@
 #else _LINUX_DEV_ENVIRONMENT
     #include <sys/types.h>
     #include <sys/stat.h>
+    #include <fcntl.h>
     #include <unistd.h>
+    #include <errno.h>
     #include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
 #endif
 
 #define DIR_CREATED 200000
@@ -33,6 +36,7 @@
 #define MOVE_FILE 200008
 #define COPY_FILE 200009
 #define OTHER_FILE_ERROR 200010
+#define NO_IMPLEMENTED_ERROR 200110
 
 class SYSBUS {
     public:
