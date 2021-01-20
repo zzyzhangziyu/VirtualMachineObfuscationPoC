@@ -172,8 +172,32 @@ VBYTE dataBuffer[INPUT_BUFFER_SIZE];
 ```
 
 #### Drivers
-#### Sysbus
-todo
+The drivers are designed to expand the *VMPROTECT*'s capabilities.
+
+##### Sysbus
+A sysbus is a driver that allows access to a filesystem. Arguments to functions pass via the stack.
+
+FUNC | CMD | CODE | Windows | Linux | MacOS
+--- | --- | --- | --- | --- | ---
+createDirectory | sysdircr | 1 | YES | YES | NO |
+deleteDirectory | sysdirdel | 2 | YES | YES | NO |
+moveDirectory | sysdirmv | 3 | YES | NO | NO |
+copyDirectory | sysdircp | 4 | YES | NO | NO |
+createFile | sysfilecr | 5 | YES | YES | NO |
+deleteFile | sysfiledel | 6 | YES | YES | NO |
+moveFile | sysfilemv | 7 | YES | YES | NO |
+copyFile | sysfilecp | 8 | YES | YES | NO |
+
+```c++
+int createDirectory(std::string, int));
+int deleteDirectory(std::string);
+int moveDirectory(std::string, std::string);
+int copyDirectory(std::string, std::string);
+int createFile(std::string, uint8_t*, int);
+int deleteFile(std::string);
+int moveFile(std::string, std::string);
+int copyFile(std::string, std::string);
+```
 
 #### Registers
 A register is a slot for storing value on the CPU. The VM has 10 total registers, each of which is 4 bytes (32 bits). The six of them are general purpose, one has designated role as program counter and another has role as stack pointer. The VM has also two regisers ZF (Zero Flag) and CF (Carry Flag). These two provide information about the most recently executed calculation (allows to check logical conditions such as *AND*).
