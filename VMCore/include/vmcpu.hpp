@@ -4,8 +4,10 @@
 #include <iostream>
 #include <string.h>
 #include <stdint.h>
+#include <vector>
 
 #include "./opcodes.hpp"
+#include "./drivers/sysbus.hpp"
 
 #ifdef VMTESTS
     #include "./test.hpp"
@@ -61,9 +63,15 @@ class VMCPU {
     private:
         PADDRESS_SPACE AS;
         PREGISTERSS REGS;
+    #ifdef _WIN32_DEV_ENVIRONMENT
+        WIN32 *sysBus;
+    #else _LINUX_DEV_ENVIRONMENT
+        UNIX *sysBus;
+    #endif
 
     private:
         int executer(VBYTE);
+        void getDataFromCodeData(std::string &, int);
         void vmPrint(VBYTE s);
         void vmPrintHX(VDWORD);
         void vmPrintN(VBYTE s);

@@ -1,23 +1,6 @@
 #include "../../include/drivers/sysbus.hpp"
 
 #ifdef _LINUX_DEV_ENVIRONMENT
-    class UNIX: public SYSBUS {
-        public:
-            UNIX();
-            ~UNIX();
-            int createDirectory(std::string, int);
-            int deleteDirectory(std::string);
-            int moveDirectory(std::string, std::string);
-            int copyDirectory(std::string, std::string);
-            int deleteFile(std::string);
-            int moveFile(std::string, std::string);
-            int copyFile(std::string, std::string);
-
-        private:
-            mode_t getMode(int);
-
-    };
-
     UNIX::UNIX() { }
 
     UNIX::~UNIX() { }

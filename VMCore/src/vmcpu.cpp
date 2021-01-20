@@ -16,12 +16,18 @@ VMCPU::VMCPU()
 
     REGS->PC = 0;
     REGS->SP = sizeof(AS->stack) / sizeof(VDWORD);
+    #ifdef _WIN32_DEV_ENVIRONMENT
+        sysBus = new WIN32();
+    #else _LINUX_DEV_ENVIRONMENT
+        sysBus = new UNIX();
+    #endif
 }
 
 VMCPU::~VMCPU()
 {
     delete AS;
     delete REGS;
+    delete sysBus;
 }
 
 bool VMCPU::loadCode(VBYTE *mcode, int mcsize)

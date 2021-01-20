@@ -1,7 +1,7 @@
 # A system bus
 
 ## Values
-CODE | VALUE
+CODE | RETURN VALUE
 --- | ---
 DIR_CREATED | 200000
 DIR_CREATED_ERROR | 200001
@@ -19,25 +19,26 @@ OTHER_FILE_ERROR | 200010
 NO_IMPLEMENTED_ERROR | 200110
 
 ## Functions
+Arguments to functions pass via the stack.
 
 ```c++
-int createDirectory(std::string, int))
+int createDirectory(std::string, int));
 int deleteDirectory(std::string);
 int moveDirectory(std::string, std::string);
 int copyDirectory(std::string, std::string);
-int createFile(std::string, VBYTE *);
+int createFile(std::string, uint8_t*, int);
 int deleteFile(std::string);
 int moveFile(std::string, std::string);
 int copyFile(std::string, std::string);
 ```
 ## OS support
-FUNC | Windows | Linux | MacOS
---- | --- | --- | ---
-createDirectory | YES | YES | NO |
-deleteDirectory | YES | YES | NO |
-moveDirectory | YES | NO | NO |
-copyDirectory | YES | NO | NO |
-createFile | YES | YES | NO |
-deleteFile | YES | YES | NO |
-moveFile | YES | YES | NO |
-copyFile | YES | YES | NO |
+FUNC | CMD | CODE | Windows | Linux | MacOS
+--- | --- | --- | --- | --- | ---
+createDirectory | sysdircr | 1 | YES | YES | NO |
+deleteDirectory | sysdirdel | 2 | YES | YES | NO |
+moveDirectory | sysdirmv | 3 | YES | NO | NO |
+copyDirectory | sysdircp | 4 | YES | NO | NO |
+createFile | sysfilecr | 5 | YES | YES | NO |
+deleteFile | sysfiledel | 6 | YES | YES | NO |
+moveFile | sysfilemv | 7 | YES | YES | NO |
+copyFile | sysfilecp | 8 | YES | YES | NO |
