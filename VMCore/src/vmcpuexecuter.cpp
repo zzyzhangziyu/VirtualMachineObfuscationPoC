@@ -652,6 +652,15 @@ int VMCPU::executer(VBYTE opcode)
             REGS->PC += 2;
             REGS->R[6] = 0;
             REGS->R[7] = 0;
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] SYSBUS" << std::endl;
+                const std::string funcName[] = {
+                    "SYSBUS_CREATE_DIR", "SYSBUS_DELETE_DIR", "SYSBUS_MOVE_DIR", 
+                    "SYSBUS_COPY_DIR", "SYSBUS_CREATE_FILE", "SYSBUS_DELETE_FILE", 
+                    "SYSBUS_MOVE_FILE", "SYSBUS_COPY_FILE"
+                }
+                std::cout << "[DEBUG] CALL: " << funcName[wTmp_0 - 1] << std::endl;
+            #endif
             switch(wTmp_0)
             {
                 case SYSBUS_CREATE_DIR:
