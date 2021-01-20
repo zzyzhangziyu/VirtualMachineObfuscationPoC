@@ -38,19 +38,33 @@
 #define OTHER_FILE_ERROR 200010
 #define NO_IMPLEMENTED_ERROR 200110
 
+#define SYSBUS_CREATE_DIR 1
+#define SYSBUS_DELETE_DIR 2
+#define SYSBUS_MOVE_DIR 3
+#define SYSBUS_COPY_DIR 4
+#define SYSBUS_CREATE_FILE 5
+#define SYSBUS_DELETE_FILE 6
+#define SYSBUS_MOVE_FILE 7
+#define SYSBUS_COPY_FILE 8
+
 class SYSBUS {
     public:
         virtual int createDirectory(std::string, int)) = 0;
         virtual int deleteDirectory(std::string) = 0;
         virtual int moveDirectory(std::string, std::string) = 0;
         virtual int copyDirectory(std::string, std::string) = 0;
-        int createFile(std::string fileName, VBYTE *dataToWrite)
+        int createFile(std::string fileName, VBYTE *dataToWrite, int dataSize)
         {
-            int dataSize = sizeof(data);
             std::fstream fs;
-            fs.open(fileName.c_str(), std::fstream::out | std::fstream::binary);
-            fs.write((char*)data, dataSize);
-	        fs.close();
+            fs.open(fileName.c_str(), std::fstream::in);
+            if(fs)
+            {
+                fs.close();
+                fs.open(fileName.c_str(), std::fstream::out | std::fstream:: app| std::fstream::binary);
+            }
+            else fs.open(fileName.c_str(), std::fstream::out | std::fstream::binary);
+            fs.write((char*)dataToWrite, dataSize);
+            fs.close();
             return 0;
         }
         virtual int deleteFile(std::string) = 0;
