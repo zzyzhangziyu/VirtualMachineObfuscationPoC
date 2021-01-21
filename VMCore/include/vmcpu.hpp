@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "./opcodes.hpp"
+#include "./advancesecurity.hpp"
 
 #ifdef _WIN32_DEV_ENVIRONMENT
     #include "./drivers/win32sysbus.hpp"
