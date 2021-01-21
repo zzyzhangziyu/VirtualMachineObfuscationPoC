@@ -199,6 +199,26 @@ int moveFile(std::string, std::string);
 int copyFile(std::string, std::string);
 ```
 
+```nasm
+%include "vm.inc"
+
+start:
+    dw 0x6d56
+    movd r1, 0x0
+    movd r2, 0x0
+    movd r1, path
+    movd r2, data
+    push r1
+    push r2
+    vmsysbus sysfilecr
+    ee
+
+data:
+    db 0x01, 0x02, 0x03, 0x04, 0x3, 0xD
+path:
+    db "/home/eaglx/file.bin", 0x3, 0xD
+```
+
 #### Registers
 A register is a slot for storing value on the CPU. The VM has 10 total registers, each of which is 4 bytes (32 bits). The six of them are general purpose, one has designated role as program counter and another has role as stack pointer. The VM has also two regisers ZF (Zero Flag) and CF (Carry Flag). These two provide information about the most recently executed calculation (allows to check logical conditions such as *AND*).
 
