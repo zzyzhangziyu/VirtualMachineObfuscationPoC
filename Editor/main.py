@@ -340,7 +340,7 @@ class Editor:
     fileNamePart2 = (self.filename.split("/")[-1]).split('.')[0]
     with open(fileNamePart1 + fileNamePart2, mode='rb') as file:
       codePart2 = file.read()
-    codePart2str = binascii.hexlify(bytearray(codePart2)).decode("utf-8")
+    codePart2str = binascii.hexlify(VBYTEarray(codePart2)).decode("utf-8")
     codePart2final = ""
     for i in range(0, len(codePart2str), 2):
       s1,s2 = codePart2str[i:i+2]

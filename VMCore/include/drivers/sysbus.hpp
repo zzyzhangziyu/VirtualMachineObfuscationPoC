@@ -1,44 +1,35 @@
 #ifndef _SYSTEM_BUS_HPP
 #define _SYSTEM_BUS_HPP
 
-#include "global.hpp"
+#include "../global.hpp"
 #include <iostream>
 #include <string>
+#include <fstream>
 
-#ifdef _WIN32_DEV_ENVIRONMENT
-    #include <Windows.h>
+#include "../../../SharedCode/datatypes.hpp"
 
-    #define DIR_CREATED 200000
-    #define DIR_EXIST 200001
-    #define OTHER_ERROR 200002
-#else _LINUX_DEV_ENVIRONMENT
-    #include <sys/types.h>
-    #include <sys/stat.h>
-    #include <unistd.h>
+#define DIR_CREATED 200000
+#define DIR_CREATED_ERROR 200001
+#define DIR_EXIST 200002
+#define DELETE_DIR 200011
+#define MOVE_DIR 200003
+#define COPY_DIR 200004
+#define OTHER_DIR_ERROR 200005
+#define FILE_CREATED 200006
+#define FILE_EXIST 200007
+#define DELETE_FILE 200012
+#define MOVE_FILE 200008
+#define COPY_FILE 200009
+#define OTHER_FILE_ERROR 200010
+#define NO_IMPLEMENTED_ERROR 200110
 
-    #define DIR_CREATED 200000
-    #define DIR_EXIST 200001
-    #define MKDIR_ERROR 200002
-#endif
-
-class SYSBUS {
-    private:
-
-    public:
-        SYSBUS();
-        ~SYSBUS();
-        int createDirectory(std::string, int);
-        // int deleteDirectory(std::string);
-        // int moveDirectory(std::string);
-        // int copyDirectory(std::string);
-
-        // int createFile(std::string, int);
-        // int deleteFile(std::string);
-        // int moveFile(std::string);
-        // int copyFile(std::string);
-
-        // int getProcessPid(std::string);
-        // int killProcess(int);
-};
+#define SYSBUS_CREATE_DIR 1
+#define SYSBUS_DELETE_DIR 2
+#define SYSBUS_MOVE_DIR 3
+#define SYSBUS_COPY_DIR 4
+#define SYSBUS_CREATE_FILE 5
+#define SYSBUS_DELETE_FILE 6
+#define SYSBUS_MOVE_FILE 7
+#define SYSBUS_COPY_FILE 8
 
 #endif

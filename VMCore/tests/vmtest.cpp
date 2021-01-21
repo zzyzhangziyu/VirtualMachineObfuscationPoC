@@ -1,65 +1,9 @@
-#define VMTESTS
-
-#include "../include/test.hpp"
-#include "../include/vmcpu.hpp"
-
-class VMTest {
-    private:
-        VMCPU *vm;
-        PADDRESS_SPACE T_AS;
-        PREGISTERSS T_REGS;
-        void printTestResult(bool, unsigned int);
-
-    public:
-        VMTest() {
-            vm = new VMCPU();
-        }
-        ~VMTest() {
-            delete vm;
-        }
-        bool testVM();
-};
-
-int main()
-{
-    std::cout << R"(
- _   ____  _______________ _____ _____ _____ _____ _____ 
-| | | |  \/  || ___ \ ___ \  _  |_   _|  ___/  __ \_   _|
-| | | | .  . || |_/ / |_/ / | | | | | | |__ | /  \/ | |  
-| | | | |\/| ||  __/|    /| | | | | | |  __|| |     | |  
-\ \_/ / |  | || |   | |\ \\ \_/ / | | | |___| \__/\ | |  
- \___/\_|  |_/\_|   \_| \_|\___/  \_/ \____/ \____/ \_/  
-                                                         
-                                                         
- _____ _____ _____ _____ _____                           
-|_   _|  ___/  ___|_   _/  ___|                          
-  | | | |__ \ `--.  | | \ `--.                           
-  | | |  __| `--. \ | |  `--. \                          
-  | | | |___/\__/ / | | /\__/ /                          
-  \_/ \____/\____/  \_/ \____/                           
-                                                         
-    )" << std::endl;
-    std::cout << "version 0.2.200924.0001\n" << std::endl;
-
-    if(VMCPU::bIsOnTest) {
-        VMTest *vmt = new VMTest();
-
-        std::cout << "[INFO] TESTS STARTED" << std::endl;
-        if(vmt->testVM()) std::cout << "[INFO] ALL TESTS PASS" << std::endl;
-        else std::cout << "[ERROR] SOME TESTS FAILED!" << std::endl;
-
-        delete vmt;
-    }
-    else{
-        std::cout << "[ERROR] CANNOT START TESTS!" << std::endl;
-    }
-    return 0;
-}
+#include "vmtest.hpp"
 
 void VMTest::printTestResult(bool bTestPass, unsigned int currentTestNumber)
 {
-    if(bTestPass == true) std::cout << "[INFO] TEST " << currentTestNumber << ": PASS" << std::endl;
-    else std::cout << "[INFO] TEST " << currentTestNumber << ": FAIL!" << std::endl;
+    if(bTestPass == true) std::cout << "\t[INFO] TEST " << currentTestNumber << ": PASS" << std::endl;
+    else std::cout << "\t[INFO] TEST " << currentTestNumber << ": FAIL!" << std::endl;
 }
 
 bool VMTest::testVM()

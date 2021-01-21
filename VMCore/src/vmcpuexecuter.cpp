@@ -640,6 +640,135 @@ int VMCPU::executer(VBYTE opcode)
             else REGS->CF = 0;
             break;
         /*  ********************************
+                        VMSYSBUS
+            ********************************
+        */
+        /*
+            VMSYSBUS FUNC_CODE
+            60 01 00 => SYSBUS createDirectory
+        */
+        case VMSYSBUS:
+            wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
+            REGS->PC += 2;
+            REGS->R[6] = 0;
+            REGS->R[7] = 0;
+            #ifdef V_DEBUG
+                std::cout << "[DEBUG] VMSYSBUS" << std::endl;
+                std::cout << "[DEBUG] CALL " << wTmp_0 << std::endl;
+            #endif
+            switch(wTmp_0)
+            {
+                case SYSBUS_CREATE_DIR:
+                    {
+                        wTmp_1 = AS->stack[REGS->SP]; // second arg
+                        REGS->SP += 1;
+                        wTmp_0 = AS->stack[REGS->SP]; // first arg
+                        REGS->SP += 1;
+                        std::string arg1 = "";
+                        getDataFromCodeData(arg1, wTmp_0);
+                        REGS->R[6] = sysBus->createDirectory(arg1, wTmp_1);
+                    }
+                    break;
+                case SYSBUS_DELETE_DIR:
+                    {
+                        wTmp_0 = AS->stack[REGS->SP];
+                        REGS->SP += 1;
+                        std::string arg1 = "";
+                        getDataFromCodeData(arg1, wTmp_0);
+                        REGS->R[6] = sysBus->deleteDirectory(arg1);
+                    }
+                    break;
+                case SYSBUS_MOVE_DIR:
+                    {
+                        wTmp_1 = AS->stack[REGS->SP]; // second arg
+                        REGS->SP += 1;
+                        wTmp_0 = AS->stack[REGS->SP]; // first arg
+                        REGS->SP += 1;
+                        std::string arg1 = "";
+                        std::string arg2 = "";
+                        getDataFromCodeData(arg2, wTmp_1);
+                        getDataFromCodeData(arg1, wTmp_0);
+                        REGS->R[6] = sysBus->moveDirectory(arg1, arg2);
+                    }
+                    break;
+                case SYSBUS_COPY_DIR:
+                    {
+                        wTmp_1 = AS->stack[REGS->SP]; // second arg
+                        REGS->SP += 1;
+                        wTmp_0 = AS->stack[REGS->SP]; // first arg
+                        REGS->SP += 1;
+                        std::string arg1 = "";
+                        std::string arg2 = "";
+                        getDataFromCodeData(arg2, wTmp_1);
+                        getDataFromCodeData(arg1, wTmp_0);
+                        REGS->R[6] = sysBus->copyDirectory(arg1, arg2);
+                    }
+                    break;
+                case SYSBUS_CREATE_FILE:
+                    {
+                        wTmp_1 = AS->stack[REGS->SP];
+                        REGS->SP += 1;
+                        wTmp_0 = AS->stack[REGS->SP];
+                        REGS->SP += 1;
+                        std::string arg2 = "";
+                        int counter = wTmp_1;
+                        int dataLength = 0;
+                        VBYTE b;
+                        std::vector<VBYTE> dataVbyte;
+                        while(true)
+                        {
+                            b = AS->codeData[counter++];
+                            if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
+                            ++dataLength;
+                            dataVbyte.push_back(b);
+                            std::cout << std::hex << b << std::endl;
+                        }
+                        VBYTE *dataToWrite = &dataVbyte[0];
+                        std::string arg1 = "";
+                        getDataFromCodeData(arg1, wTmp_0);
+                        REGS->R[6] = sysBus->createFile(arg1, dataToWrite, dataLength);
+                    }
+                    break;
+                case SYSBUS_DELETE_FILE:
+                    {
+                        wTmp_0 = AS->stack[REGS->SP];
+                        REGS->SP += 1;
+                        std::string arg1 = "";
+                        getDataFromCodeData(arg1, wTmp_0);
+                        REGS->R[6] = sysBus->deleteFile(arg1);
+                    }
+                    break;
+                case SYSBUS_MOVE_FILE:
+                    {
+                        wTmp_1 = AS->stack[REGS->SP]; // second arg
+                        REGS->SP += 1;
+                        wTmp_0 = AS->stack[REGS->SP]; // first arg
+                        REGS->SP += 1;
+                        std::string arg1 = "";
+                        std::string arg2 = "";
+                        getDataFromCodeData(arg2, wTmp_1);
+                        getDataFromCodeData(arg1, wTmp_0);
+                        REGS->R[6] = sysBus->moveFile(arg1, arg2);
+                    }
+                    break;
+                case SYSBUS_COPY_FILE:
+                    {
+                        wTmp_1 = AS->stack[REGS->SP]; // second arg
+                        REGS->SP += 1;
+                        wTmp_0 = AS->stack[REGS->SP]; // first arg
+                        REGS->SP += 1;
+                        std::string arg1 = "";
+                        std::string arg2 = "";
+                        getDataFromCodeData(arg2, wTmp_1);
+                        getDataFromCodeData(arg1, wTmp_0);
+                        REGS->R[6] = sysBus->copyFile(arg1, arg2);
+                    }
+                    break;
+                default:
+                    REGS->R[7] = 1;
+            }
+            break;
+        /*  ********************************
                         STACK
             ********************************
         */
@@ -919,4 +1048,19 @@ int VMCPU::executer(VBYTE opcode)
     }
 
     return valToReturn;
+}
+
+void VMCPU::getDataFromCodeData(std::string &arg1, int startFrom)
+{
+    int counter = startFrom;
+    std::stringstream ss;
+    VBYTE b;
+    while(true)
+    {
+        b = AS->codeData[counter++];
+        if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
+        ss << std::hex << b;
+    }
+    arg1 = ss.str();
+    return;
 }

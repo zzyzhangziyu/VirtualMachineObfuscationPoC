@@ -8,7 +8,7 @@
 <a href="https://github.com/eaglx/VMPROTECT/network/members"><img src="https://img.shields.io/github/forks/eaglx/VMPROTECT" alt="Forks Badge"/></a>
 <a href="https://github.com/eaglx/VMPROTECT/blob/master/LICENSE"><img src="https://img.shields.io/github/license/eaglx/VMPROTECT?color=2b9348" alt="License Badge"/></a>
 [![GitHub release](https://img.shields.io/github/release/eaglx/VMPROTECT)](https://GitHub.com/eaglx/VMPROTECT/releases/)
-![Progress](https://progress-bar.dev/3/?title=progress-v0.3)
+![Progress](https://progress-bar.dev/25/?title=progress-v0.3)
 <!---![Progress](https://progress-bar.dev/100/?title=progress-v0.3)-->
 
 A virtual machine that simulates a CPU along with a few other hardware components, allows to perform arithmetic operations, reads and writes to memory and interacts with I/O devices. It can understand a machine language which can be used to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random).
@@ -26,7 +26,6 @@ A virtual machine that simulates a CPU along with a few other hardware component
     * [Memory](#memory)
     * [Drivers](#drivers)
       * [Sysbus](#sysbus)
-      * [Netbus](#netbus)
     * [Registers](#registers)
     * [Instructions](#instructions)
 * [Disclaimer](#disclaimer)
@@ -173,11 +172,32 @@ VBYTE dataBuffer[INPUT_BUFFER_SIZE];
 ```
 
 #### Drivers
-#### Sysbus
-todo
+The drivers are designed to expand the *VMPROTECT*'s capabilities.
 
-#### Netbus
-todo
+##### Sysbus
+A sysbus is a driver that allows access to a filesystem. Arguments to functions pass via the stack.
+
+FUNC | CMD | CODE | Windows | Linux | MacOS
+--- | --- | --- | --- | --- | ---
+createDirectory | sysdircr | 1 | YES | YES | NO |
+deleteDirectory | sysdirdel | 2 | YES | YES | NO |
+moveDirectory | sysdirmv | 3 | YES | NO | NO |
+copyDirectory | sysdircp | 4 | YES | NO | NO |
+createFile | sysfilecr | 5 | YES | YES | NO |
+deleteFile | sysfiledel | 6 | YES | YES | NO |
+moveFile | sysfilemv | 7 | YES | YES | NO |
+copyFile | sysfilecp | 8 | YES | YES | NO |
+
+```c++
+int createDirectory(std::string, int));
+int deleteDirectory(std::string);
+int moveDirectory(std::string, std::string);
+int copyDirectory(std::string, std::string);
+int createFile(std::string, uint8_t*, int);
+int deleteFile(std::string);
+int moveFile(std::string, std::string);
+int copyFile(std::string, std::string);
+```
 
 #### Registers
 A register is a slot for storing value on the CPU. The VM has 10 total registers, each of which is 4 bytes (32 bits). The six of them are general purpose, one has designated role as program counter and another has role as stack pointer. The VM has also two regisers ZF (Zero Flag) and CF (Carry Flag). These two provide information about the most recently executed calculation (allows to check logical conditions such as *AND*).
@@ -257,8 +277,7 @@ EE  | EE | End of code and end of the VM's cpu |
 50  |  CMP r<sub>dst</sub>, r<sub>src</sub> | Compare two registers |
 51  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
   | | |
-60  |  SYSBUS id<sub>byte</sub> | todo |
-61  |  NETBUS id<sub>byte</sub> | todo |
+60  |  VMSYSBUS word | Arguments to functions pass via the stack |
   | | |
 90  |  PUSH r<sub>src</sub> | Push value from a register to stack |
 91  |  POP r<sub>dst</sub> | Pop value from stack to a register |

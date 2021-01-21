@@ -9,7 +9,7 @@
     #include <unistd.h> 
     #include <sys/socket.h> 
     #include <netinet/in.h>
-#else _WIN32_DEV_ENVIRONMENT
+#else //_WIN32_DEV_ENVIRONMENT
     #include <winsock2.h>
     #include <ws2tcpip.h>
     #include <tchar.h>
