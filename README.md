@@ -188,6 +188,7 @@ deleteFile | sysfiledel | 6 | YES | YES | NO |
 moveFile | sysfilemv | 7 | YES | YES | NO |
 copyFile | sysfilecp | 8 | YES | YES | NO |
 
+Functions' implementation:
 ```c++
 int createDirectory(std::string, int));
 int deleteDirectory(std::string);
@@ -199,6 +200,7 @@ int moveFile(std::string, std::string);
 int copyFile(std::string, std::string);
 ```
 
+Example call function use case:
 ```nasm
 %include "vm.inc"
 
