@@ -32,4 +32,22 @@
 #define SYSBUS_MOVE_FILE 7
 #define SYSBUS_COPY_FILE 8
 
+class SYSBUS {
+    public:
+        int createFile(std::string fileName, VBYTE *dataToWrite, int dataSize)
+        {
+            std::fstream fs;
+            fs.open(fileName.c_str(), std::fstream::in);
+            if(fs)
+            {
+                fs.close();
+                fs.open(fileName.c_str(), std::fstream::out | std::fstream:: app| std::fstream::binary);
+            }
+            else fs.open(fileName.c_str(), std::fstream::out | std::fstream::binary);
+            fs.write((char*)dataToWrite, dataSize);
+            fs.close();
+            return 0;
+        }
+};
+
 #endif
