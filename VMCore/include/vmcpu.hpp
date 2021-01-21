@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string.h>
 #include <stdint.h>
+#include <vector>
 
 #ifdef _WIN32_DEV_ENVIRONMENT
     #include <Windows.h>
@@ -15,14 +16,13 @@
 #include <thread>
 
 #include "./opcodes.hpp"
+#include "./drivers/sysbus.hpp"
 
 #ifdef VMTESTS
     #include "./test.hpp"
 #endif //VMTESTS
 
-typedef uint8_t VBYTE;
-typedef uint16_t VWORD;
-typedef uint32_t VDWORD;
+#include "../../SharedCode/datatypes.hpp"
 
 #define CODE_DATA_SIZE 51200
 #define STACK_SIZE 256
@@ -77,6 +77,11 @@ class VMCPU {
     private:
         PADDRESS_SPACE AS;
         PREGISTERSS REGS;
+    #ifdef _WIN32_DEV_ENVIRONMENT
+        WIN32 *sysBus;
+    #else _LINUX_DEV_ENVIRONMENT
+        UNIX *sysBus;
+    #endif
 
         std::mutex memMutex;
         bool isVMcpuTurnOff;
@@ -85,6 +90,7 @@ class VMCPU {
 
     private:
         int executer(VBYTE);
+        void getDataFromCodeData(std::string &, int);
         void vmPrint(VBYTE s);
         void vmPrintHX(VDWORD);
         void vmPrintN(VBYTE s);

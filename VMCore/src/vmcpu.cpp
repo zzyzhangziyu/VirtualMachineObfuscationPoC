@@ -19,6 +19,11 @@ VMCPU::VMCPU()
 
     isVMcpuTurnOff = false;
     areFramesNeeded = false;
+    #ifdef _WIN32_DEV_ENVIRONMENT
+        sysBus = new WIN32();
+    #else _LINUX_DEV_ENVIRONMENT
+        sysBus = new UNIX();
+    #endif
 }
 
 VMCPU::~VMCPU()
@@ -26,6 +31,7 @@ VMCPU::~VMCPU()
     delete AS;
     delete REGS;
     if(areFramesNeeded) = delete framesSizeArray;
+    delete sysBus;
 }
 
 bool VMCPU::loadCode(VBYTE *mcode, int mcsize)
