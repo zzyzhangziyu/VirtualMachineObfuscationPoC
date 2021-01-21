@@ -707,16 +707,7 @@ int VMCPU::executer(VBYTE opcode)
                     wTmp_0 = AS->stack[REGS->SP];
                     REGS->SP += 1;
                     std::string arg2 = "";
-                    int counter = wTmp_1;
-                    int dataLength = 0;
-                    VBYTE b;
-                    while(true)
-                    {
-                        b = AS->codeData[counter++];
-                        if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
-                        ++dataLength;
-                        arg2 += std::to_string(b);
-                    }
+                    int dataLength = getDataFromCodeData(arg2, wTmp_1);
                     std::vector<VBYTE> convertVector(arg2.begin(), arg2.end());
                     VBYTE *dataToWrite = &convertVector[0];
                     std::string arg1 = "";
@@ -854,7 +845,7 @@ int VMCPU::executer(VBYTE opcode)
                 #endif
                 goto EXCEPTION;
             }
-            bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
+            bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]]; // TODO ************** FRAME **************
             vmPrint(bTmp_0);
             break;
         /*
@@ -876,7 +867,7 @@ int VMCPU::executer(VBYTE opcode)
                 #endif
                 goto EXCEPTION;
             }
-            bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
+            bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]]; // TODO ************** FRAME **************
             vmPrintN(bTmp_0);
             break;
         /*
@@ -1038,15 +1029,26 @@ int VMCPU::executer(VBYTE opcode)
     return valToReturn;
 }
 
-void getDataFromCodeData(std::string &arg1, int startFrom)
+int getDataFromCodeData(std::string &arg1, int startFrom)
 {
     int counter = startFrom;
+    int dataLength = 0;
     VBYTE b;
     while(true)
     {
+        if(counter) // TODO *****************************
+        {
+            // TODO *****************************
+            memConditionVar.wait(lk, []{return isFrameReady;});
+            isFrameReady = false;
+            isNewFrameNeed = false;
+        }
+        // TODO: restore previous frame *****************************
+
         b = AS->codeData[counter++];
         if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
+        ++dataLength;
         arg1 += std::to_string(b);
     }
-    return;
+    return dataLength;
 }

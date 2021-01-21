@@ -19,6 +19,10 @@ VMCPU::VMCPU()
 
     isVMcpuTurnOff = false;
     areFramesNeeded = false;
+
+    isFrameReady = false;
+    isNewFrameNeed = false;
+
     #ifdef _WIN32_DEV_ENVIRONMENT
         sysBus = new WIN32();
     #else _LINUX_DEV_ENVIRONMENT
@@ -36,14 +40,12 @@ VMCPU::~VMCPU()
 
 bool VMCPU::loadCode(VBYTE *mcode, int mcsize)
 {
-    memMutex.lock();
     memset(AS->codeData, 0, CODE_DATA_SIZE*sizeof(*(AS->codeData)));
     memset(AS->stack, 0, STACK_SIZE*sizeof(*(AS->stack)));
     memset(AS->dataBuffer, 0, INPUT_BUFFER_SIZE*sizeof(*(AS->dataBuffer)));
     if((unsigned) (mcsize) > (sizeof(AS->codeData) / sizeof(AS->codeData[0]))) 
     {
         std::cout << "[ERROR 101001] TOO BIG A CODE TO EXECUTE!\n";
-        memMutex.unlock();
         return false;
     }
     memcpy(AS->codeData, mcode, mcsize);
@@ -53,7 +55,6 @@ bool VMCPU::loadCode(VBYTE *mcode, int mcsize)
     }
     REGS->CF = 0;
     REGS->ZF = 0;
-    memMutex.unlock();
     return true;
 }
 
@@ -79,18 +80,27 @@ void VMCPU::vmPrintHXN(VDWORD hx)
 
 void VMCPU::run()
 {
+    std::unique_lock<std::mutex> memLock(memMutex);
+    memLock.lock();
     bool exit = false;
     VBYTE opcode;
 
     while(!exit)
     {
-        memMutex.lock();
+        if([REGS->PC ) // TODO *****************************
         {
-            opcode = AS->codeData[REGS->PC++];
-            exit = executer(opcode);
+            memLock.unlock();
+            // TODO
+            memConditionVar.wait(lk, []{return isFrameReady;});
+            memLock.lock();
+            isFrameReady = false;
+            isNewFrameNeed = false;
         }
-        memMutex.unlock();
+        opcode = AS->codeData[REGS->PC++];
+        exit = executer(opcode);
     }
     isCpuTurnOff = true;
+    isNewFrameNeed = true;
+    memConditionVar.notify_all();
     return;
 }
