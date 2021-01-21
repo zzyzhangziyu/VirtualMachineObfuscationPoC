@@ -13,7 +13,7 @@
     #include <stdlib.h>
     #include <string.h>
 
-    class UNIX {
+    class UNIX: public SYSBUS {
         public:
             UNIX() { };
             ~UNIX() { };
@@ -21,7 +21,6 @@
             int deleteDirectory(std::string);
             int moveDirectory(std::string, std::string);
             int copyDirectory(std::string, std::string);
-            int createFile(std::string, VBYTE*, int);
             int deleteFile(std::string);
             int moveFile(std::string, std::string);
             int copyFile(std::string, std::string);

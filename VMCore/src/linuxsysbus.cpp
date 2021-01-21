@@ -47,21 +47,6 @@
         else return OTHER_FILE_ERROR;
     }
 
-    int UNIX::createFile(std::string fileName, VBYTE *dataToWrite, int dataSize)
-    {
-        std::fstream fs;
-        fs.open(fileName.c_str(), std::fstream::in);
-        if(fs)
-        {
-            fs.close();
-            fs.open(fileName.c_str(), std::fstream::out | std::fstream:: app| std::fstream::binary);
-        }
-        else fs.open(fileName.c_str(), std::fstream::out | std::fstream::binary);
-        fs.write((char*)dataToWrite, dataSize);
-        fs.close();
-        return FILE_CREATED;
-    }
-
     int UNIX::copyFile(std::string sourcePath, std::string destPath)
     {
         const char *to = destPath.c_str();
