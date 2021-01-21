@@ -866,7 +866,7 @@ int VMCPU::executer(VBYTE opcode)
                 #endif
                 goto EXCEPTION;
             }
-            bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
+            bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]]; // TODO ************** FRAME **************
             vmPrint(bTmp_0);
             break;
         /*
@@ -888,7 +888,7 @@ int VMCPU::executer(VBYTE opcode)
                 #endif
                 goto EXCEPTION;
             }
-            bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
+            bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]]; // TODO ************** FRAME **************
             vmPrintN(bTmp_0);
             break;
         /*
@@ -1050,17 +1050,26 @@ int VMCPU::executer(VBYTE opcode)
     return valToReturn;
 }
 
-void VMCPU::getDataFromCodeData(std::string &arg1, int startFrom)
+int getDataFromCodeData(std::string &arg1, int startFrom)
 {
     int counter = startFrom;
-    std::stringstream ss;
+    int dataLength = 0;
     VBYTE b;
     while(true)
     {
+        if(counter) // TODO *****************************
+        {
+            // TODO *****************************
+            memConditionVar.wait(lk, []{return isFrameReady;});
+            isFrameReady = false;
+            isNewFrameNeed = false;
+        }
+        // TODO: restore previous frame *****************************
+
         b = AS->codeData[counter++];
         if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
-        ss << std::hex << b;
+        ++dataLength;
+        arg1 += std::to_string(b);
     }
-    arg1 = ss.str();
-    return;
+    return dataLength;
 }

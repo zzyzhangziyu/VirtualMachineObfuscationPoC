@@ -13,8 +13,9 @@
     #include <unistd.h>
 #endif
 
-#include <mutex>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 
 #include "./opcodes.hpp"
 
@@ -95,10 +96,15 @@ class VMCPU {
         bool isVMcpuTurnOff;
 
         bool areFrames;
+        bool isVMcpuTurnOff;
+        std::mutex memMutex;
+        std::condition_variable memConditionVar;
+        bool isFrameReady;
+        bool isNewFrameNeed;
 
     private:
         int executer(VBYTE);
-        void getDataFromCodeData(std::string &, int);
+        int getDataFromCodeData(std::string &, int);
         void vmPrint(VBYTE s);
         void vmPrintHX(VDWORD);
         void vmPrintN(VBYTE s);
