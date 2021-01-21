@@ -277,7 +277,7 @@ EE  | EE | End of code and end of the VM's cpu |
 50  |  CMP r<sub>dst</sub>, r<sub>src</sub> | Compare two registers |
 51  |  CMPL r<sub>dst</sub>, r<sub>src</sub> | Compare two registers (the low byte) |
   | | |
-60  |  SYSBUS word | Arguments to functions pass via the stack |
+60  |  VMSYSBUS word | Arguments to functions pass via the stack |
   | | |
 90  |  PUSH r<sub>src</sub> | Push value from a register to stack |
 91  |  POP r<sub>dst</sub> | Pop value from stack to a register |

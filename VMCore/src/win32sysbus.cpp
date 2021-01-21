@@ -1,10 +1,6 @@
-#include "../../include/drivers/sysbus.hpp"
+#include "../include/drivers/win32sysbus.hpp"
 
 #ifdef _WIN32_DEV_ENVIRONMENT
-    WIN32::WIN32() { }
-
-    WIN32::~WIN32() { }
-
     int WIN32::createDirectory(std::string dirName, int dirMode)
     {
         if (CreateDirectoryA(dirName.c_str(), NULL)) return DIR_CREATED;
@@ -28,6 +24,21 @@
     {
         if(copyDir((stringToWString(dirSource)).c_str()), (stringToWString(dirDest)).c_str())) return COPY_DIR;
         else return OTHER_DIR_ERROR;
+    }
+
+    int UNIX::createFile(std::string fileName, VBYTE *dataToWrite, int dataSize)
+    {
+        std::fstream fs;
+        fs.open(fileName.c_str(), std::fstream::in);
+        if(fs)
+        {
+            fs.close();
+            fs.open(fileName.c_str(), std::fstream::out | std::fstream:: app| std::fstream::binary);
+        }
+        else fs.open(fileName.c_str(), std::fstream::out | std::fstream::binary);
+        fs.write((char*)dataToWrite, dataSize);
+        fs.close();
+        return FILE_CREATED;
     }
 
     int WIN32::deleteFile(std::string filePath)

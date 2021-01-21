@@ -5,9 +5,17 @@
 #include <string.h>
 #include <stdint.h>
 #include <vector>
+#include <sstream>
 
 #include "./opcodes.hpp"
-#include "./drivers/sysbus.hpp"
+
+#ifdef _WIN32_DEV_ENVIRONMENT
+    #include "./drivers/win32sysbus.hpp"
+#else //_LINUX_DEV_ENVIRONMENT
+    #include "./drivers/linuxsysbus.hpp"
+#endif
+
+// #define V_DEBUG
 
 #ifdef VMTESTS
     #include "./test.hpp"
@@ -63,11 +71,11 @@ class VMCPU {
     private:
         PADDRESS_SPACE AS;
         PREGISTERSS REGS;
-    #ifdef _WIN32_DEV_ENVIRONMENT
-        WIN32 *sysBus;
-    #else _LINUX_DEV_ENVIRONMENT
-        UNIX *sysBus;
-    #endif
+        #ifdef _WIN32_DEV_ENVIRONMENT
+            WIN32 *sysBus;
+        #else //_LINUX_DEV_ENVIRONMENT
+            UNIX *sysBus;
+        #endif
 
     private:
         int executer(VBYTE);

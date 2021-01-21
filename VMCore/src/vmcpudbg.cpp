@@ -49,7 +49,7 @@ void VMCPU::debug()
         }
 
         closesocket(serverSocket);
-    #else _LINUX_DEV_ENVIRONMENT
+    #else //_LINUX_DEV_ENVIRONMENT
         int serverSocket, debuggerSocket;
         struct sockaddr_in address;
         int opt = 1; 
@@ -114,7 +114,7 @@ void VMCPU::debug()
                 #ifdef _WIN32_DEV_ENVIRONMENT
                     closesocket(debuggerSocket);
                     WSACleanup();
-                #else _LINUX_DEV_ENVIRONMENT
+                #else //_LINUX_DEV_ENVIRONMENT
                     close(debuggerSocket);
                     close(serverSocket);
                 #endif
@@ -129,7 +129,7 @@ void VMCPU::debug()
                 #ifdef _WIN32_DEV_ENVIRONMENT
                     closesocket(debuggerSocket);
                     WSACleanup();
-                #else _LINUX_DEV_ENVIRONMENT
+                #else //_LINUX_DEV_ENVIRONMENT
                     close(debuggerSocket);
                     close(serverSocket);
                 #endif
@@ -189,7 +189,7 @@ void VMCPU::debug()
     #ifdef _WIN32_DEV_ENVIRONMENT
         closesocket(debuggerSocket);
         WSACleanup();
-    #else _LINUX_DEV_ENVIRONMENT
+    #else //_LINUX_DEV_ENVIRONMENT
         close(debuggerSocket);
         close(serverSocket);
     #endif

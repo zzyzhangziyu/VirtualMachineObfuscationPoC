@@ -1,10 +1,6 @@
-#include "../../include/drivers/sysbus.hpp"
+#include "../include/drivers/linuxsysbus.hpp"
 
 #ifdef _LINUX_DEV_ENVIRONMENT
-    UNIX::UNIX() { }
-
-    UNIX::~UNIX() { }
-
     int UNIX::createDirectory(std::string dirName, int dirMode)
     {
         struct stat st = {0};
@@ -49,6 +45,21 @@
     {
         if(!rename(sourcePath.c_str(), destPath.c_str())) return MOVE_FILE;
         else return OTHER_FILE_ERROR;
+    }
+
+    int UNIX::createFile(std::string fileName, VBYTE *dataToWrite, int dataSize)
+    {
+        std::fstream fs;
+        fs.open(fileName.c_str(), std::fstream::in);
+        if(fs)
+        {
+            fs.close();
+            fs.open(fileName.c_str(), std::fstream::out | std::fstream:: app| std::fstream::binary);
+        }
+        else fs.open(fileName.c_str(), std::fstream::out | std::fstream::binary);
+        fs.write((char*)dataToWrite, dataSize);
+        fs.close();
+        return FILE_CREATED;
     }
 
     int UNIX::copyFile(std::string sourcePath, std::string destPath)
@@ -110,7 +121,7 @@
         return OTHER_FILE_ERROR;
     }
 
-    UNIX::mode_t getMode(int m)
+    mode_t UNIX::getMode(int m)
     {
         mode_t mode = 0;
         std::string s = std::to_string(m);

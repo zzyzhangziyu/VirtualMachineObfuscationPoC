@@ -1,6 +1,6 @@
 [org 0x0]
 
-; Sysbus
+; VMSysbus
 %define sysdircr 1
 %define sysdirdel 2
 %define sysdirmv 3
@@ -10,7 +10,7 @@
 %define sysfilemv 7
 %define sysfilecp 8
 
-; Registers.
+; Registers
 %define r0 0
 %define r1 1
 %define r2 2
@@ -193,9 +193,9 @@ db 0x50, %1, %2
 db 0x51, %1, %2
 %endmacro
 
-%macro sysbus 1
+%macro vmsysbus 1
 db 0x60,
-dd %1
+dw %1
 %endmacro
 
 %macro push 1

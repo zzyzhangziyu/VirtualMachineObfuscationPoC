@@ -4,8 +4,7 @@
     #include <string>
 #endif
 
-//#define V_DEBUG
-//#include <bitset>
+// #include <bitset>
 
 VMCPU::VMCPU()
 {
@@ -18,7 +17,7 @@ VMCPU::VMCPU()
     REGS->SP = sizeof(AS->stack) / sizeof(VDWORD);
     #ifdef _WIN32_DEV_ENVIRONMENT
         sysBus = new WIN32();
-    #else _LINUX_DEV_ENVIRONMENT
+    #else //_LINUX_DEV_ENVIRONMENT
         sysBus = new UNIX();
     #endif
 }

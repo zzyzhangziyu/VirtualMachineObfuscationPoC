@@ -18,7 +18,7 @@ void conn(int cliSocket)
             std::cout << "[ERROR] Failed receive data\n";
             #ifdef  _LINUX_DEV_ENVIRONMENT
                 close(cliSocket);
-            #else _WIN32_DEV_ENVIRONMENT
+            #else //_WIN32_DEV_ENVIRONMENT
                 closesocket(cliSocket);
                 WSACleanup();
             #endif
@@ -222,7 +222,7 @@ SHOWOPTIONS:
 
 #ifdef  _LINUX_DEV_ENVIRONMENT
     close(cliSocket);
-#else _WIN32_DEV_ENVIRONMENT
+#else //_WIN32_DEV_ENVIRONMENT
     closesocket(cliSocket);
     WSACleanup();
 #endif
