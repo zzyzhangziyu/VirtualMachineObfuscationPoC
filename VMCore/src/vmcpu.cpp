@@ -31,9 +31,17 @@ VMCPU::VMCPU()
 
 VMCPU::~VMCPU()
 {
+    if(areFramesNeeded)
+    {
+        std::string fileNameToRemove;
+        for (const auto& [key, value] : frameMap) 
+        {
+            fileNameToRemove = ".cached." + std::to_string(key) + ".frame";
+            sysBus->deleteFile(fileNameToRemove);
+        }
+    }
     delete AS;
     delete REGS;
-    if(areFramesNeeded) = delete framesSizeArray;
     delete sysBus;
 }
 
@@ -86,19 +94,19 @@ void VMCPU::run()
 
     while(!exit)
     {
-        if([REGS->PC ) // TODO *****************************
-        {
-            memLock.unlock();
-            // TODO
-            memConditionVar.wait(lk, []{return isFrameReady;});
-            memLock.lock();
-            isFrameReady = false;
-            isNewFrameNeed = false;
-        }
+        //if([REGS->PC] ) // TODO *****************************
+        //{
+            // memLock.unlock();
+            // // TODO
+            // memConditionVar.wait(lk, []{return isFrameReady;});
+            // memLock.lock();
+            // isFrameReady = false;
+            // isNewFrameNeed = false;
+        //}
         opcode = AS->codeData[REGS->PC++];
         exit = executer(opcode);
     }
-    isCpuTurnOff = true;
+    isVMcpuTurnOff = true;
     isNewFrameNeed = true;
     memConditionVar.notify_all();
     return;

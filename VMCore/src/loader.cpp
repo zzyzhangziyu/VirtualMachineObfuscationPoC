@@ -1,16 +1,19 @@
 #include "../include/main.hpp"
-#include "./opcodes.hpp"
+#include "../include/opcodes.hpp"
 #include <string.h>
 #include <fstream>
-//#include <bitset>
+#include <vector>
 
-#define CODE_DATA_SIZE_WITH_MAGIC 51202
+// #include <bitset>
 
-VBYTE* loadProtectedCode(int &mcsize, std::string fileName, bool &areFramesNeeded, int &framesCount, int *framesSizeArray)
+#define CODE_DATA_SIZE 51200
+
+VBYTE* loadProtectedCode(int &mcsize, std::string fileName, bool &areFramesNeeded, std::map<int, int> &frameMap)
 {
     VBYTE *mc;
     std::ifstream fileBinToRead;
     std::ofstream fileBinToWrite;
+    int framesCount;
     
     fileBinToRead.open(fileName, std::ios::binary);
 
@@ -19,20 +22,11 @@ VBYTE* loadProtectedCode(int &mcsize, std::string fileName, bool &areFramesNeede
         fileBinToRead.seekg(0, fileBinToRead.end);
         mcsize = fileBinToRead.tellg();
         fileBinToRead.seekg(0, fileBinToRead.beg);
-        
-        if(mcsize > CODE_DATA_SIZE_WITH_MAGIC)
-        {
-            areFramesNeeded = true;
-            framesCount = int((mcsize + CODE_DATA_SIZE_WITH_MAGIC - 1) / CODE_DATA_SIZE_WITH_MAGIC)
-            framesSizeArray = new int[framesCount];
-        }
 
         VWORD highVBYTE = fileBinToRead.get();
         VWORD lowVBYTE = fileBinToRead.get();
-
         // std::cout << std::bitset<8>(highVBYTE) << std::endl;
         // std::cout << std::hex << highVBYTE << std::endl;
-
         VDWORD magicNumber = (highVBYTE << 8) | lowVBYTE;
 
         if(magicNumber != MAGIC_NUMBER)
@@ -40,42 +34,73 @@ VBYTE* loadProtectedCode(int &mcsize, std::string fileName, bool &areFramesNeede
             fileBinToRead.close();
             throw 100012;
         }
+        
+        if(mcsize > CODE_DATA_SIZE)
+        {
+            areFramesNeeded = true;
+            framesCount = int((mcsize + CODE_DATA_SIZE - 1) / CODE_DATA_SIZE);
+            for(int i = 0; i < framesCount; i++) frameMap[i] = 0;
+        }
 
         fileBinToRead.seekg(0, fileBinToRead.beg);
 
         mc = new VBYTE[mcsize];
-        char VBYTE;
+        char vb;
         int counter = 0;
+        framesCount = 0;
+        std::string tempFileToOpen;
+        std::vector<VBYTE> readData;
+        int argCount = 0;
+        bool isOpcode;
 
-        fileBinToWrite
         if(areFramesNeeded) {
-            std::string tempFileToOpen = ".cached." + (++framesCount) + ".frame"
-            fileBinToWrite.open(tempFileToOpen.c_str(), std::ios::binary)
+            tempFileToOpen = ".cached." + std::to_string(framesCount++) + ".frame";
+            fileBinToWrite.open(tempFileToOpen.c_str(), std::fstream::out | std::ios::binary);
         }
-        //std::cout << "[DEBUG] *************" << std::endl;
-        while(fileBinToRead.get(VBYTE))
+        while(fileBinToRead.get(vb))
         {
+            
             if(areFramesNeeded) {
-                // **************************************************************************
-                // TODO: create frames
-
-                tempFileToOpen.put(VBYTE);
-
-                auto opcodeSize = checkOpcodeSize(VBYTE);
-                if(counter == CODE_DATA_SIZE_WITH_MAGIC) {
-                    fileBinToRead.close();
-                    std::string tempFileToOpen = ".cached." + (++framesCount) + ".frame"
-                    fileBinToWrite.open(tempFileToOpen.c_str(), std::ios::binary)
+                ++counter;
+                if(argCount == 0) 
+                {
+                    isOpcode = true;
+                    argCount = checkOpcodeSize(vb, isOpcode);
                 }
-                // **************************************************************************
+                else if(vb == 0xEE)
+                {
+                    argCount = -1;
+                    isOpcode = false;
+                }
+                else
+                {
+                    --argCount;
+                    isOpcode = false;
+                }
+                if((counter + checkOpcodeSize(vb, isOpcode)) > CODE_DATA_SIZE) {
+                    VBYTE *dataToWrite = &readData[0];
+                    fileBinToWrite.write((char*)dataToWrite, counter-1);
+                    fileBinToWrite.close();
+
+                    std::string tempFileToOpen = ".cached." + std::to_string(framesCount++) + ".frame";
+                    fileBinToWrite.open(tempFileToOpen.c_str(), std::fstream::out | std::ios::binary);
+                    
+                    readData.clear();
+                    counter = 1;
+                    readData.push_back(vb);
+                }
+                else 
+                {
+                    if(framesCount == 1) mc[counter - 1] = vb;
+                    readData.push_back(vb);
+                }
             }
             else {
-                mc[counter++] = VBYTE;
+                mc[counter++] = vb;
                 //std::cout << "\t<READ> : " << static_cast<uint16_t>(mc[counter - 1]) << std::endl;
             }
         }
         if(areFramesNeeded) fileBinToWrite.close();
-        //std::cout << "[DEBUG] *************" << std::endl;
         fileBinToRead.close();
     }
     else
@@ -85,8 +110,9 @@ VBYTE* loadProtectedCode(int &mcsize, std::string fileName, bool &areFramesNeede
     return mc;
 }
 
-int checkOpcodeSize(VBYTE opcode) 
+int checkOpcodeSize(VBYTE opcode, bool isOpcode) 
 {
+    if(!isOpcode) return 0;
     switch(opcode) 
     {
         case 0x56:
@@ -167,6 +193,8 @@ int checkOpcodeSize(VBYTE opcode)
             return 2;
         case CMPL:
             return 2;
+        case VMSYSBUS:
+            return 1;
         case PUSH:
            return 1;
         case POP:

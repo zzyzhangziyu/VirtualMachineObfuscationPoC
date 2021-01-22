@@ -1050,26 +1050,27 @@ int VMCPU::executer(VBYTE opcode)
     return valToReturn;
 }
 
-int getDataFromCodeData(std::string &arg1, int startFrom)
+void VMCPU::getDataFromCodeData(std::string &arg1, int startFrom)
 {
     int counter = startFrom;
-    int dataLength = 0;
+    std::stringstream ss;
     VBYTE b;
     while(true)
     {
-        if(counter) // TODO *****************************
-        {
-            // TODO *****************************
-            memConditionVar.wait(lk, []{return isFrameReady;});
-            isFrameReady = false;
-            isNewFrameNeed = false;
-        }
+
+        // if(counter) // TODO *****************************
+        // {
+        //     // TODO *****************************
+        //     memConditionVar.wait(lk, []{return isFrameReady;});
+        //     isFrameReady = false;
+        //     isNewFrameNeed = false;
+        // }
         // TODO: restore previous frame *****************************
 
         b = AS->codeData[counter++];
         if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
-        ++dataLength;
-        arg1 += std::to_string(b);
+        ss << std::hex << b;
     }
-    return dataLength;
-}
+    arg1 = ss.str();
+    return;
+} 

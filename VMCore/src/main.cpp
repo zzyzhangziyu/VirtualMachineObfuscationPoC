@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     int mcsize = -1;
     try 
     {
-        mc = loadProtectedCode(mcsize, pathToFile, vm->areFramesNeeded, vm->framesCount, vm->framesSizeArray);
+        mc = loadProtectedCode(mcsize, pathToFile, vm->areFramesNeeded, vm->frameMap);
     }
     catch (int e) 
     {
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     else if(mode.compare(MODE_EXEC) == 0) 
     {
         try{
-            std::thread memThread(&Test::memoryManager, vm);
+            std::thread memThread(&VMCPU::memoryManager, vm);
             vm->run();
             memThread.join();
         } catch(...){

@@ -1,23 +1,23 @@
 #include "../include/vmcpu.hpp"
 
 void VMCPU::memoryManager() {
-    std::unique_lock<std::mutex> memLock(memMutex);
-    memLock.unlock();
-    int currentFrame = 0;
+    // std::unique_lock<std::mutex> memLock(memMutex);
+    // memLock.unlock();
+    // int currentFrame = 0;
 
-    while(true) {
-        memConditionVar.wait(lk, []{return isNewFrameNeed;});
-        memLock.lock();
+    // while(true) {
+    //     memConditionVar.wait(memLock, []{ return isNewFrameNeed; });
+    //     memLock.lock();
 
-        if(isVMcpuTurnOff) {
-            return;
-        }
+    //     if(isVMcpuTurnOff) {
+    //         return;
+    //     }
 
-        //todo
+    //     //todo
 
-        isFrameReady = true;
-        memLock.unlock();
-        memConditionVar.notify_all();
-    }
+    //     isFrameReady = true;
+    //     memLock.unlock();
+    //     memConditionVar.notify_all();
+    // }
     return;
 }

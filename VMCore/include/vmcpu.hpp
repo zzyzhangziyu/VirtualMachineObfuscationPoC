@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <vector>
 #include <sstream>
+#include <map>
 
 #ifdef _WIN32_DEV_ENVIRONMENT
     #include <Windows.h>
@@ -80,8 +81,7 @@ typedef struct {
 class VMCPU {
     public:
         bool areFramesNeeded;
-        int countFrames;
-        int *framesSizeArray;
+        std::map<int, int> frameMap;
 
     private:
         PADDRESS_SPACE AS;
@@ -92,11 +92,8 @@ class VMCPU {
             UNIX *sysBus;
         #endif
 
-        std::mutex memMutex;
         bool isVMcpuTurnOff;
-
         bool areFrames;
-        bool isVMcpuTurnOff;
         std::mutex memMutex;
         std::condition_variable memConditionVar;
         bool isFrameReady;
@@ -104,14 +101,12 @@ class VMCPU {
 
     private:
         int executer(VBYTE);
-        int getDataFromCodeData(std::string &, int);
+        void getDataFromCodeData(std::string &, int);
         void vmPrint(VBYTE s);
         void vmPrintHX(VDWORD);
         void vmPrintN(VBYTE s);
         void vmPrintHXN(VDWORD);
         //void vmScan();
-
-        void memoryManager();
 
     public:
         VMCPU();
@@ -119,6 +114,7 @@ class VMCPU {
         void run();
         void debug();
         bool loadCode(VBYTE *, int);
+        void memoryManager();
 
     #ifdef _VM_CPU_TEST_
     public:

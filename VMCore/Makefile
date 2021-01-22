@@ -19,11 +19,11 @@ help:
 build: $(PREXEC) ## Build project
 
 $(PREXEC): $(PROBJECTS)
-	$(CC) $(PROBJECTS) -o $(PREXEC) $(CFLAGS)
+	$(CC) $(PROBJECTS) -o $(PREXEC) $(CFLAGS) -lpthread
 
 # telling make how to turn file.cpp into file.o for an arbitary file
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CC) -c $^ -o $@ $(CFLAGS)
+	$(CC) -c $^ -o $@ $(CFLAGS) -lpthread
 
 $(OBJ_DIR):
 	mkdir $@
