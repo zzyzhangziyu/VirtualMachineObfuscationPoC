@@ -107,14 +107,10 @@ void VMCPU::run()
     bool exit = false;
     VBYTE opcode;
 
-    for (const auto& [key, value] : frameMap) 
-    {
-        std::cout << "KEY: " << key << " VALUE: " << value << std::endl;
-    }
-
     while(!exit)
     {
         if(areFramesNeeded && (REGS->PC >= CODE_DATA_SIZE)) REGS->PC = loadFrame(REGS->PC);
+        if(isError) return;
         opcode = AS->codeData[REGS->PC++];
         exit = executer(opcode);
     }
@@ -206,9 +202,7 @@ int VMCPU::loadFrame(int pc)
 error_loadFrame:
         std::cout << "[ERROR] Failed load a frame" << std::endl;
         isError = true;
-// ********************************************************************************************
-        exit(0);  //TODO
-// ********************************************************************************************
+        return 0;
 
 ok_loadFrame:
     currentFrameNumber = frameNumber;
@@ -238,9 +232,7 @@ void VMCPU::restoreFrame()
 error_restoreFrame:
     std::cout << "[ERROR] Failed restore a frame" << std::endl;
     isError = true;
-// ********************************************************************************************
-    exit(0);  //TODO
-// ********************************************************************************************
+    return;
 ok_restoreFrame:
     isError = false;
     return;
