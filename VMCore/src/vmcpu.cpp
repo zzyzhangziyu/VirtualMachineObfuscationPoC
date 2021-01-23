@@ -127,7 +127,7 @@ VBYTE VMCPU::getByteFromFrame(int bytePosition)
     auto frameNumber = -1;
     for (const auto& [key, value] : frameMap) {
         sum += value;
-        if(sum >= bytePosition)
+        if(sum >= (bytePosition + 1))
         {
             frameNumber = key;
             break;
@@ -139,7 +139,7 @@ VBYTE VMCPU::getByteFromFrame(int bytePosition)
         std::string frameToLoadName = ".cached." + std::to_string(frameNumber) + ".frame";
         std::ifstream fileBinToRead;
         fileBinToRead.open(frameToLoadName, std::ios::binary);
-        auto positionToGet = sum - bytePosition;
+        auto positionToGet = frameMap[frameNumber] - (sum - bytePosition);
         if(fileBinToRead.is_open())
         {
             auto counter = 0;
