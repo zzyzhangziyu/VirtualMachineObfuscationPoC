@@ -719,6 +719,7 @@ int VMCPU::executer(VBYTE opcode)
                         while(true)
                         {
                             if(areFramesNeeded && (counter >= CODE_DATA_SIZE)) counter = loadFrame(counter);
+                            if(isError) goto EXCEPTION;
                             b = AS->codeData[counter++];
                             if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
                             ++dataLength;
@@ -727,6 +728,7 @@ int VMCPU::executer(VBYTE opcode)
                         }
                         currentFrameNumber = frameNumberToRestore;
                         restoreFrame();
+                        if(isError) goto EXCEPTION;
                         VBYTE *dataToWrite = &dataVbyte[0];
                         std::string arg1 = "";
                         getDataFromCodeData(arg1, wTmp_0);
