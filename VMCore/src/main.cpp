@@ -81,17 +81,17 @@ int main(int argc, char *argv[])
 
     VBYTE *mc;
     int mcsize = -1;
-    try
+    try 
     {
-        mc = loadProtectedCode(mcsize, pathToFile);
+        mc = loadProtectedCode(mcsize, pathToFile, vm->areFramesNeeded, vm->frameMap);
     }
-    catch (int e)
+    catch (int e) 
     {
         std::cout << "[ERROR " << e << "] NO FILE OR SE \n";
         return -1;
     }
 
-    if(!vm->loadCode(mc, mcsize))
+    if(!vm->loadCode(mc, mcsize)) 
     {
         delete[] mc;
         return -1;
@@ -99,19 +99,22 @@ int main(int argc, char *argv[])
 
     delete[] mc;
 
-    if(mode.compare(MODE_DEBUG) == 0)
+    if(mode.compare(MODE_DEBUG) == 0) 
     {
         vm->debug();
     }
-    else if(mode.compare(MODE_EXEC) == 0)
+    else if(mode.compare(MODE_EXEC) == 0) 
     {
         try{
+            // std::thread memThread(&VMCPU::memoryManager, vm);
             vm->run();
+            // memThread.join();
+            delete vm;
         } catch(...){
             return -1;
         }
     }
-    else
+    else 
     {
         std::cout << "[ERROR 100101] INCORRECT MODE!\n";
         return -1;

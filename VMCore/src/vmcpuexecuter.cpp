@@ -715,14 +715,18 @@ int VMCPU::executer(VBYTE opcode)
                         int dataLength = 0;
                         VBYTE b;
                         std::vector<VBYTE> dataVbyte;
+                        int frameNumberToRestore = currentFrameNumber;
                         while(true)
                         {
+                            if(areFramesNeeded && (counter >= CODE_DATA_SIZE)) counter = loadFrame(counter);
                             b = AS->codeData[counter++];
                             if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
                             ++dataLength;
                             dataVbyte.push_back(b);
                             std::cout << std::hex << b << std::endl;
                         }
+                        currentFrameNumber = frameNumberToRestore;
+                        restoreFrame();
                         VBYTE *dataToWrite = &dataVbyte[0];
                         std::string arg1 = "";
                         getDataFromCodeData(arg1, wTmp_0);
@@ -866,7 +870,9 @@ int VMCPU::executer(VBYTE opcode)
                 #endif
                 goto EXCEPTION;
             }
-            bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
+            if(areFramesNeeded && (AS->stack[REGS->SP] >= CODE_DATA_SIZE)) bTmp_0 = getByteFromFrame(AS->stack[REGS->SP++]);
+            else bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
+            if(isError) goto EXCEPTION;
             vmPrint(bTmp_0);
             break;
         /*
@@ -888,7 +894,9 @@ int VMCPU::executer(VBYTE opcode)
                 #endif
                 goto EXCEPTION;
             }
-            bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
+            if(areFramesNeeded && (AS->stack[REGS->SP] >= CODE_DATA_SIZE)) bTmp_0 = getByteFromFrame(AS->stack[REGS->SP++]);
+            else bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
+            if(isError) goto EXCEPTION;
             vmPrintN(bTmp_0);
             break;
         /*
@@ -1048,19 +1056,4 @@ int VMCPU::executer(VBYTE opcode)
     }
 
     return valToReturn;
-}
-
-void VMCPU::getDataFromCodeData(std::string &arg1, int startFrom)
-{
-    int counter = startFrom;
-    std::stringstream ss;
-    VBYTE b;
-    while(true)
-    {
-        b = AS->codeData[counter++];
-        if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
-        ss << std::hex << b;
-    }
-    arg1 = ss.str();
-    return;
 }

@@ -6,6 +6,18 @@
 #include <stdint.h>
 #include <vector>
 #include <sstream>
+#include <map>
+#include <fstream>
+
+#ifdef _WIN32_DEV_ENVIRONMENT
+    #include <Windows.h>
+#else _LINUX_DEV_ENVIRONMENT
+    #include <unistd.h>
+#endif
+
+// #include <thread>
+// #include <mutex>
+// #include <condition_variable>
 
 #include "./opcodes.hpp"
 #include "./advancesecurity.hpp"
@@ -69,6 +81,10 @@ typedef struct {
 #endif // _VM_CPU_TEST_
 
 class VMCPU {
+    public:
+        bool areFramesNeeded;
+        std::map<int, int> frameMap;
+
     private:
         PADDRESS_SPACE AS;
         PREGISTERSS REGS;
@@ -78,6 +94,11 @@ class VMCPU {
             UNIX *sysBus;
         #endif
 
+        // std::mutex memMutex;
+        // std::condition_variable memConditionVar;
+        int currentFrameNumber;
+        bool isError;
+
     private:
         int executer(VBYTE);
         void getDataFromCodeData(std::string &, int);
@@ -85,6 +106,9 @@ class VMCPU {
         void vmPrintHX(VDWORD);
         void vmPrintN(VBYTE s);
         void vmPrintHXN(VDWORD);
+        VBYTE getByteFromFrame(int);
+        int loadFrame(int);
+        void restoreFrame();
         //void vmScan();
 
     public:
@@ -93,6 +117,7 @@ class VMCPU {
         void run();
         void debug();
         bool loadCode(VBYTE *, int);
+        void memoryManager();
 
     #ifdef _VM_CPU_TEST_
     public:
