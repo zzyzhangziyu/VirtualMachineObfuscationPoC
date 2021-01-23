@@ -109,12 +109,10 @@ void VMCPU::run()
 
     while(!exit)
     {
-        if(areFramesNeeded && (REGS->PC >= CODE_DATA_SIZE)) REGS->PC = loadFrame(REGS->PC);
+        if(areFramesNeeded && (REGS->PC >= frameMap[currentFrameNumber])) REGS->PC = loadFrame(REGS->PC);
         if(isError) return;
         opcode = AS->codeData[REGS->PC++];
         exit = executer(opcode);
-
-        std::cin.get();
     }
     return;
 }
@@ -243,6 +241,14 @@ int VMCPU::loadFrame(int pc)
             break;
         }
     }
+
+    if(frameMap[currentFrameNumber] == pc)
+    {
+        frameNumber = currentFrameNumber + 1;
+        pc = 0;
+        sum = frameMap[frameNumber];
+    }
+
     #ifdef V_DEBUG
         std::cout << "[DEBUG] Frame number: " << frameNumber << std::endl;
     #endif

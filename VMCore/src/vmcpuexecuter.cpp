@@ -69,7 +69,7 @@ int VMCPU::executer(VBYTE opcode)
             //if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
             REGS->PC += 2;
             REGS->R[bTmp_0] = 0;
-            if(areFramesNeeded && (wTmp_0 >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (wTmp_0 >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> bytes = getByteFromFrame(wTmp_0, 1);
                 if(isError) goto EXCEPTION;
@@ -90,7 +90,7 @@ int VMCPU::executer(VBYTE opcode)
             wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
             //if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
             REGS->PC += 2;
-            if(areFramesNeeded && (wTmp_0 >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (wTmp_0 >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> bytes = getByteFromFrame(wTmp_0, 2);
                 if(isError) goto EXCEPTION;
@@ -140,7 +140,7 @@ int VMCPU::executer(VBYTE opcode)
             REGS->PC += 2;
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
-            if(areFramesNeeded && (wTmp_0 >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (wTmp_0 >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> byteToWrite;
                 byteToWrite.push_back(*(VBYTE*) &REGS->R[bTmp_0]);
@@ -162,7 +162,7 @@ int VMCPU::executer(VBYTE opcode)
             REGS->PC += 2;
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
-            if(areFramesNeeded && (wTmp_0 >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (wTmp_0 >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> byteToWrite;
                 VWORD w = *(VWORD*) &REGS->R[bTmp_0];
@@ -188,7 +188,7 @@ int VMCPU::executer(VBYTE opcode)
             if(bTmp_1 > 8) goto EXCEPTION;
             //if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
             REGS->R[bTmp_0] = 0;
-            if(areFramesNeeded && (REGS->R[bTmp_1] >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (REGS->R[bTmp_1] >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> bytes = getByteFromFrame(REGS->R[bTmp_1], 1);
                 if(isError) goto EXCEPTION;
@@ -210,7 +210,7 @@ int VMCPU::executer(VBYTE opcode)
             bTmp_1 = AS->codeData[REGS->PC++];
             if(bTmp_1 > 8) goto EXCEPTION;
             //if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
-            if(areFramesNeeded && (REGS->R[bTmp_1] >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (REGS->R[bTmp_1] >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> bytes = getByteFromFrame(REGS->R[bTmp_1], 2);
                 if(isError) goto EXCEPTION;
@@ -234,7 +234,7 @@ int VMCPU::executer(VBYTE opcode)
             dTmp_0 = *(VDWORD*) &AS->codeData[REGS->PC];
             //if(dTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
             REGS->PC += 2;
-            if(areFramesNeeded && (dTmp_0 >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (dTmp_0 >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> bytes = getByteFromFrame(dTmp_0, 4);
                 if(isError) goto EXCEPTION;
@@ -273,7 +273,7 @@ int VMCPU::executer(VBYTE opcode)
             REGS->PC += 2;
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
-            if(areFramesNeeded && (wTmp_0 >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (wTmp_0 >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> byteToWrite;
                 VDWORD dw = REGS->R[bTmp_0];
@@ -300,7 +300,7 @@ int VMCPU::executer(VBYTE opcode)
             bTmp_1 = AS->codeData[REGS->PC++];
             if(bTmp_1 > 8) goto EXCEPTION;
             //if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
-            if(areFramesNeeded && (REGS->R[bTmp_1] >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (REGS->R[bTmp_1] >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> bytes = getByteFromFrame(REGS->R[bTmp_1], 4);
                 if(isError) goto EXCEPTION;
@@ -327,7 +327,7 @@ int VMCPU::executer(VBYTE opcode)
             #endif
             wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
             REGS->PC += 2;
-            if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
+            // if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
             REGS->PC = wTmp_0;
             break; 
         /*
@@ -340,7 +340,7 @@ int VMCPU::executer(VBYTE opcode)
             #endif
             wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
             REGS->PC += 2;
-            if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
+            // if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
             if(REGS->ZF) REGS->PC = wTmp_0;
             break;
         /*
@@ -353,7 +353,7 @@ int VMCPU::executer(VBYTE opcode)
             #endif
             wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
             REGS->PC += 2;
-            if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
+            // if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
             if(!REGS->ZF) REGS->PC = wTmp_0;
             break;
         /*
@@ -366,7 +366,7 @@ int VMCPU::executer(VBYTE opcode)
             #endif
             wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
             REGS->PC += 2;
-            if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
+            // if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
             if(REGS->ZF || !REGS->CF) REGS->PC = wTmp_0;
             break;
         /*
@@ -379,7 +379,7 @@ int VMCPU::executer(VBYTE opcode)
             #endif
             wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
             REGS->PC += 2;
-            if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
+            // if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
             if(REGS->ZF || REGS->CF) REGS->PC = wTmp_0;
             break;
         /*
@@ -392,7 +392,7 @@ int VMCPU::executer(VBYTE opcode)
             #endif
             wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
             REGS->PC += 2;
-            if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
+            // if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
             if(!REGS->ZF && REGS->CF) REGS->PC = wTmp_0;
             break;
         /*
@@ -405,7 +405,7 @@ int VMCPU::executer(VBYTE opcode)
             #endif
             wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
             REGS->PC += 2;
-            if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
+            // if(wTmp_0 > sizeof(AS->codeData)) goto EXCEPTION;
             if(!REGS->ZF && !REGS->CF) REGS->PC = wTmp_0;
             break;
         /*  ********************************
@@ -797,7 +797,7 @@ int VMCPU::executer(VBYTE opcode)
                         int frameNumberToRestore = currentFrameNumber;
                         while(true)
                         {
-                            if(areFramesNeeded && (counter >= CODE_DATA_SIZE)) counter = loadFrame(counter);
+                            if(areFramesNeeded && (counter >= frameMap[currentFrameNumber])) counter = loadFrame(counter);
                             if(isError) goto EXCEPTION;
                             b = AS->codeData[counter++];
                             if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
@@ -951,7 +951,7 @@ int VMCPU::executer(VBYTE opcode)
                 #endif
                 goto EXCEPTION;
             }
-            if(areFramesNeeded && (AS->stack[REGS->SP] >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (AS->stack[REGS->SP] >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> bytes = getByteFromFrame(AS->stack[REGS->SP++], 1);
                 bTmp_0 = bytes[0];
@@ -979,7 +979,7 @@ int VMCPU::executer(VBYTE opcode)
                 #endif
                 goto EXCEPTION;
             }
-            if(areFramesNeeded && (AS->stack[REGS->SP] >= CODE_DATA_SIZE))
+            if(areFramesNeeded && (AS->stack[REGS->SP] >= frameMap[currentFrameNumber]))
             {
                 std::vector<VBYTE> bytes = getByteFromFrame(AS->stack[REGS->SP++], 1);
                 bTmp_0 = bytes[0];

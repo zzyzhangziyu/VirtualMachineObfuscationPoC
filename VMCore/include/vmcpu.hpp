@@ -28,7 +28,7 @@
     #include "./drivers/linuxsysbus.hpp"
 #endif
 
-#define V_DEBUG
+// #define V_DEBUG
 
 #ifdef VMTESTS
     #include "./test.hpp"
@@ -36,7 +36,7 @@
 
 #include "../../SharedCode/datatypes.hpp"
 
-#define CODE_DATA_SIZE 20//51200
+#define CODE_DATA_SIZE 51200
 #define STACK_SIZE 256
 #define INPUT_BUFFER_SIZE 1024
 
