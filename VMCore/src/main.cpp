@@ -23,7 +23,7 @@ void show_usage()
 int main(int argc, char *argv[])
 {
 #ifdef _LINUX_DEV_ENVIRONMENT
-    checkPtrace();
+    checkPtrace(argc);
 #endif
     VMCPU *vm = new VMCPU();
 

@@ -113,16 +113,74 @@ void VMCPU::run()
         if(isError) return;
         opcode = AS->codeData[REGS->PC++];
         exit = executer(opcode);
+
+        std::cin.get();
     }
     return;
 }
 
-VBYTE VMCPU::getByteFromFrame(int bytePosition)
+void VMCPU::writeByteIntoFrame(int bytePosition, int howManyBytes, std::vector<VBYTE> bytes)
+{
+    #ifdef V_DEBUG
+        std::cout << "[DEBUG] Write bytes into frame" << std::endl;
+    #endif
+    auto sum = 0;
+    auto frameNumber = -1;
+    for (const auto& [key, value] : frameMap) {
+        sum += value;
+        if(sum >= (bytePosition + 1))
+        {
+            frameNumber = key;
+            break;
+        }
+    }
+    if(frameNumber == -1) goto error_getByteFromFrame;
+    else
+    {
+        char byte;
+        std::vector<VBYTE> readData;
+        std::string frameToLoadName = ".cached." + std::to_string(frameNumber) + ".frame";
+        std::ifstream fileBinToRead;
+        std::ofstream fileBinToWrite;
+        fileBinToRead.open(frameToLoadName, std::ios::binary);
+        auto positionToGet = frameMap[frameNumber] - (sum - bytePosition);
+        auto counter = 0;
+        if(fileBinToRead.is_open())
+        {
+            while(fileBinToRead.get(byte))
+            {
+                ++counter;
+                readData.push_back(byte);
+            }
+            fileBinToRead.close();
+            
+            for(auto i = 0; i < howManyBytes; i++) readData[positionToGet++] = bytes[i];
+            
+            fileBinToWrite.open(frameToLoadName.c_str(), std::fstream::out | std::ios::binary);
+            VBYTE *dataToWrite = &readData[0];
+            fileBinToWrite.write((char*)dataToWrite, counter-1);
+            fileBinToWrite.close();
+        }
+        else goto error_getByteFromFrame;
+    }
+    goto ok_getByteFromFrame;
+
+error_getByteFromFrame:
+        std::cout << "[ERROR] Write bytes into frame" << std::endl;
+        isError = true;
+        return;
+ok_getByteFromFrame:
+    isError = false;
+    return;
+}
+
+std::vector<VBYTE> VMCPU::getByteFromFrame(int bytePosition, int howManyBytes)
 {
     #ifdef V_DEBUG
         std::cout << "[DEBUG] Get a byte from frame" << std::endl;
     #endif
-    char byteToReturn;
+    std::vector<VBYTE> readBytes;
+    char byte;
     auto sum = 0;
     auto frameNumber = -1;
     for (const auto& [key, value] : frameMap) {
@@ -143,9 +201,15 @@ VBYTE VMCPU::getByteFromFrame(int bytePosition)
         if(fileBinToRead.is_open())
         {
             auto counter = 0;
-            while(fileBinToRead.get(byteToReturn))
+            while(fileBinToRead.get(byte))
             {
-                if(counter == positionToGet) break;
+                if(counter == positionToGet)
+                { 
+                    readBytes.push_back(byte);
+                    --howManyBytes;
+                    ++positionToGet;
+                    if(howManyBytes == 0) break;
+                }
                 ++counter;
             }
             fileBinToRead.close();
@@ -157,10 +221,11 @@ VBYTE VMCPU::getByteFromFrame(int bytePosition)
 error_getByteFromFrame:
         std::cout << "[ERROR] Failed get a byte from frame" << std::endl;
         isError = true;
-        return 0x0;
+        readBytes.push_back(0x0);
+        return readBytes;
 ok_getByteFromFrame:
     isError = false;
-    return byteToReturn;
+    return readBytes;
 }
 
 int VMCPU::loadFrame(int pc)

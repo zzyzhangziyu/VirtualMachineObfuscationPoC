@@ -66,10 +66,16 @@ int VMCPU::executer(VBYTE opcode)
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
             wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
-            if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
+            //if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
             REGS->PC += 2;
             REGS->R[bTmp_0] = 0;
-            *(VBYTE*) &REGS->R[bTmp_0] = AS->codeData[wTmp_0];
+            if(areFramesNeeded && (wTmp_0 >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> bytes = getByteFromFrame(wTmp_0, 1);
+                if(isError) goto EXCEPTION;
+                *(VBYTE*) &REGS->R[bTmp_0] = bytes[0];
+            }
+            else *(VBYTE*) &REGS->R[bTmp_0] = AS->codeData[wTmp_0];
             break;  
         /* 
             MOVMW - move and extend word from memory to register 
@@ -82,9 +88,18 @@ int VMCPU::executer(VBYTE opcode)
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
             wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
-            if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
+            //if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
             REGS->PC += 2;
-            *(VWORD*) &REGS->R[bTmp_0] = *(VWORD*) &AS->codeData[wTmp_0];
+            if(areFramesNeeded && (wTmp_0 >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> bytes = getByteFromFrame(wTmp_0, 2);
+                if(isError) goto EXCEPTION;
+                VBYTE hb = bytes[0];
+                VBYTE lb = bytes[1];
+                VWORD w = ((VWORD) hb << 8) | lb;
+                *(VWORD*) &REGS->R[bTmp_0] = w;
+            }
+            else *(VWORD*) &REGS->R[bTmp_0] = *(VWORD*) &AS->codeData[wTmp_0];
             break;  
         /* 
             MOVB - move and extend byte to register 
@@ -109,38 +124,54 @@ int VMCPU::executer(VBYTE opcode)
             #endif
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
-            *(VWORD*) REGS->R[bTmp_0] = *(VWORD *) &AS->codeData[REGS->PC];
+            *(VWORD*) &REGS->R[bTmp_0] = *(VWORD *) &AS->codeData[REGS->PC];
             REGS->PC += 2;
             break; 
         /* 
             MOVBM - move byte from register to memory location 
-            06 04 43 13 => MOVBM 1343, R4
+            07 04 43 13 => MOVBM 1343,R4
         */
         case MOVBM:
             #ifdef V_DEBUG
                 std::cout << "[DEBUG] MOVBM" << std::endl;
             #endif
+            wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
+            //if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
+            REGS->PC += 2;
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
-            wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
-            if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
-            REGS->PC += 2;
-            AS->codeData[wTmp_0] = *(VBYTE*) &REGS->R[bTmp_0];
+            if(areFramesNeeded && (wTmp_0 >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> byteToWrite;
+                byteToWrite.push_back(*(VBYTE*) &REGS->R[bTmp_0]);
+                writeByteIntoFrame(wTmp_0, 1, byteToWrite);
+                if(isError) goto EXCEPTION;
+            }
+            else AS->codeData[wTmp_0] = *(VBYTE*) &REGS->R[bTmp_0];
             break;  
         /* 
             MOVWM - move word from register to memory location 
-            07 04 43 13 => MOVWM 1343, R4
+            07 43 13 04 => MOVWM 1343,R4
         */
         case MOVWM:
             #ifdef V_DEBUG
                 std::cout << "[DEBUG] MOVWM" << std::endl;
             #endif
+            wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
+            //if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
+            REGS->PC += 2;
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
-            wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
-            if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
-            REGS->PC += 2;
-            *(VWORD*) &AS->codeData[wTmp_0] = REGS->R[bTmp_0];
+            if(areFramesNeeded && (wTmp_0 >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> byteToWrite;
+                VWORD w = *(VWORD*) &REGS->R[bTmp_0];
+                byteToWrite.push_back(w >> 8);
+                byteToWrite.push_back(w & 0xff);
+                writeByteIntoFrame(wTmp_0, 2, byteToWrite);
+                if(isError) goto EXCEPTION;
+            }
+            else *(VWORD*) &AS->codeData[wTmp_0] = REGS->R[bTmp_0];
             break;
         /* 
             MOVMRB - move and extend byte from memory to register
@@ -155,9 +186,15 @@ int VMCPU::executer(VBYTE opcode)
             if(bTmp_0 > 8) goto EXCEPTION;
             bTmp_1 = AS->codeData[REGS->PC++];
             if(bTmp_1 > 8) goto EXCEPTION;
-            if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
+            //if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
             REGS->R[bTmp_0] = 0;
-            *(VBYTE*) &REGS->R[bTmp_0] = AS->codeData[REGS->R[bTmp_1]];
+            if(areFramesNeeded && (REGS->R[bTmp_1] >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> bytes = getByteFromFrame(REGS->R[bTmp_1], 1);
+                if(isError) goto EXCEPTION;
+                *(VBYTE*) &REGS->R[bTmp_0] = bytes[0];
+            }
+            else *(VBYTE*) &REGS->R[bTmp_0] = AS->codeData[REGS->R[bTmp_1]];
             break;
         /* 
             MOVMRW - move and extend word from memory to register
@@ -172,8 +209,17 @@ int VMCPU::executer(VBYTE opcode)
             if(bTmp_0 > 8) goto EXCEPTION;
             bTmp_1 = AS->codeData[REGS->PC++];
             if(bTmp_1 > 8) goto EXCEPTION;
-            if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
-            *(VWORD*) REGS->R[bTmp_0] = *(VWORD*) &AS->codeData[REGS->R[bTmp_1]];
+            //if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
+            if(areFramesNeeded && (REGS->R[bTmp_1] >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> bytes = getByteFromFrame(REGS->R[bTmp_1], 2);
+                if(isError) goto EXCEPTION;
+                VBYTE hb = bytes[0];
+                VBYTE lb = bytes[1];
+                VWORD w = ((VWORD) hb << 8) | lb;
+                *(VWORD*) &REGS->R[bTmp_0] = w;
+            }
+            else *(VWORD*) &REGS->R[bTmp_0] = *(VWORD*) &AS->codeData[REGS->R[bTmp_1]];
             break;
         /* 
             MOVMD - move double word from memory to register 
@@ -186,9 +232,20 @@ int VMCPU::executer(VBYTE opcode)
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
             dTmp_0 = *(VDWORD*) &AS->codeData[REGS->PC];
-            if(dTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
+            //if(dTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
             REGS->PC += 2;
-            REGS->R[bTmp_0] = *(VDWORD*) &AS->codeData[dTmp_0];
+            if(areFramesNeeded && (dTmp_0 >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> bytes = getByteFromFrame(dTmp_0, 4);
+                if(isError) goto EXCEPTION;
+                VBYTE hb3 = bytes[0];
+                VBYTE hb2 = bytes[1];
+                VBYTE hb1 = bytes[2];
+                VBYTE lb = bytes[3];
+                VDWORD dw = ((VDWORD) hb3 << 24) | ((VDWORD) hb2 << 16) | ((VDWORD) hb1 << 8) | lb;
+                REGS->R[bTmp_0] = dw;
+            }
+            else REGS->R[bTmp_0] = *(VDWORD*) &AS->codeData[dTmp_0];
             break;  
         /* 
             MOVD - move value to register 
@@ -205,18 +262,29 @@ int VMCPU::executer(VBYTE opcode)
             break;  
         /* 
             MOVDM - move double word from register to memory location 
-            0C 04 43 13 => MOVWM 1343, R4
+            0C 43 13 04 => MOVWM 1343, R4
         */
         case MOVDM:
             #ifdef V_DEBUG
                 std::cout << "[DEBUG] MOVDM" << std::endl;
             #endif
+            wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
+            //if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
+            REGS->PC += 2;
             bTmp_0 = AS->codeData[REGS->PC++];
             if(bTmp_0 > 8) goto EXCEPTION;
-            wTmp_0 = *(VWORD*) &AS->codeData[REGS->PC];
-            if(wTmp_0 >= sizeof(AS->codeData)) goto EXCEPTION;
-            REGS->PC += 2;
-            *(VDWORD*) &AS->codeData[wTmp_0] = REGS->R[bTmp_0];
+            if(areFramesNeeded && (wTmp_0 >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> byteToWrite;
+                VDWORD dw = REGS->R[bTmp_0];
+                byteToWrite.push_back(dw >> 24);
+                byteToWrite.push_back(dw >> 16);
+                byteToWrite.push_back(dw >> 8);
+                byteToWrite.push_back(dw);
+                writeByteIntoFrame(wTmp_0, 2, byteToWrite);
+                if(isError) goto EXCEPTION;
+            }
+            else *(VDWORD*) &AS->codeData[wTmp_0] = REGS->R[bTmp_0];
             break;
         /* 
             MOVMRD - move double word from memory to register
@@ -231,8 +299,19 @@ int VMCPU::executer(VBYTE opcode)
             if(bTmp_0 > 8) goto EXCEPTION;
             bTmp_1 = AS->codeData[REGS->PC++];
             if(bTmp_1 > 8) goto EXCEPTION;
-            if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
-            REGS->R[bTmp_0] = *(VDWORD*) &AS->codeData[REGS->R[bTmp_1]];
+            //if(REGS->R[bTmp_1] >= sizeof(AS->codeData)) goto EXCEPTION;
+            if(areFramesNeeded && (REGS->R[bTmp_1] >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> bytes = getByteFromFrame(REGS->R[bTmp_1], 4);
+                if(isError) goto EXCEPTION;
+                VBYTE hb3 = bytes[0];
+                VBYTE hb2 = bytes[1];
+                VBYTE hb1 = bytes[2];
+                VBYTE lb = bytes[3];
+                VDWORD dw = ((VDWORD) hb3 << 24) | ((VDWORD) hb2 << 16) | ((VDWORD) hb1 << 8) | lb;
+                REGS->R[bTmp_0] = dw;
+            }
+            else REGS->R[bTmp_0] = *(VDWORD*) &AS->codeData[REGS->R[bTmp_1]];
             break;
         /*  ********************************
                         JUMP
@@ -872,7 +951,11 @@ int VMCPU::executer(VBYTE opcode)
                 #endif
                 goto EXCEPTION;
             }
-            if(areFramesNeeded && (AS->stack[REGS->SP] >= CODE_DATA_SIZE)) bTmp_0 = getByteFromFrame(AS->stack[REGS->SP++]);
+            if(areFramesNeeded && (AS->stack[REGS->SP] >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> bytes = getByteFromFrame(AS->stack[REGS->SP++], 1);
+                bTmp_0 = bytes[0];
+            }
             else bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
             if(isError) goto EXCEPTION;
             vmPrint(bTmp_0);
@@ -896,7 +979,11 @@ int VMCPU::executer(VBYTE opcode)
                 #endif
                 goto EXCEPTION;
             }
-            if(areFramesNeeded && (AS->stack[REGS->SP] >= CODE_DATA_SIZE)) bTmp_0 = getByteFromFrame(AS->stack[REGS->SP++]);
+            if(areFramesNeeded && (AS->stack[REGS->SP] >= CODE_DATA_SIZE))
+            {
+                std::vector<VBYTE> bytes = getByteFromFrame(AS->stack[REGS->SP++], 1);
+                bTmp_0 = bytes[0];
+            }
             else bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
             if(isError) goto EXCEPTION;
             vmPrintN(bTmp_0);

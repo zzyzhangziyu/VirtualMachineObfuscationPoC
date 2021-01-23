@@ -3,7 +3,7 @@
 #ifdef _WIN32_DEV_ENVIRONMENT
 
 #else //_LINUX_DEV_ENVIRONMENT
-    void checkPtrace()
+    void checkPtrace(int argc)
     {
         int offset = 10;
         if (ptrace(PTRACE_TRACEME, 0, 1, 0) == 0) offset = 66;

@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "vmcpu.hpp"
+
 #ifdef _WIN32_DEV_ENVIRONMENT
     
 #else //_LINUX_DEV_ENVIRONMENT
@@ -10,7 +12,7 @@
     #include <unistd.h>
     #include <sys/ptrace.h>
     /* ****** FUNCTIONS ****** */
-    void checkPtrace();
+    void checkPtrace(int);
 #endif
 
 #endif //_ADVM_SEC_HPP

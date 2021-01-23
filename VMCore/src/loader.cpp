@@ -6,7 +6,7 @@
 
 // #include <bitset>
 
-#define CODE_DATA_SIZE 51200
+#define CODE_DATA_SIZE 20//51200
 
 VBYTE* loadProtectedCode(int &mcsize, std::string fileName, bool &areFramesNeeded, std::map<int, int> &frameMap)
 {
