@@ -3,7 +3,9 @@
 
 #include <iostream>
 
-#ifdef _LINUX_DEV_ENVIRONMENT
+#ifdef _WIN32_DEV_ENVIRONMENT
+    
+#else //_LINUX_DEV_ENVIRONMENT
     /* ****** HEADERS ****** */
     #include <unistd.h>
     #include <sys/ptrace.h>

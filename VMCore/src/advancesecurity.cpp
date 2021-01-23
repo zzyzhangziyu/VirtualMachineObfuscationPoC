@@ -1,6 +1,8 @@
 #include "../include/advancesecurity.hpp"
 
-#ifdef _LINUX_DEV_ENVIRONMENT
+#ifdef _WIN32_DEV_ENVIRONMENT
+
+#else //_LINUX_DEV_ENVIRONMENT
     void checkPtrace()
     {
         int offset = 10;
