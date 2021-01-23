@@ -1,6 +1,7 @@
 #include "../include/vmcpu.hpp"
 
-void VMCPU::memoryManager() {
+void VMCPU::memoryManager() 
+{
     // std::unique_lock<std::mutex> memLock(memMutex);
     // memLock.unlock();
     // int currentFrame = 0;
@@ -13,11 +14,12 @@ void VMCPU::memoryManager() {
     //         return;
     //     }
 
-    //     //todo
+    //     // TODO: memory swap
 
     //     isFrameReady = true;
     //     memLock.unlock();
     //     memConditionVar.notify_all();
     // }
+    std::cout << "NOT IMPLEMENTED YET!" << std::endl;
     return;
 }

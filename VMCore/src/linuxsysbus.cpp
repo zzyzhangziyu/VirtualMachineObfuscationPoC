@@ -37,7 +37,7 @@
 
     int UNIX::deleteFile(std::string filePath)
     {
-        if(!rmdir(filePath.c_str())) return DELETE_FILE;
+        if(!remove(filePath.c_str())) return DELETE_FILE;
         else return OTHER_FILE_ERROR;
     }
 

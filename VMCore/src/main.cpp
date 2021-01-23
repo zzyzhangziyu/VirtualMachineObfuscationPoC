@@ -120,9 +120,10 @@ int main(int argc, char *argv[])
     else if(mode.compare(MODE_EXEC) == 0) 
     {
         try{
-            std::thread memThread(&VMCPU::memoryManager, vm);
+            // std::thread memThread(&VMCPU::memoryManager, vm);
             vm->run();
-            memThread.join();
+            // memThread.join();
+            delete vm;
         } catch(...){
             return -1;
         }

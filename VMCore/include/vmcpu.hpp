@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 #include <map>
+#include <fstream>
 
 #ifdef _WIN32_DEV_ENVIRONMENT
     #include <Windows.h>
@@ -14,9 +15,9 @@
     #include <unistd.h>
 #endif
 
-#include <thread>
-#include <mutex>
-#include <condition_variable>
+// #include <thread>
+// #include <mutex>
+// #include <condition_variable>
 
 #include "./opcodes.hpp"
 
@@ -92,12 +93,10 @@ class VMCPU {
             UNIX *sysBus;
         #endif
 
-        bool isVMcpuTurnOff;
-        bool areFrames;
-        std::mutex memMutex;
-        std::condition_variable memConditionVar;
-        bool isFrameReady;
-        bool isNewFrameNeed;
+        // std::mutex memMutex;
+        // std::condition_variable memConditionVar;
+        int currentFrameNumber;
+        bool isError;
 
     private:
         int executer(VBYTE);
@@ -106,6 +105,9 @@ class VMCPU {
         void vmPrintHX(VDWORD);
         void vmPrintN(VBYTE s);
         void vmPrintHXN(VDWORD);
+        VBYTE getByteFromFrame(int);
+        int loadFrame(int);
+        void restoreFrame();
         //void vmScan();
 
     public:

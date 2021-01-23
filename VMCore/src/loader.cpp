@@ -47,6 +47,7 @@ VBYTE* loadProtectedCode(int &mcsize, std::string fileName, bool &areFramesNeede
         mc = new VBYTE[mcsize];
         char vb;
         int counter = 0;
+        int globalCounter = 0;
         framesCount = 0;
         std::string tempFileToOpen;
         std::vector<VBYTE> readData;
@@ -58,10 +59,10 @@ VBYTE* loadProtectedCode(int &mcsize, std::string fileName, bool &areFramesNeede
             fileBinToWrite.open(tempFileToOpen.c_str(), std::fstream::out | std::ios::binary);
         }
         while(fileBinToRead.get(vb))
-        {
-            
+        {   
             if(areFramesNeeded) {
                 ++counter;
+                ++globalCounter;
                 if(argCount == 0) 
                 {
                     isOpcode = true;
@@ -78,9 +79,12 @@ VBYTE* loadProtectedCode(int &mcsize, std::string fileName, bool &areFramesNeede
                     isOpcode = false;
                 }
                 if((counter + checkOpcodeSize(vb, isOpcode)) > CODE_DATA_SIZE) {
+                    frameMap[framesCount - 1] = counter - 1;
                     VBYTE *dataToWrite = &readData[0];
                     fileBinToWrite.write((char*)dataToWrite, counter-1);
                     fileBinToWrite.close();
+
+                    if(globalCounter == mcsize) break;
 
                     std::string tempFileToOpen = ".cached." + std::to_string(framesCount++) + ".frame";
                     fileBinToWrite.open(tempFileToOpen.c_str(), std::fstream::out | std::ios::binary);
@@ -100,7 +104,11 @@ VBYTE* loadProtectedCode(int &mcsize, std::string fileName, bool &areFramesNeede
                 //std::cout << "\t<READ> : " << static_cast<uint16_t>(mc[counter - 1]) << std::endl;
             }
         }
-        if(areFramesNeeded) fileBinToWrite.close();
+        if(areFramesNeeded)
+        {
+            mcsize = frameMap[0];
+            fileBinToWrite.close();
+        }
         fileBinToRead.close();
     }
     else
