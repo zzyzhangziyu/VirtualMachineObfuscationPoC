@@ -38,7 +38,7 @@ run: ## Run project
 	./$(PREXEC) $(ARGS)
 
 TEST_SRC_DIR = tests
-TEST_SOURCE = $(wildcard $(SRC_DIR)/vmcpu.cpp) $(wildcard $(TEST_SRC_DIR)/*.cpp)
+TEST_SOURCE = $(wildcard $(TEST_SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/vmcpu.cpp) $(wildcard $(SRC_DIR)/vmcpuexecuter.cpp) $(wildcard $(SRC_DIR)/linuxsysbus.cpp)
 TEST_EXEC = VMCoreTESTS.exe
 buildtests: ## Build tests
 	@echo "Building tests..."

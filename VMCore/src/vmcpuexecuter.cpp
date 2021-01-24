@@ -129,7 +129,7 @@ int VMCPU::executer(VBYTE opcode)
             break; 
         /* 
             MOVBM - move byte from register to memory location 
-            07 04 43 13 => MOVBM 1343,R4
+            07 43 13 04 => MOVBM 1343, R4
         */
         case MOVBM:
             #ifdef V_DEBUG

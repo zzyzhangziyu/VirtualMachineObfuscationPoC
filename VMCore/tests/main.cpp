@@ -1,4 +1,3 @@
-#define VMTESTS
 #include "vmtest.hpp"
 
 int main()
@@ -20,7 +19,7 @@ int main()
   \_/ \____/\____/  \_/ \____/                           
                                                          
     )" << std::endl;
-    std::cout << "version 0.2.210107.1750\n" << std::endl;
+    std::cout << "version 0.3.240121.0026\n" << std::endl;
 
     if(VMCPU::bIsOnTest) {
         VMTest *vmt = new VMTest();

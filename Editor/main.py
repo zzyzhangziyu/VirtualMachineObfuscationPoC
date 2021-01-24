@@ -378,7 +378,7 @@ class Editor:
 
   def buildStage3(self):
     if os.name == 'nt':
-      # TODO:
+      # TODO: NOT IMPLEMENTED YET!
       # cl /EHsc or msbuild project.sln/Flags 
       # self.pathToCompiler
       # self.pathToNASM

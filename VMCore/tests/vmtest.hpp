@@ -1,7 +1,8 @@
 #ifndef _VM_TEST_HPP
 #define _VM_TEST_HPP
 
-#include "../include/test.hpp"
+#define _VM_CPU_TEST_
+
 #include "../include/vmcpu.hpp"
 
 class VMTest {

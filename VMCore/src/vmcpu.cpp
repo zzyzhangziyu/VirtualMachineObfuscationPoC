@@ -164,9 +164,11 @@ void VMCPU::writeByteIntoFrame(int bytePosition, int howManyBytes, std::vector<V
     goto ok_getByteFromFrame;
 
 error_getByteFromFrame:
+    #ifdef V_DEBUG
         std::cout << "[ERROR] Write bytes into frame" << std::endl;
-        isError = true;
-        return;
+    #endif
+    isError = true;
+    return;
 ok_getByteFromFrame:
     isError = false;
     return;
@@ -217,10 +219,12 @@ std::vector<VBYTE> VMCPU::getByteFromFrame(int bytePosition, int howManyBytes)
     goto ok_getByteFromFrame;
 
 error_getByteFromFrame:
+    #ifdef V_DEBUG
         std::cout << "[ERROR] Failed get a byte from frame" << std::endl;
-        isError = true;
-        readBytes.push_back(0x0);
-        return readBytes;
+    #endif
+    isError = true;
+    readBytes.push_back(0x0);
+    return readBytes;
 ok_getByteFromFrame:
     isError = false;
     return readBytes;
@@ -271,9 +275,11 @@ int VMCPU::loadFrame(int pc)
     goto ok_loadFrame;
 
 error_loadFrame:
+    #ifdef V_DEBUG
         std::cout << "[ERROR] Failed load a frame" << std::endl;
-        isError = true;
-        return 0;
+    #endif
+    isError = true;
+    return 0;
 
 ok_loadFrame:
     currentFrameNumber = frameNumber;
@@ -301,7 +307,9 @@ void VMCPU::restoreFrame()
     goto ok_restoreFrame;
 
 error_restoreFrame:
-    std::cout << "[ERROR] Failed restore a frame" << std::endl;
+    #ifdef V_DEBUG
+        std::cout << "[ERROR] Failed restore a frame" << std::endl;
+    #endif
     isError = true;
     return;
 ok_restoreFrame:

@@ -162,9 +162,9 @@ bool VMTest::testVM()
     ++currentTestNumber;
     T_REGS->R[2] = (VDWORD) 6;
     T_AS->codeData[0] = MOVBM;
-    T_AS->codeData[1] = 0x02; // R2
-    T_AS->codeData[2] = 0x07;
-    T_AS->codeData[3] = 0x00; // 0007h
+    T_AS->codeData[1] = 0x07;
+    T_AS->codeData[2] = 0x00; // 0007h
+    T_AS->codeData[3] = 0x02; // R2
     T_AS->codeData[4] = EE;
     T_AS->codeData[7] = 0x03;
     vm->vcpuFlag = VCpuFlag::OK;
@@ -206,9 +206,9 @@ bool VMTest::testVM()
     ++currentTestNumber;
     T_REGS->R[2] = (VDWORD) 6;
     T_AS->codeData[0] = MOVWM;
-    T_AS->codeData[1] = 0x02; // R2
-    T_AS->codeData[2] = 0x07;
-    T_AS->codeData[3] = 0x00; // 0007h
+    T_AS->codeData[1] = 0x07;
+    T_AS->codeData[2] = 0x00; // 0007h
+    T_AS->codeData[3] = 0x02; // R2
     T_AS->codeData[4] = EE;
     T_AS->codeData[7] = 0x03;
     T_AS->codeData[8] = 0x04;

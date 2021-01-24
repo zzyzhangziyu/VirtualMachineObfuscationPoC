@@ -4,7 +4,7 @@
     language which can be used to program it.
     
     Copyright (C) eaglx.
-    version 0.3.210121.1954
+    version 0.3.240121.0026
 */
 #include "../include/global.hpp"
 #include "../include/main.hpp"
