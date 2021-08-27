@@ -3,8 +3,20 @@
 int VMCPU::executer(VBYTE opcode)
 {
     int valToReturn = 0;
-    dicOpcodesFunction[opcode]();
-    return isError;
+    callMethod(opcode);
+    if(opcode == EE) valToReturn = 1;
+    return valToReturn;
+}
+
+void VMCPU::callMethod(VBYTE opcode)
+{
+    if(dOpcodesFunction.find(opcode) == dOpcodesFunction.end()) 
+    {
+        funcException("unknown opcode!");
+        return;
+    }
+    MFP fp = dOpcodesFunction[opcode];
+    (this->*fp)();
 }
 
 void VMCPU::funcException(std::string e)
@@ -17,6 +29,7 @@ void VMCPU::funcException(std::string e)
         std::cout << "[ERROR] INFO: " << e << std::endl;
     #endif
     isError = true;
+    areFramesNeeded = false;
 }
 
 /* NOP */
@@ -33,7 +46,7 @@ void VMCPU::funcEE()
     #ifdef V_DEBUG
         std::cout << "[DEBUG] EE" << std::endl;
     #endif
-    valToReturn = 1;
+    //valToReturn = 1;
 }
 
 /*
@@ -72,6 +85,7 @@ void VMCPU::funcMov()
 void VMCPU::funcMovmb()
 {
     VBYTE bTmp_0;
+    VWORD wTmp_0;
     #ifdef V_DEBUG
         std::cout << "[DEBUG] MOVMB" << std::endl;
     #endif
@@ -268,6 +282,7 @@ void VMCPU::funcMovmd()
 {
     VBYTE bTmp_0;
     VBYTE bTmp_1;
+    VDWORD dTmp_0;
     #ifdef V_DEBUG
         std::cout << "[DEBUG] MOVMD" << std::endl;
     #endif
@@ -301,7 +316,7 @@ void VMCPU::funcMovd()
         std::cout << "[DEBUG] MOVD" << std::endl;
     #endif
     bTmp_0 = AS->codeData[REGS->PC++];
-    if(bTmp_0 > 8) gfuncException("register index out of range!");
+    if(bTmp_0 > 8) funcException("register index out of range!");
     REGS->R[bTmp_0] = *(VDWORD *) &AS->codeData[REGS->PC];
     REGS->PC += 4;
 }
@@ -939,7 +954,7 @@ void VMCPU::funcVmSysbus()
                 while(true)
                 {
                     if(areFramesNeeded && (counter >= frameMap[currentFrameNumber])) counter = loadFrame(counter);
-                    if(isError) goto EXCEPTION;
+                    if(isError) return;
                     b = AS->codeData[counter++];
                     if((b == 0x3) && (AS->codeData[counter] == 0xD)) break;
                     ++dataLength;
@@ -948,7 +963,7 @@ void VMCPU::funcVmSysbus()
                 }
                 currentFrameNumber = frameNumberToRestore;
                 restoreFrame();
-                if(isError) goto EXCEPTION;
+                if(isError) return;
                 VBYTE *dataToWrite = &dataVbyte[0];
                 std::string arg1 = "";
                 getDataFromCodeData(arg1, wTmp_0);

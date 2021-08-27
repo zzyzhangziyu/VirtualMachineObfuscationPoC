@@ -4,7 +4,7 @@
     language which can be used to program it.
     
     Copyright (C) eaglx.
-    version 0.3.240121.0026
+    version 0.4.260821.2208
 */
 #include "../include/global.hpp"
 #include "../include/main.hpp"
@@ -35,15 +35,12 @@ int main(int argc, char *argv[])
         }
         else
         {
-            if(!vm->loadCode(ProtectedData, sizeof(ProtectedData)/sizeof(ProtectedData[0])))
-            {
-                return -1;
-            }
+            if(!vm->loadCode(ProtectedData, sizeof(ProtectedData)/sizeof(ProtectedData[0]))) return -1;
             
             try{
                 vm->run();
                 return 0;
-            } catch(...){
+            } catch(...) {
                 return -1;
             }
         }
@@ -106,9 +103,7 @@ int main(int argc, char *argv[])
     else if(mode.compare(MODE_EXEC) == 0) 
     {
         try{
-            // std::thread memThread(&VMCPU::memoryManager, vm);
             vm->run();
-            // memThread.join();
             delete vm;
         } catch(...){
             return -1;

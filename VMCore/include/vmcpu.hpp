@@ -81,7 +81,7 @@ typedef struct {
 #endif // _VM_CPU_TEST_
 
 class VMCPU {
-    typedef void (Mfunc::* MFP)();
+    typedef void (VMCPU::*MFP)();
 
     public:
         bool areFramesNeeded;
@@ -104,6 +104,7 @@ class VMCPU {
 
     private:
         int executer(VBYTE);
+        void callMethod(VBYTE opcode);
         void getDataFromCodeData(std::string &, int);
         void vmPrint(VBYTE s);
         void vmPrintHX(VDWORD);
@@ -170,7 +171,61 @@ class VMCPU {
         void funcPxv();
         void funcPxvn();
 
-        std::map <int, MFP> dicOpcodesFunction;
+        std::map <int, MFP> dOpcodesFunction = { 
+            {0x56, &VMCPU::funcNop},
+            {0x6d, &VMCPU::funcNop},
+            {NOP, &VMCPU::funcNop},
+            {EE, &VMCPU::funcEE},
+            {MOV, &VMCPU::funcMov},
+            {MOVMB, &VMCPU::funcMovmb},
+            {MOVMW, &VMCPU::funcMovmw},
+            {MOVB, &VMCPU::funcMovb},
+            {MOVW, &VMCPU::funcMovw},
+            {MOVBM, &VMCPU::funcMovbm},
+            {MOVWM, &VMCPU::funcMovwm},
+            {MOVMRB, &VMCPU::funcMovmrb},
+            {MOVMRW, &VMCPU::funcMovmrw},
+            {MOVMD, &VMCPU::funcMovmd},
+            {MOVD, &VMCPU::funcMovd},
+            {MOVDM, &VMCPU::funcMovdm},
+            {MOVMRD, &VMCPU::funcMovmrd},
+            {JMP, &VMCPU::funcJmp},
+            {JZ, &VMCPU::funcJz},
+            {JNZ, &VMCPU::funcJnz},
+            {JAE, &VMCPU::funcJae},
+            {JBE, &VMCPU::funcJbe},
+            {JB, &VMCPU::funcJb},
+            {JA, &VMCPU::funcJa},
+            {ADVR, &VMCPU::funcAdvr},
+            {ADRR, &VMCPU::funcAdrr},
+            {ADRRL, &VMCPU::funcAdrrl},
+            {SUBVR, &VMCPU::funcSubvr},
+            {SUBRR, &VMCPU::funcSubrr},
+            {SUBRRL, &VMCPU::funcSubrrl},
+            {XOR, &VMCPU::funcXor},
+            {XORL, &VMCPU::funcXorl},
+            {NOT, &VMCPU::funcNot},
+            {NOTB, &VMCPU::funcNotb},
+            {ADVRD, &VMCPU::funcAdvrd},
+            {SUBVRD, &VMCPU::funcSubvrd},
+            {SHR, &VMCPU::funcShr},
+            {SHL, &VMCPU::funcShl},
+            {CMP, &VMCPU::funcCmp},
+            {CMPL, &VMCPU::funcCmpl},
+            {VMSYSBUS, &VMCPU::funcVmSysbus},
+            {PUSH, &VMCPU::funcPush},
+            {POP, &VMCPU::funcPop},
+            {CLST, &VMCPU::funcClSt},
+            {SETSP, &VMCPU::funcSetSp},
+            {POC, &VMCPU::funcPoc},
+            {POCN, &VMCPU::funcPocn},
+            {TIB, &VMCPU::funcTib},
+            {GIC, &VMCPU::funcGic},
+            {PIC, &VMCPU::funcPic},
+            {PICN, &VMCPU::funcPicn},
+            {PXV, &VMCPU::funcPxv},
+            {PXVN, &VMCPU::funcPxvn}
+        };
 
     public:
         VMCPU();
@@ -178,7 +233,6 @@ class VMCPU {
         void run();
         void debug();
         bool loadCode(VBYTE *, int);
-        void memoryManager();
 
     #ifdef _VM_CPU_TEST_
     public:
