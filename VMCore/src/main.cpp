@@ -4,7 +4,7 @@
     language which can be used to program it.
     
     Copyright (C) eaglx.
-    version 0.4.260821.2208
+    version 0.4.051021.1436
 */
 #include "../include/global.hpp"
 #include "../include/main.hpp"
@@ -12,7 +12,7 @@
 #include "../include/protected.hpp"
 // #include <sstream>
 
-void show_usage()
+void showUsage()
 {
     std::cout << "Usage:"
                 << "\t-m value\t\tSet program mode. The value can be debug or exec\n"
@@ -20,24 +20,21 @@ void show_usage()
                 << std::endl;
 }
 
-int main(int argc, char *argv[])
+int runVM(int argc, char *argv[])
 {
-#ifdef _LINUX_DEV_ENVIRONMENT
-    checkPtrace(argc);
-#endif
     VMCPU *vm = new VMCPU();
 
     if(argc == 1) {
         if(ProtectedData[0] == 0xFF)
         {
-            show_usage();
+            showUsage();
             return 0;
         }
         else
         {
             if(!vm->loadCode(ProtectedData, sizeof(ProtectedData)/sizeof(ProtectedData[0]))) return -1;
-            
-            try{
+  
+            try {
                 vm->run();
                 return 0;
             } catch(...) {
@@ -47,61 +44,45 @@ int main(int argc, char *argv[])
     }
 
     std::string mode = "";
-    std::string pathToFile = "";
+    std::string path_to_file = "";
 
-    for(int i = 1; i < argc; i++)
-    {
+    for(int i = 1; i < argc; i++) {
         std::string arg = argv[i];
 
-        if(arg == "-h")
-        {
-            show_usage();
+        if(arg == "-h") {
+            showUsage();
             return 0;
         }
-        else if(arg == "-m")
-        {
+        else if(arg == "-m") {
             i += 1;
             mode =  argv[i];
         }
-        else if(arg == "-p")
-        {
+        else if(arg == "-p") {
             i += 1;
-            pathToFile = argv[i];
+            path_to_file = argv[i];
         }
-        else 
-        {
-            show_usage();
+        else {
+            showUsage();
             return 0;
         }
-        
     }
 
     VBYTE *mc;
     int mcsize = -1;
-    try 
-    {
-        mc = loadProtectedCode(mcsize, pathToFile, vm->areFramesNeeded, vm->frameMap);
-    }
-    catch (int e) 
-    {
+    try { mc = loadProtectedCode(mcsize, path_to_file, vm->areFramesNeeded, vm->frameMap); }
+    catch (int e) {
         std::cout << "[ERROR " << e << "] NO FILE OR SE \n";
         return -1;
     }
 
-    if(!vm->loadCode(mc, mcsize)) 
-    {
+    if(!vm->loadCode(mc, mcsize)) {
         delete[] mc;
         return -1;
     }
 
     delete[] mc;
-
-    if(mode.compare(MODE_DEBUG) == 0) 
-    {
-        vm->debug();
-    }
-    else if(mode.compare(MODE_EXEC) == 0) 
-    {
+    if(mode.compare(MODE_DEBUG) == 0) vm->debug();
+    else if(mode.compare(MODE_EXEC) == 0) {
         try{
             vm->run();
             delete vm;
@@ -109,11 +90,22 @@ int main(int argc, char *argv[])
             return -1;
         }
     }
-    else 
-    {
+    else {
         std::cout << "[ERROR 100101] INCORRECT MODE!\n";
         return -1;
     }
 
     return 0;
+}
+
+int main(int argc, char *argv[])
+{
+    #ifdef _WIN32_DEV_ENVIRONMENT
+        isHypervisor();
+        return runVM(argc, argv);
+    #else //_LINUX_DEV_ENVIRONMENT
+        isHypervisor();
+        checkPtrace(argc);
+        return runVM(argc, argv);
+    #endif
 }

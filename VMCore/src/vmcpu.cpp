@@ -66,6 +66,7 @@ bool VMCPU::loadCode(VBYTE *mcode, int mcsize)
 
 void VMCPU::run()
 {
+    isError = false;
     bool exit = false;
     VBYTE opcode;
 

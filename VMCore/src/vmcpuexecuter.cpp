@@ -1032,7 +1032,7 @@ void VMCPU::funcPush()
         #endif
         funcException("stack overflow!");
     }
-    AS->stack[REGS->SP] = REGS->R[bTmp_0];
+    else AS->stack[REGS->SP] = REGS->R[bTmp_0];
     #ifdef V_DEBUG
         std::cout <<"val: " << std::hex << AS->stack[REGS->SP] << std::endl;
     #endif
@@ -1059,8 +1059,10 @@ void VMCPU::funcPop()
         #endif
         funcException("stack underflow!");
     }
-    REGS->R[bTmp_0] = AS->stack[REGS->SP];
-    REGS->SP += 1;
+    else {
+        REGS->R[bTmp_0] = AS->stack[REGS->SP];
+        REGS->SP += 1;
+    }
 }
 
 /*

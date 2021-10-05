@@ -1,5 +1,23 @@
 #include "vmtest.hpp"
 
+std::ostream &operator << ( std::ostream& os, const VCpuFlag vcf ) {
+    switch(vcf) {
+        case VCpuFlag::OK:
+            os << "OK";
+        break;
+        case VCpuFlag::ERROR:
+            os << "ERROR";
+        break;
+        case VCpuFlag::UNDERFLOW:
+            os << "UNDERFLOW";
+        break;
+        case VCpuFlag::OVERFLOW:
+            os << "OVERFLOW";
+        break;
+    }
+    return os;
+}
+
 void VMTest::printTestResult(bool bTestPass, unsigned int currentTestNumber)
 {
     if(bTestPass == true) std::cout << "\t[INFO] TEST " << currentTestNumber << ": PASS" << std::endl;
@@ -9,7 +27,6 @@ void VMTest::printTestResult(bool bTestPass, unsigned int currentTestNumber)
 bool VMTest::testVM()
 {
     bool bTestPass = true;
-    VMCPU *vm = new VMCPU();
     unsigned int currentTestNumber = 0;
 
     T_AS = vm->getAS();
@@ -299,7 +316,7 @@ bool VMTest::testVM()
             goto FINISH_TESTS;
         }
     }
-    else{
+    else {
         bTestPass = false;
         goto FINISH_TESTS;
     }
@@ -311,7 +328,7 @@ bool VMTest::testVM()
     T_REGS->PC = (VDWORD) 0;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
-        /* TEST 8
+        /* TEST 9
         desc: shift the bits to the right
         */
     /* ************************* */
@@ -339,7 +356,7 @@ bool VMTest::testVM()
     T_AS->codeData[3] = 0x00;
     printTestResult(bTestPass, currentTestNumber);
     /* ************************* */
-        /* TEST 9
+        /* TEST 10
         desc: shift the bits to the left
         */
     /* ************************* */
@@ -372,7 +389,6 @@ bool VMTest::testVM()
 
 FINISH_TESTS:
     if(bTestPass == false) printTestResult(bTestPass, currentTestNumber);
-    delete vm;
     T_AS = NULL;
     T_REGS = NULL;
     return bTestPass;

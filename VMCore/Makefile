@@ -38,7 +38,7 @@ run: ## Run project
 	./$(PREXEC) $(ARGS)
 
 TEST_SRC_DIR = tests
-TEST_SOURCE = $(wildcard $(TEST_SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/vmcpu.cpp) $(wildcard $(SRC_DIR)/vmcpuexecuter.cpp) $(wildcard $(SRC_DIR)/linuxsysbus.cpp)
+TEST_SOURCE = $(wildcard $(TEST_SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/vmcpu.cpp) $(wildcard $(SRC_DIR)/vmcpuexecuter.cpp) $(wildcard $(SRC_DIR)/vmcpudbg.cpp) $(wildcard $(SRC_DIR)/framesmanager.cpp) $(wildcard $(SRC_DIR)/advancesecurity.cpp) $(wildcard $(SRC_DIR)/screen.cpp) $(wildcard $(SRC_DIR)/linuxsysbus.cpp)
 TEST_EXEC = VMCoreTESTS.exe
 buildtests: ## Build tests
 	@echo "Building tests..."

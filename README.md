@@ -8,14 +8,14 @@
 <a href="https://github.com/eaglx/VMPROTECT/network/members"><img src="https://img.shields.io/github/forks/eaglx/VMPROTECT" alt="Forks Badge"/></a>
 <a href="https://github.com/eaglx/VMPROTECT/blob/master/LICENSE"><img src="https://img.shields.io/github/license/eaglx/VMPROTECT?color=2b9348" alt="License Badge"/></a>
 [![GitHub release](https://img.shields.io/github/release/eaglx/VMPROTECT)](https://GitHub.com/eaglx/VMPROTECT/releases/)
-![Progress](https://progress-bar.dev/40/?title=progress-v0.4)
+![Progress](https://progress-bar.dev/100/?title=progress-v0.4)
 
 A virtual machine that simulates a CPU along with a few other hardware components, allows to perform arithmetic operations, reads and writes to memory and interacts with I/O devices. It can understand a machine language which can be used to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random).
 
 ## Table of contents
 * [Requirements](#requirements)
 * [Setup](#setup)
-* [HowTo](#HowTo)
+* [Editor](#editor)
 * [Compiler](#compiler)
 * [Debugger](#debugger)
 * [VMCore](#vmcore)
@@ -31,18 +31,58 @@ A virtual machine that simulates a CPU along with a few other hardware component
 
 ## Requirements
 * NASM [tested on 2.13.02]
+* Only MacOS and Linux:
+  * Python3 [tested on 3.6.9]
+  * Tkinter [tested on 8.6]
 * g++ [tested on 7.5.0]
 * make [tested on 4.1]
 
 ## Setup
-Simply clone the project to the desired directory and install required software. In the directory there are:
+A bash script was created for easier setup of the development environment. At the beginning the script checks and installs the necessary software. Next, copy files and run some unit tests. The bash script is compatible with Debian-based distributions and *Advanced Package Tool*, which handle the installation and removal of software.
+
+<img src="doc/1.png" height="300">
+
+Or simply clone the project to the desired directory and install required software.
+
+After setting up the environment, the directory structure looks like in the screenshot below. There are:
 * Debugger - the source code of the debugger,
 * SharedCode - shared codes between debugger and VMCore,
 * VMCore - the source code of the virtual machine,
-* vm.inc - the file with definitions of opcodes
+* vm.inc - the file with definitions of opcodes,
+* Editor - the source code of the code editor (only MacOS and Linux),
+* VMPROTECT.py - start here (only MacOS and Linux) :smile:
 
-## HowTo
-TODO
+<img src="doc/2.png" height="150">
+
+In VMCore/include/global.hpp you can set the target system environment.
+
+```c++
+#ifndef _GLOBAL_VARIABLES_HPP
+#define _GLOBAL_VARIABLES_HPP
+
+#define _LINUX_DEV_ENVIRONMENT
+// #define _WIN32_DEV_ENVIRONMENT
+
+#endif
+```
+
+## Editor
+:warning: **SUPPORTED MacOS and Linux**
+
+The editor was written in *Python*. It is a plain text editor with no code syntax highlighting. You can write programs for *VMPROTECT* here. The window consists of a menu, a space for entering text and an output from compiling and building the program. Additionally, the editor status is shown at the bottom.
+
+<img src="doc/3.png" height="300">
+
+There are two options for building a program. The first mode is to compile the program into a separate file and prepare the *VMPROTECT* and *VMPROTECT-DEBUGGER* executables. The second option differs from the previous one in that it merges the compiled code with *VMPROTECT*. Then *VMPROTECT* can be executed without passing arguments.
+
+<img src="doc/4.png" height="300">
+
+Remember to save the source code with the extension (e.g. *asm*) because the editor doesn't support compiling without the extension. Which can lead to the unexpected operation of the editor program. The following files will be created in the directory where the file, with source code, was saved (please do not confuse the *exe* extension with *PE* files for the Windows operating system):
+* compiled program file
+* VMPROTECT.exe
+* VmprotDebugger.exe
+
+<img src="doc/5.png" height="300">
 
 ## Compiler
 The *nasm* as compiler is used for compilation a code. Remember to include the *vm.inc* file with definitions of opcodes in your programs. Additionally, at the beginning of the code should be included magic number *0x566d*. An example program for virtual machine below.
