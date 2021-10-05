@@ -8,7 +8,7 @@
 <a href="https://github.com/eaglx/VMPROTECT/network/members"><img src="https://img.shields.io/github/forks/eaglx/VMPROTECT" alt="Forks Badge"/></a>
 <a href="https://github.com/eaglx/VMPROTECT/blob/master/LICENSE"><img src="https://img.shields.io/github/license/eaglx/VMPROTECT?color=2b9348" alt="License Badge"/></a>
 [![GitHub release](https://img.shields.io/github/release/eaglx/VMPROTECT)](https://GitHub.com/eaglx/VMPROTECT/releases/)
-<!---![Progress](https://progress-bar.dev/100/?title=progress-v0.3)-->
+![Progress](https://progress-bar.dev/100/?title=progress-v0.4)
 
 A virtual machine that simulates a CPU along with a few other hardware components, allows to perform arithmetic operations, reads and writes to memory and interacts with I/O devices. It can understand a machine language which can be used to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random).
 
@@ -31,7 +31,8 @@ A virtual machine that simulates a CPU along with a few other hardware component
 
 ## Requirements
 * NASM [tested on 2.13.02]
-* Python3 [tested on 3.6.9]
+* Only MacOS and Linux:
+  * Python3 [tested on 3.6.9]
   * Tkinter [tested on 8.6]
 * g++ [tested on 7.5.0]
 * make [tested on 4.1]
@@ -41,16 +42,33 @@ A bash script was created for easier setup of the development environment. At th
 
 <img src="doc/1.png" height="300">
 
+Or simply clone the project to the desired directory and install required software.
+
 After setting up the environment, the directory structure looks like in the screenshot below. There are:
 * Debugger - the source code of the debugger,
-* Editor - the source code of the code editor,
+* SharedCode - shared codes between debugger and VMCore,
 * VMCore - the source code of the virtual machine,
 * vm.inc - the file with definitions of opcodes,
-* VMPROTECT.py - start here :smile:
+* Editor - the source code of the code editor (only MacOS and Linux),
+* VMPROTECT.py - start here (only MacOS and Linux) :smile:
 
 <img src="doc/2.png" height="150">
 
+In VMCore/include/global.hpp you can set the target system environment.
+
+```c++
+#ifndef _GLOBAL_VARIABLES_HPP
+#define _GLOBAL_VARIABLES_HPP
+
+#define _LINUX_DEV_ENVIRONMENT
+// #define _WIN32_DEV_ENVIRONMENT
+
+#endif
+```
+
 ## Editor
+:warning: **SUPPORTED MacOS and Linux**
+
 The editor was written in *Python*. It is a plain text editor with no code syntax highlighting. You can write programs for *VMPROTECT* here. The window consists of a menu, a space for entering text and an output from compiling and building the program. Additionally, the editor status is shown at the bottom.
 
 <img src="doc/3.png" height="300">

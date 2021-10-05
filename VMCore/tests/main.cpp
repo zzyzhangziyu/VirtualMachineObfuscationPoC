@@ -19,7 +19,7 @@ int main()
   \_/ \____/\____/  \_/ \____/                           
                                                          
     )" << std::endl;
-    std::cout << "version 0.3.240121.0026\n" << std::endl;
+    std::cout << "version 0.4.051021.1436\n" << std::endl;
 
     if(VMCPU::bIsOnTest) {
         VMTest *vmt = new VMTest();

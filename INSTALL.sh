@@ -17,7 +17,7 @@ echo "version 0.1.200926.1246"
 echo "#####################################"
 
 echo ""
-echo -n "Write path to deploy: "
+echo -n "Path to deploy VMPROTECT: "
 read pathToInstall
 
 vmDirName="/VMPROTECT"
