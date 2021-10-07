@@ -3,20 +3,19 @@
 int VMCPU::executer(VBYTE opcode)
 {
     int valToReturn = 0;
-    callMethod(opcode);
     if(opcode == EE) valToReturn = 1;
-    return valToReturn;
-}
-
-void VMCPU::callMethod(VBYTE opcode)
-{
-    if(dOpcodesFunction.find(opcode) == dOpcodesFunction.end()) 
-    {
-        funcException("unknown opcode!");
-        return;
+    else {
+        if(dOpcodesFunction.find(opcode) == dOpcodesFunction.end()) {
+            funcException("[ERROR] unknown opcode!");
+            isError = true;
+            valToReturn = -1;
+        }
+        else {
+            MFP fp = dOpcodesFunction[opcode];
+            (this->*fp)();
+        }
     }
-    MFP fp = dOpcodesFunction[opcode];
-    (this->*fp)();
+    return valToReturn;
 }
 
 void VMCPU::funcException(std::string e)

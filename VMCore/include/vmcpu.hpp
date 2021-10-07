@@ -104,7 +104,6 @@ class VMCPU {
 
     private:
         int executer(VBYTE);
-        void callMethod(VBYTE opcode);
         void getDataFromCodeData(std::string &, int);
         void vmPrint(VBYTE s);
         void vmPrintHX(VDWORD);
