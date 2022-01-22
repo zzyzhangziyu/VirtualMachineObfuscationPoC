@@ -2,8 +2,8 @@
 #define DEBUGGER_MAIN_HPP
 
 #include <iostream>
-#include "../VMCore/include/opcodes.hpp"
-#include "../VMCore/include/vmdebug.hpp"
+#include "../SharedCode/opcodes.hpp"
+#include "../SharedCode/vmdebug.hpp"
 
 #ifdef _WIN32_DEV_ENVIRONMENT
     #include <windows.h>
@@ -25,7 +25,7 @@
 
 #include <bitset>
 
-#include "../VMCore/include/global.hpp"
+#include "../SharedCode/global.hpp"
 
 /* *****************  FUNCTIONS *****************  */
 void printIntro();

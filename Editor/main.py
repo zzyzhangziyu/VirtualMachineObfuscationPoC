@@ -363,12 +363,12 @@ class Editor:
     f.close()
     if os.name == 'nt':
       codeToWrite = "#ifndef _GLOBAL_VARIABLES_HPP\n#define _GLOBAL_VARIABLES_HPP\n#define _WIN32_DEV_ENVIRONMENT\n#endif"
-      f = open("./VMCore/include/global.hpp.hpp", 'w')
+      f = open("./SharedCode/global.hpp.hpp", 'w')
       f.write(codeToWrite)
       f.close()
     else:
       codeToWrite = "#ifndef _GLOBAL_VARIABLES_HPP\n#define _GLOBAL_VARIABLES_HPP\n#define _LINUX_DEV_ENVIRONMENT\n#endif"
-      f = open("./VMCore/include/global.hpp.hpp", 'w')
+      f = open("./SharedCode/global.hpp.hpp", 'w')
       f.write(codeToWrite)
       f.close()
     time.sleep(3)

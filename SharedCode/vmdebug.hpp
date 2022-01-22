@@ -1,8 +1,8 @@
 #ifndef _VM_DEBUG
 #define _VM_DEBUG
 
-#include "./vmcpu.hpp"
-#include "global.hpp"
+#include "../VMCore/include/vmcpu.hpp"
+#include "./global.hpp"
 
 /*
 Not support development on Windows right now!
@@ -11,7 +11,7 @@ Not support development on Windows right now!
 
 #ifndef VMTESTS
     #define PORT 9313
-    #include "./nethelpers.hpp"
+    #include "../VMCore/include/nethelpers.hpp"
 #endif
 
 #endif

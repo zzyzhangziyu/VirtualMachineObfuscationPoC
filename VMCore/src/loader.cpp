@@ -1,5 +1,5 @@
 #include "../include/main.hpp"
-#include "../include/opcodes.hpp"
+#include "../../SharedCode/opcodes.hpp"
 #include <string.h>
 #include <fstream>
 #include <vector>

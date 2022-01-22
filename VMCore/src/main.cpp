@@ -6,7 +6,7 @@
     Copyright (C) eaglx.
     version 0.4.051021.1436
 */
-#include "../include/global.hpp"
+#include "../../SharedCode/global.hpp"
 #include "../include/main.hpp"
 #include "../include/vmcpu.hpp"
 #include "../include/protected.hpp"

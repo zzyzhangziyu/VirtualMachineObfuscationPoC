@@ -1,7 +1,7 @@
 #ifndef _SYSTEM_BUS_HPP
 #define _SYSTEM_BUS_HPP
 
-#include "../global.hpp"
+#include "../../../SharedCode/global.hpp"
 #include <iostream>
 #include <string>
 #include <fstream>

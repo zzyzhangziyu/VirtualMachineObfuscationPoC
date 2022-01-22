@@ -54,7 +54,7 @@ After setting up the environment, the directory structure looks like in the scre
 
 <img src="doc/2.png" height="150">
 
-In VMCore/include/global.hpp you can set the target system environment.
+In ShareCode/global.hpp you can set the target system environment.
 
 ```c++
 #ifndef _GLOBAL_VARIABLES_HPP

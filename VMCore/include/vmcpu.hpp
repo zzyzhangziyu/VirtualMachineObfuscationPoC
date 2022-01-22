@@ -19,7 +19,7 @@
 // #include <mutex>
 // #include <condition_variable>
 
-#include "./opcodes.hpp"
+#include "../../SharedCode/opcodes.hpp"
 #include "./advancesecurity.hpp"
 
 #ifdef _WIN32_DEV_ENVIRONMENT
@@ -40,7 +40,7 @@
 #define STACK_SIZE 256
 #define INPUT_BUFFER_SIZE 1024
 
-#include "./vmdebug.hpp"
+#include "../../SharedCode/vmdebug.hpp"
 
 typedef struct {
     /* Here will be a code to execute and other data - 50KB*/
