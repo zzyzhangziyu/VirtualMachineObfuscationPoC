@@ -32,7 +32,7 @@ int runVM(int argc, char *argv[])
         }
         else
         {
-            if(!vm->loadCode(ProtectedData, sizeof(ProtectedData)/sizeof(ProtectedData[0]))) return -1;
+            if(!vm->loadCode(ProtectedData, sizeof(ProtectedData)/sizeof(ProtectedData[0]))) return -1; //TODO: rewrite
   
             try {
                 vm->run();
@@ -69,6 +69,7 @@ int runVM(int argc, char *argv[])
 
     VBYTE *mc;
     int mcsize = -1;
+    //TODO: rewrite
     try { mc = vm->loadProtectedCode(mcsize, path_to_file); }
     catch (int e) {
         std::cout << "[ERROR " << e << "] NO FILE OR SE \n";
@@ -79,7 +80,7 @@ int runVM(int argc, char *argv[])
         delete[] mc;
         return -1;
     }
-
+    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     delete[] mc;
     if(mode.compare(MODE_DEBUG) == 0) vm->debug();
     else if(mode.compare(MODE_EXEC) == 0) {
