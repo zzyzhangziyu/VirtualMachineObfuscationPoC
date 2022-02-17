@@ -44,7 +44,7 @@ VMCPU::~VMCPU()
     dOpcodesFunction.clear();
 }
 
-bool VMCPU::loadCode(VBYTE *mcode, int mcsize)
+bool VMCPU::loadCode(VBYTE *mcode, int mcsize) //TODO: rewrite
 {
     memset(AS->codeData, 0, CODE_DATA_SIZE*sizeof(*(AS->codeData)));
     memset(AS->stack, 0, STACK_SIZE*sizeof(*(AS->stack)));
