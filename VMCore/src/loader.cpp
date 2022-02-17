@@ -18,7 +18,7 @@ int VMCPU::checkOpcodeSize(VBYTE opcode, bool isOpcode)
     }
 }
 
-VBYTE* VMCPU::loadProtectedCode(int &mcsize, std::string fileName)
+VBYTE* VMCPU::loadProtectedCode(int &mcsize, std::string fileName) //TODO: rewrite
 {
     VBYTE *mc;
     std::ifstream fileBinToRead;
