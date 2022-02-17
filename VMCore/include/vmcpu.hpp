@@ -8,6 +8,7 @@
 #include <sstream>
 #include <map>
 #include <fstream>
+#include <utility>
 
 #ifdef _WIN32_DEV_ENVIRONMENT
     #include <Windows.h>
@@ -114,6 +115,7 @@ class VMCPU {
         int loadFrame(int);
         void restoreFrame();
         //void vmScan();
+        int checkOpcodeSize(VBYTE, bool);
 
         void funcException(std::string e);
 
@@ -170,60 +172,60 @@ class VMCPU {
         void funcPxv();
         void funcPxvn();
 
-        std::map <int, MFP> dOpcodesFunction = { 
-            {0x56, &VMCPU::funcNop},
-            {0x6d, &VMCPU::funcNop},
-            {NOP, &VMCPU::funcNop},
-            {EE, &VMCPU::funcEE},
-            {MOV, &VMCPU::funcMov},
-            {MOVMB, &VMCPU::funcMovmb},
-            {MOVMW, &VMCPU::funcMovmw},
-            {MOVB, &VMCPU::funcMovb},
-            {MOVW, &VMCPU::funcMovw},
-            {MOVBM, &VMCPU::funcMovbm},
-            {MOVWM, &VMCPU::funcMovwm},
-            {MOVMRB, &VMCPU::funcMovmrb},
-            {MOVMRW, &VMCPU::funcMovmrw},
-            {MOVMD, &VMCPU::funcMovmd},
-            {MOVD, &VMCPU::funcMovd},
-            {MOVDM, &VMCPU::funcMovdm},
-            {MOVMRD, &VMCPU::funcMovmrd},
-            {JMP, &VMCPU::funcJmp},
-            {JZ, &VMCPU::funcJz},
-            {JNZ, &VMCPU::funcJnz},
-            {JAE, &VMCPU::funcJae},
-            {JBE, &VMCPU::funcJbe},
-            {JB, &VMCPU::funcJb},
-            {JA, &VMCPU::funcJa},
-            {ADVR, &VMCPU::funcAdvr},
-            {ADRR, &VMCPU::funcAdrr},
-            {ADRRL, &VMCPU::funcAdrrl},
-            {SUBVR, &VMCPU::funcSubvr},
-            {SUBRR, &VMCPU::funcSubrr},
-            {SUBRRL, &VMCPU::funcSubrrl},
-            {XOR, &VMCPU::funcXor},
-            {XORL, &VMCPU::funcXorl},
-            {NOT, &VMCPU::funcNot},
-            {NOTB, &VMCPU::funcNotb},
-            {ADVRD, &VMCPU::funcAdvrd},
-            {SUBVRD, &VMCPU::funcSubvrd},
-            {SHR, &VMCPU::funcShr},
-            {SHL, &VMCPU::funcShl},
-            {CMP, &VMCPU::funcCmp},
-            {CMPL, &VMCPU::funcCmpl},
-            {VMSYSBUS, &VMCPU::funcVmSysbus},
-            {PUSH, &VMCPU::funcPush},
-            {POP, &VMCPU::funcPop},
-            {CLST, &VMCPU::funcClSt},
-            {SETSP, &VMCPU::funcSetSp},
-            {POC, &VMCPU::funcPoc},
-            {POCN, &VMCPU::funcPocn},
-            {TIB, &VMCPU::funcTib},
-            {GIC, &VMCPU::funcGic},
-            {PIC, &VMCPU::funcPic},
-            {PICN, &VMCPU::funcPicn},
-            {PXV, &VMCPU::funcPxv},
-            {PXVN, &VMCPU::funcPxvn}
+        std::map <int, std::pair<int,MFP>> dOpcodesFunction = { 
+            {0x56, {0,&VMCPU::funcNop}},
+            {0x6d, {0,&VMCPU::funcNop}},
+            {NOP, {0,&VMCPU::funcNop}},
+            {EE, {0,&VMCPU::funcEE}},
+            {MOV, {2,&VMCPU::funcMov}},
+            {MOVMB, {3,&VMCPU::funcMovmb}},
+            {MOVMW, {3,&VMCPU::funcMovmw}},
+            {MOVB, {2,&VMCPU::funcMovb}},
+            {MOVW, {3,&VMCPU::funcMovw}},
+            {MOVBM, {3,&VMCPU::funcMovbm}},
+            {MOVWM, {3,&VMCPU::funcMovwm}},
+            {MOVMRB, {2,&VMCPU::funcMovmrb}},
+            {MOVMRW, {2,&VMCPU::funcMovmrw}},
+            {MOVMD, {3,&VMCPU::funcMovmd}},
+            {MOVD, {5,&VMCPU::funcMovd}},
+            {MOVDM, {3,&VMCPU::funcMovdm}},
+            {MOVMRD, {2,&VMCPU::funcMovmrd}},
+            {JMP, {2,&VMCPU::funcJmp}},
+            {JZ, {2,&VMCPU::funcJz}},
+            {JNZ, {2,&VMCPU::funcJnz}},
+            {JAE, {2,&VMCPU::funcJae}},
+            {JBE, {2,&VMCPU::funcJbe}},
+            {JB, {2,&VMCPU::funcJb}},
+            {JA, {2,&VMCPU::funcJa}},
+            {ADVR, {3,&VMCPU::funcAdvr}},
+            {ADRR, {2,&VMCPU::funcAdrr}},
+            {ADRRL, {2,&VMCPU::funcAdrrl}},
+            {SUBVR, {3,&VMCPU::funcSubvr}},
+            {SUBRR, {2,&VMCPU::funcSubrr}},
+            {SUBRRL, {2,&VMCPU::funcSubrrl}},
+            {XOR, {2,&VMCPU::funcXor}},
+            {XORL, {2,&VMCPU::funcXorl}},
+            {NOT, {1,&VMCPU::funcNot}},
+            {NOTB, {1,&VMCPU::funcNotb}},
+            {ADVRD, {5,&VMCPU::funcAdvrd}},
+            {SUBVRD, {5,&VMCPU::funcSubvrd}},
+            {SHR, {2,&VMCPU::funcShr}},
+            {SHL, {2,&VMCPU::funcShl}},
+            {CMP, {2,&VMCPU::funcCmp}},
+            {CMPL, {2,&VMCPU::funcCmpl}},
+            {VMSYSBUS, {1,&VMCPU::funcVmSysbus}},
+            {PUSH, {1,&VMCPU::funcPush}},
+            {POP, {1,&VMCPU::funcPop}},
+            {CLST, {0,&VMCPU::funcClSt}},
+            {SETSP, {4,&VMCPU::funcSetSp}},
+            {POC, {0,&VMCPU::funcPoc}},
+            {POCN, {0,&VMCPU::funcPocn}},
+            {TIB, {0,&VMCPU::funcTib}},
+            {GIC, {1,&VMCPU::funcGic}},
+            {PIC, {0,&VMCPU::funcPic}},
+            {PICN, {0,&VMCPU::funcPicn}},
+            {PXV, {0,&VMCPU::funcPxv}},
+            {PXVN, {0,&VMCPU::funcPxvn}}
         };
 
     public:
@@ -232,6 +234,7 @@ class VMCPU {
         void run();
         void debug();
         bool loadCode(VBYTE *, int);
+        VBYTE* loadProtectedCode(int &, std::string);
 
     #ifdef _VM_CPU_TEST_
     public:

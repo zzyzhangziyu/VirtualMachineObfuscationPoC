@@ -69,7 +69,7 @@ int runVM(int argc, char *argv[])
 
     VBYTE *mc;
     int mcsize = -1;
-    try { mc = loadProtectedCode(mcsize, path_to_file, vm->areFramesNeeded, vm->frameMap); }
+    try { mc = vm->loadProtectedCode(mcsize, path_to_file); }
     catch (int e) {
         std::cout << "[ERROR " << e << "] NO FILE OR SE \n";
         return -1;

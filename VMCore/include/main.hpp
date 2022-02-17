@@ -9,7 +9,4 @@
 #define MODE_DEBUG "debug"
 #define MODE_EXEC "exec"
 
-VBYTE* loadProtectedCode(int &, std::string, bool&, std::map<int, int>&);
-int checkOpcodeSize(VBYTE, bool);
-
 #endif //_MAIN_HPP

@@ -1,6 +1,6 @@
 PROJECTNAME = VMPROTECT
 CC = g++
-CFLAGS = -Wall -Wextra -std=c++11
+CFLAGS = -Wall -Wextra -std=c++17
 SRC_DIR = src
 SHARED_SRC_DIR = ../SharedCode
 OBJ_DIR = obj

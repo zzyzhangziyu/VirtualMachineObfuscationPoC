@@ -11,7 +11,7 @@ int VMCPU::executer(VBYTE opcode)
             valToReturn = -1;
         }
         else {
-            MFP fp = dOpcodesFunction[opcode];
+            MFP fp = dOpcodesFunction[opcode].second;
             (this->*fp)();
         }
     }
