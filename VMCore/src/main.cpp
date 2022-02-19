@@ -4,7 +4,7 @@
     language which can be used to program it.
     
     Copyright (C) eaglx.
-    version 0.4.051021.1436
+    version 0.4.190222.1050
 */
 #include "../../SharedCode/global.hpp"
 #include "../include/main.hpp"
@@ -102,11 +102,11 @@ int runVM(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
     #ifdef _WIN32_DEV_ENVIRONMENT
-        isHypervisor();
+        AdvanceSecurity::isHypervisor();
         return runVM(argc, argv);
     #else //_LINUX_DEV_ENVIRONMENT
-        isHypervisor();
-        checkPtrace(argc);
+        AdvanceSecurity::isHypervisor();
+        AdvanceSecurity::checkPtrace(argc);
         return runVM(argc, argv);
     #endif
 }

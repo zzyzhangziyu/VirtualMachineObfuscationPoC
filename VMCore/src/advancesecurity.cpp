@@ -1,9 +1,9 @@
 #include "../include/advancesecurity.hpp"
 
 #ifdef _WIN32_DEV_ENVIRONMENT
-
+    /* ****** TBD ****** */
 #else //_LINUX_DEV_ENVIRONMENT
-    void checkPtrace(int argc) {
+    void AdvanceSecurity::checkPtrace(int argc) {
         int offset = 10;
         if (ptrace(PTRACE_TRACEME, 0, 1, 0) == 0) offset = 66;
         if (ptrace(PTRACE_TRACEME, 0, 1, 0) == -1) offset *= 23;
@@ -16,7 +16,7 @@
     }
 #endif
 
-void isHypervisor(void) {
+void AdvanceSecurity::isHypervisor(void) {
     #ifdef _WIN32_DEV_ENVIRONMENT
         int cpuinfo[4]; 
         __cpuid(cpuinfo, 1);

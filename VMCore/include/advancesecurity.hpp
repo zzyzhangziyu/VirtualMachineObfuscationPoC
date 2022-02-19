@@ -5,20 +5,23 @@
 
 #include "vmcpu.hpp"
 
+/* ****** HEADERS ****** */
 #ifdef _WIN32_DEV_ENVIRONMENT
-    /* ****** HEADERS ****** */
     #include <intrin.h>
-    /* ****** FUNCTIONS ****** */
 #else //_LINUX_DEV_ENVIRONMENT
-    /* ****** HEADERS ****** */
     #include <unistd.h>
     #include <sys/ptrace.h>
     #include <cpuid.h>
-    /* ****** FUNCTIONS ****** */
-    void checkPtrace(int);
 #endif
 
-/* ****** FUNCTIONS ****** */
-void isHypervisor(void);
+class AdvanceSecurity {
+    public:
+        #ifdef _WIN32_DEV_ENVIRONMENT
+            /* ****** TBD ****** */
+        #else //_LINUX_DEV_ENVIRONMENT
+            static void checkPtrace(int);
+        #endif
+        static void isHypervisor(void);
+};
 
 #endif //_ADVM_SEC_HPP
