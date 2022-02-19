@@ -1120,7 +1120,7 @@ void VMCPU::funcPoc()
     }
     else bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
     if(isError) funcException("get byte from frame!");
-    vmPrint(bTmp_0);
+    Screen::vmPrint(bTmp_0, SCREEN_MODE::NORMAL, false);
 }
 
 /*
@@ -1151,7 +1151,7 @@ void VMCPU::funcPocn()
     }
     else bTmp_0 = *(VBYTE*) &AS->codeData[AS->stack[REGS->SP++]];
     if(isError) funcException("get byte from frame!");
-    vmPrintN(bTmp_0);
+    Screen::vmPrint(bTmp_0, SCREEN_MODE::NORMAL, true);
 }
 
 /*
@@ -1226,7 +1226,7 @@ void VMCPU::funcPic()
         funcException("stack underflow!");
     }
     VBYTE bTmp_0 = AS->stack[REGS->SP++];
-    vmPrint(bTmp_0);
+    Screen::vmPrint(bTmp_0, SCREEN_MODE::NORMAL, false);
 }
 
 /*
@@ -1250,7 +1250,7 @@ void VMCPU::funcPicn()
         funcException("stack underflow!");
     }
     VBYTE bTmp_0 = AS->stack[REGS->SP++];
-    vmPrintN(bTmp_0);
+    Screen::vmPrint(bTmp_0, SCREEN_MODE::NORMAL, true);
 }
 
 /*
@@ -1273,7 +1273,7 @@ void VMCPU::funcPxv()
         funcException("stack underflow!");
     }
     VDWORD dTmp_0 = AS->stack[REGS->SP++];
-    vmPrintHX(dTmp_0);
+    Screen::vmPrint(dTmp_0, SCREEN_MODE::HEX, false);
 }
 
 /*
@@ -1297,5 +1297,5 @@ void VMCPU::funcPxvn()
         funcException("stack underflow!");
     }
     VDWORD dTmp_0 = AS->stack[REGS->SP++];
-    vmPrintHXN(dTmp_0);
+    Screen::vmPrint(dTmp_0, SCREEN_MODE::HEX, true);
 }

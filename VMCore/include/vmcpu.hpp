@@ -10,6 +10,9 @@
 #include <fstream>
 #include <utility>
 
+#include "vmbase.hpp"
+#include "screen.hpp"
+
 #ifdef _WIN32_DEV_ENVIRONMENT
     #include <Windows.h>
 #else _LINUX_DEV_ENVIRONMENT
@@ -81,7 +84,7 @@ typedef struct {
     enum class VCpuFlag {OK = 0, ERROR, UNDERFLOW, OVERFLOW};
 #endif // _VM_CPU_TEST_
 
-class VMCPU {
+class VMCPU: private VMBase {
     typedef void (VMCPU::*MFP)();
 
     public:
@@ -106,17 +109,14 @@ class VMCPU {
     private:
         int executer(VBYTE);
         void getDataFromCodeData(std::string &, int);
-        void vmPrint(VBYTE s);
-        void vmPrintHX(VDWORD);
-        void vmPrintN(VBYTE s);
-        void vmPrintHXN(VDWORD);
+        
+        /* MEMORY */
         void writeByteIntoFrame(int, int, std::vector<VBYTE>);
         std::vector<VBYTE> getByteFromFrame(int, int);
         int loadFrame(int);
         void restoreFrame();
-        //void vmScan();
-        int checkOpcodeSize(VBYTE, bool);
 
+        int checkOpcodeSize(VBYTE, bool);
         void funcException(std::string e);
 
         // Opcodes functions
