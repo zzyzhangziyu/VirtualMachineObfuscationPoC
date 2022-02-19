@@ -4,7 +4,7 @@
     language which can be used to program it.
     
     Copyright (C) eaglx.
-    version 0.4.190222.1050
+    version 0.4.190222.2030
 */
 #include "../../SharedCode/global.hpp"
 #include "../include/main.hpp"
@@ -67,35 +67,20 @@ int runVM(int argc, char *argv[])
         }
     }
 
-    VBYTE *mc;
-    int mcsize = -1;
-    //TODO: rewrite
-    try { mc = vm->loadProtectedCode(mcsize, path_to_file); }
+    try { if(!vm->loadCode(0, path_to_file)) { delete vm; return -1; } }
     catch (int e) {
         std::cout << "[ERROR " << e << "] NO FILE OR SE \n";
         return -1;
     }
 
-    if(!vm->loadCode(mc, mcsize)) {
-        delete[] mc;
-        return -1;
-    }
-    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    delete[] mc;
     if(mode.compare(MODE_DEBUG) == 0) vm->debug();
     else if(mode.compare(MODE_EXEC) == 0) {
-        try{
-            vm->run();
-            delete vm;
-        } catch(...){
-            return -1;
-        }
+        try{ vm->run(); delete vm; } catch(...) { return -1; }
     }
     else {
         std::cout << "[ERROR 100101] INCORRECT MODE!\n";
         return -1;
     }
-
     return 0;
 }
 

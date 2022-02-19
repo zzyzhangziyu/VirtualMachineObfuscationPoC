@@ -38,46 +38,9 @@
     #include "./test.hpp"
 #endif //VMTESTS
 
+#include "./memory.hpp"
 #include "../../SharedCode/datatypes.hpp"
-
-#define CODE_DATA_SIZE 51200
-#define STACK_SIZE 256
-#define INPUT_BUFFER_SIZE 1024
-
 #include "../../SharedCode/vmdebug.hpp"
-
-typedef struct {
-    /* Here will be a code to execute and other data - 50KB*/
-    VBYTE codeData[CODE_DATA_SIZE];
-
-    /* Size of one element is VDWORD 
-    in order to be able to push addresses. */
-    VDWORD stack[STACK_SIZE];
-
-    /* Here will be a user input*/
-    VBYTE dataBuffer[INPUT_BUFFER_SIZE];
-} ADDRESS_SPACE, *PADDRESS_SPACE;
-
-typedef struct {
-    /* General Purpose Registers R0 -> R7 */
-    VDWORD R[8];
-    struct {
-        /* Zero Flag 
-            value 1 - flag is set if the result of the last comparison was zero
-            value 0 - flag is not set
-        */
-        unsigned char ZF : 1;
-        /* Carry Flag 
-            value 1 - flag is set the results of the last comparison was moving
-            value 0 - flag is not set
-        */
-        unsigned char CF : 1;
-    };
-    /* Program Counter */
-    VDWORD PC;
-    /* Stack Pointer */
-    VDWORD SP;
-} REGISTERSS, *PREGISTERSS;
 
 
 #ifdef _VM_CPU_TEST_
@@ -110,11 +73,12 @@ class VMCPU: private VMBase {
         int executer(VBYTE);
         void getDataFromCodeData(std::string &, int);
         
-        /* MEMORY */
+        /* ******************** MEMORY *********************** */
         void writeByteIntoFrame(int, int, std::vector<VBYTE>);
         std::vector<VBYTE> getByteFromFrame(int, int);
         int loadFrame(int);
         void restoreFrame();
+        /* ^^^^^^^^^^^^^ TODO: MOVE TO NEW CLASS ^^^^^^^^^^^^^ */
 
         int checkOpcodeSize(VBYTE, bool);
         void funcException(std::string e);
@@ -234,6 +198,9 @@ class VMCPU: private VMBase {
         void run();
         void debug();
         bool loadCode(VBYTE *, int);
+        bool loadCode(int, std::string);
+
+    private:
         VBYTE* loadProtectedCode(int &, std::string);
 
     #ifdef _VM_CPU_TEST_

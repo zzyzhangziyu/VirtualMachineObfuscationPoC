@@ -1,7 +1,7 @@
 #ifndef _VM_PROTECTED_D
 #define _VM_PROTECTED_D
 
-#include "main.hpp"
+#include "../../SharedCode/datatypes.hpp"
 
 /* 
     Here paste a compiled program to be integrated in VMCore.

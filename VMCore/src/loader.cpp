@@ -8,6 +8,35 @@
 
 #define CODE_DATA_SIZE 51200
 
+bool VMCPU::loadCode(VBYTE *mcode, int mcsize)
+{
+    memset(AS->codeData, 0, CODE_DATA_SIZE*sizeof(*(AS->codeData)));
+    memset(AS->stack, 0, STACK_SIZE*sizeof(*(AS->stack)));
+    memset(AS->dataBuffer, 0, INPUT_BUFFER_SIZE*sizeof(*(AS->dataBuffer)));
+    if((unsigned) (mcsize) > (sizeof(AS->codeData) / sizeof(AS->codeData[0]))) 
+    {
+        std::cout << "[ERROR 101001] TOO BIG A CODE TO EXECUTE!\n";
+        return false;
+    }
+    memcpy(AS->codeData, mcode, mcsize);
+    for(int i = 0; i < 8; i++)
+    {
+        REGS->R[i] = (VDWORD) 0;
+    }
+    REGS->CF = 0;
+    REGS->ZF = 0;
+    return true;
+}
+
+bool VMCPU::loadCode(int mcsize, std::string fileName) 
+{
+    auto *mc = loadProtectedCode(mcsize, fileName);
+    auto valToReturn = false;
+    if(loadCode(mc, mcsize)) valToReturn = true;
+    delete mc;
+    return valToReturn;
+}
+
 int VMCPU::checkOpcodeSize(VBYTE opcode, bool isOpcode) 
 {
     if(!isOpcode) return 0;
@@ -18,7 +47,7 @@ int VMCPU::checkOpcodeSize(VBYTE opcode, bool isOpcode)
     }
 }
 
-VBYTE* VMCPU::loadProtectedCode(int &mcsize, std::string fileName) //TODO: rewrite
+VBYTE* VMCPU::loadProtectedCode(int &mcsize, std::string fileName)
 {
     VBYTE *mc;
     std::ifstream fileBinToRead;
@@ -125,25 +154,4 @@ VBYTE* VMCPU::loadProtectedCode(int &mcsize, std::string fileName) //TODO: rewri
         throw 100010;
     }
     return mc;
-}
-
-
-bool VMCPU::loadCode(VBYTE *mcode, int mcsize) //TODO: rewrite
-{
-    memset(AS->codeData, 0, CODE_DATA_SIZE*sizeof(*(AS->codeData)));
-    memset(AS->stack, 0, STACK_SIZE*sizeof(*(AS->stack)));
-    memset(AS->dataBuffer, 0, INPUT_BUFFER_SIZE*sizeof(*(AS->dataBuffer)));
-    if((unsigned) (mcsize) > (sizeof(AS->codeData) / sizeof(AS->codeData[0]))) 
-    {
-        std::cout << "[ERROR 101001] TOO BIG A CODE TO EXECUTE!\n";
-        return false;
-    }
-    memcpy(AS->codeData, mcode, mcsize);
-    for(int i = 0; i < 8; i++)
-    {
-        REGS->R[i] = (VDWORD) 0;
-    }
-    REGS->CF = 0;
-    REGS->ZF = 0;
-    return true;
 }
