@@ -8,7 +8,7 @@ void conn(int cliSocket)
     char bufferMSGtoDbg[PACKET_TO_DEBUGGER_SIZE];
     char bufferMSGfromDbg[PACKET_FROM_DEBUGGER_SIZE];
     int retValFromFunc;
-    int cmdDBG;
+    DEBUG_OPTIONS cmdDBG;
 
     while(connLoop)
     {
@@ -27,33 +27,34 @@ void conn(int cliSocket)
         deserializeMSG(&msgToDebg,bufferMSGtoDbg);
 SHOWOPTIONS:
         printOptions();
-        std::cin >> cmdDBG;
+        int temp_cmdDBG;
+        std::cin >> temp_cmdDBG;
+        cmdDBG = static_cast<DEBUG_OPTIONS>(temp_cmdDBG);
         switch(cmdDBG)
         {
-            case 1:
+            case DEBUG_OPTIONS::EXEC:
                 msgFromDebg.cmdFlag = CMD_RUN;
                 serializeMSG(&msgFromDebg, bufferMSGfromDbg);
                 retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
                 if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
                 break;
-            case 2:
+            case DEBUG_OPTIONS::STEP:
                 msgFromDebg.cmdFlag = CMD_STEP;
                 serializeMSG(&msgFromDebg, bufferMSGfromDbg);
                 retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
                 if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
                 break;
-            case 3:
+            case DEBUG_OPTIONS::EXIT_DBG:
                 msgFromDebg.cmdFlag = CMD_EXIT;
                 connLoop = false;
                 serializeMSG(&msgFromDebg, bufferMSGfromDbg);
                 retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
                 if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
                 break;
-            case 4:
+            case DEBUG_OPTIONS::SET_VAL:
                 {
                     int option;
                     VDWORD val;
-                    int regNr;
                     std::cout << "Select a register to modify:\n"
                                 << "\t1. PC\n"
                                 << "\t2. SP\n"
@@ -81,6 +82,7 @@ SHOWOPTIONS:
                             if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
                             break;
                         case 3:
+                            int regNr;
                             std::cout << "register nr: ";
                             std::cin >> regNr;
                             std::cout << "Value (hex e.g. 1B or 1b): ";
@@ -98,7 +100,7 @@ SHOWOPTIONS:
                     }
                 }
                 break;
-            case 5:
+            case DEBUG_OPTIONS::SET_FLAG:
                 {
                     int option;
                     std::cout << "Select a flag to modify:\n"
@@ -137,7 +139,7 @@ SHOWOPTIONS:
                     }
                 }
                 break;
-            case 6:
+            case DEBUG_OPTIONS::SHOW_STACK:
                 {
                     int numberDataToPrint = 0;
                     std::cout << "How many data to print: ";
@@ -153,7 +155,7 @@ SHOWOPTIONS:
                     goto SHOWOPTIONS;
                 }
                 break;
-            case 7:
+            case DEBUG_OPTIONS::SHOW_CODE_DATA:
                 {
                     int numberDataToPrint = 0;
                     std::cout << "How many data to print: ";
@@ -167,7 +169,7 @@ SHOWOPTIONS:
                     goto SHOWOPTIONS;
                 }
                 break;
-            case 8:
+            case DEBUG_OPTIONS::SHOW_DATA_BUFFER:
                 {
                     int numberDataToPrint = 0;
                     std::cout << "How many data to print: ";
@@ -181,7 +183,7 @@ SHOWOPTIONS:
                     goto SHOWOPTIONS;
                 }
                 break;
-            case 9:
+            case DEBUG_OPTIONS::SHOW_REGS:
                 std::cout << "PC: " << std::bitset<32>(msgToDebg.PC) << std::endl;
                 std::cout << "SP: " << std::bitset<32>(msgToDebg.SP) << std::endl;
                 for(int i = 0; i < 8; i++) 
@@ -192,7 +194,7 @@ SHOWOPTIONS:
                 std::cout << "CF: " << std::bitset<8>(msgToDebg.CF) << std::endl;
                 goto SHOWOPTIONS;
                 break;
-            case 10:
+            case DEBUG_OPTIONS::WRITE_CODE:
                 {
                     std::string toModify = "";
                     std::cout << "Data to modify (in bit, 1VBYTE==8bit): ";

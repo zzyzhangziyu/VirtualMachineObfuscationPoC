@@ -1,6 +1,6 @@
 PROJECTNAME = VmprotDEBUGGER
 CC = g++
-CFLAGS = -Wall -Wextra -std=c++11
+CFLAGS = -Wall -Wextra -std=c++17
 SRC_DIR = .
 SHARED_SRC_DIR = ../SharedCode
 OBJ_DIR = obj

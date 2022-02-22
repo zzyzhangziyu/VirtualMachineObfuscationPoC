@@ -1,4 +1,4 @@
-#include "../VMCore/include/nethelpers.hpp"
+#include "nethelpers.hpp"
 
 int sendData(int socket, void *buffer, size_t length)
 {

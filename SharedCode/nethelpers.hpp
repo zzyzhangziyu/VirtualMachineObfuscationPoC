@@ -1,7 +1,9 @@
 #ifndef VM_NET_HELPERS_H
 #define VM_NET_HELPERS_H
 
-#include "./vmcpu.hpp"
+#include "datatypes.hpp"
+#include "memsize.hpp"
+#include "global.hpp"
 
 #include <string.h>
 

@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <string.h>
-#include <stdint.h>
 #include <vector>
 #include <sstream>
 #include <map>
@@ -23,6 +22,7 @@
 // #include <mutex>
 // #include <condition_variable>
 
+#include "../../SharedCode/global.hpp"
 #include "../../SharedCode/opcodes.hpp"
 #include "./advancesecurity.hpp"
 

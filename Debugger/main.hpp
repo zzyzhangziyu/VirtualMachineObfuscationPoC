@@ -2,7 +2,9 @@
 #define DEBUGGER_MAIN_HPP
 
 #include <iostream>
+#include <string>
 #include "../SharedCode/opcodes.hpp"
+#include "../VMCore/include/vmcpu.hpp"
 #include "../SharedCode/vmdebug.hpp"
 
 #ifdef _WIN32_DEV_ENVIRONMENT
@@ -26,6 +28,20 @@
 #include <bitset>
 
 #include "../SharedCode/global.hpp"
+
+enum class DEBUG_OPTIONS { 
+    EXEC = 1, 
+    STEP,
+    EXIT_DBG,
+    SET_VAL,
+    SET_FLAG,
+    SHOW_STACK,
+    SHOW_CODE_DATA,
+    SHOW_DATA_BUFFER,
+    SHOW_REGS,
+    WRITE_CODE
+};
+
 
 /* *****************  FUNCTIONS *****************  */
 void printIntro();

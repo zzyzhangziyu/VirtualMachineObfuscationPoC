@@ -2,10 +2,7 @@
 #define _MEMORY_VM_HPP
 
 #include "../../SharedCode/datatypes.hpp"
-
-#define CODE_DATA_SIZE 51200
-#define STACK_SIZE 256
-#define INPUT_BUFFER_SIZE 1024
+#include "../../SharedCode/memsize.hpp"
 
 typedef struct {
     /* Here will be a code to execute and other data - 50KB*/

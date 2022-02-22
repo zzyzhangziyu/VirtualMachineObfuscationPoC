@@ -19,22 +19,22 @@ ______ ___________ _   _ _____ _____  ___________
 |___/ \____/\____/ \___/ \____/\____/\____/\_| \_|       
                                                          
     )" << std::endl;
-    std::cout << "version 0.3.240121.0026\n" << std::endl;
+    std::cout << "version 0.3.220222.1630\n" << std::endl;
 }
 
 void printOptions()
 {
     std::cout << "Options:\n"
-                << "\t1. Execute a program on the VM\n"
-                << "\t2. Step execution\n"
-                << "\t3. Exit debugger and exit debug mode in the VM\n"
-                << "\t4. Set a value in a register\n"
-                << "\t5. Set a flag\n"
-                << "\t6. Show the stack\n"
-                << "\t7. Show the code data\n"
-                << "\t8. Show the data buffer\n"
-                << "\t9. Show all registers\n"
-                << "\t10. Write to the code data"
+                << "\t" << static_cast<int>(DEBUG_OPTIONS::EXEC) << ". Execute a program on the VM\n"
+                << "\t" << static_cast<int>(DEBUG_OPTIONS::STEP) << ". Step execution\n"
+                << "\t" << static_cast<int>(DEBUG_OPTIONS::EXIT_DBG) << ". Exit debugger and exit debug mode in the VM\n"
+                << "\t" << static_cast<int>(DEBUG_OPTIONS::SET_VAL) << ". Set a value in a register\n"
+                << "\t" << static_cast<int>(DEBUG_OPTIONS::SET_FLAG) << ". Set a flag\n"
+                << "\t" << static_cast<int>(DEBUG_OPTIONS::SHOW_STACK) << ". Show the stack\n"
+                << "\t" << static_cast<int>(DEBUG_OPTIONS::SHOW_CODE_DATA) << ". Show the code data\n"
+                << "\t" << static_cast<int>(DEBUG_OPTIONS::SHOW_DATA_BUFFER) << ". Show the data buffer\n"
+                << "\t" << static_cast<int>(DEBUG_OPTIONS::SHOW_REGS) << ". Show all registers\n"
+                << "\t" << static_cast<int>(DEBUG_OPTIONS::WRITE_CODE) << ". Write to the code data\n"
                 << std::endl;
     std::cout << "Choice: ";
 }
