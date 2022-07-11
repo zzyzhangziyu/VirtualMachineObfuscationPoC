@@ -19,7 +19,7 @@ ______ ___________ _   _ _____ _____  ___________
 |___/ \____/\____/ \___/ \____/\____/\____/\_| \_|       
                                                          
     )" << std::endl;
-    std::cout << "version 0.3.220222.1630\n" << std::endl;
+    std::cout << "version 0.3.220711.1600\n" << std::endl;
 }
 
 void printOptions()
@@ -36,6 +36,23 @@ void printOptions()
                 << "\t" << static_cast<int>(DEBUG_OPTIONS::SHOW_REGS) << ". Show all registers\n"
                 << "\t" << static_cast<int>(DEBUG_OPTIONS::WRITE_CODE) << ". Write to the code data\n"
                 << std::endl;
+    std::cout << "Choice: ";
+}
+
+void printRegToModifyOptions()
+{
+    std::cout << "Select a register to modify:\n"
+                << "\t1. PC\n"
+                << "\t2. SP\n"
+                << "\t3. Rx\n";
+    std::cout << "Choice: ";
+}
+
+void printFlagToModifyOptions()
+{
+    std::cout << "Select a flag to modify:\n"
+                << "\t1. ZF\n"
+                << "\t2. CF\n";
     std::cout << "Choice: ";
 }
 

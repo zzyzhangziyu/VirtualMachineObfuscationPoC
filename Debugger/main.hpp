@@ -46,8 +46,13 @@ enum class DEBUG_OPTIONS {
 /* *****************  FUNCTIONS *****************  */
 void printIntro();
 void printOptions();
+void printRegToModifyOptions();
+void printFlagToModifyOptions();
+
 void errorSend(int);
 void conn(int);
+void sendCmd(int, int);
+void setRegValue(int, int, VDWORD, int);
 
 #ifdef _WIN32_DEV_ENVIRONMENT
     int setWin32Connection();

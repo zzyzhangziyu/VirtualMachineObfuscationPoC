@@ -33,66 +33,36 @@ SHOWOPTIONS:
         switch(cmdDBG)
         {
             case DEBUG_OPTIONS::EXEC:
-                msgFromDebg.cmdFlag = CMD_RUN;
-                serializeMSG(&msgFromDebg, bufferMSGfromDbg);
-                retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
-                if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                sendCmd(cliSocket, CMD_RUN);
                 break;
             case DEBUG_OPTIONS::STEP:
-                msgFromDebg.cmdFlag = CMD_STEP;
-                serializeMSG(&msgFromDebg, bufferMSGfromDbg);
-                retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
-                if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                sendCmd(cliSocket, CMD_STEP);
                 break;
             case DEBUG_OPTIONS::EXIT_DBG:
-                msgFromDebg.cmdFlag = CMD_EXIT;
                 connLoop = false;
-                serializeMSG(&msgFromDebg, bufferMSGfromDbg);
-                retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
-                if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                sendCmd(cliSocket, CMD_EXIT);
                 break;
             case DEBUG_OPTIONS::SET_VAL:
                 {
                     int option;
                     VDWORD val;
-                    std::cout << "Select a register to modify:\n"
-                                << "\t1. PC\n"
-                                << "\t2. SP\n"
-                                << "\t3. Rx\n";
-                    std::cout << "Choice: ";
+                    printRegToModifyOptions();
                     std::cin >> option;
+                    std::cout << "Value (hex e.g. 1B or 1b): ";
+                    std::cin >> std::hex >> val;
                     switch(option)
                     {
                         case 1:
-                            std::cout << "Value (hex e.g. 1B or 1b): ";
-                            std::cin >> std::hex >> val;
-                            msgFromDebg.cmdFlag = CMD_SET_PC;
-                            *(VDWORD*) &msgFromDebg.buffer[0] = val;
-                            serializeMSG(&msgFromDebg, bufferMSGfromDbg);
-                            retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
-                            if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                            setRegValue(cliSocket, CMD_SET_PC, val, -1);
                             break;
                         case 2:
-                            std::cout << "Value (hex e.g. 1B or 1b): ";
-                            std::cin >> std::hex >> val;
-                            msgFromDebg.cmdFlag = CMD_SET_SP;
-                            *(VDWORD*) &msgFromDebg.buffer[0] = val;
-                            serializeMSG(&msgFromDebg, bufferMSGfromDbg);
-                            retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
-                            if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                            setRegValue(cliSocket, CMD_SET_SP, val, -1);
                             break;
                         case 3:
                             int regNr;
                             std::cout << "register nr: ";
                             std::cin >> regNr;
-                            std::cout << "Value (hex e.g. 1B or 1b): ";
-                            std::cin >> std::hex >> val;
-                            msgFromDebg.cmdFlag = CMD_SET_R;
-                            msgFromDebg.buffer[0] = regNr + '0';
-                            *(VDWORD*) &msgFromDebg.buffer[1] = val;
-                            serializeMSG(&msgFromDebg, bufferMSGfromDbg);
-                            retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
-                            if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+                            setRegValue(cliSocket, CMD_SET_SP, val, regNr);
                             break;
                         default:
                             std::cout << "Unkonown command!\n";
@@ -103,35 +73,19 @@ SHOWOPTIONS:
             case DEBUG_OPTIONS::SET_FLAG:
                 {
                     int option;
-                    std::cout << "Select a flag to modify:\n"
-                                << "\t1. ZF\n"
-                                << "\t2. CF\n";
-                    std::cout << "Choice: ";
-                    std::cin >> option;
                     char val;
+                    printFlagToModifyOptions();
+                    std::cin >> option;
+                    std::cout << "Value: ";
+                    std::cin >> val;
+
                     switch(option)
                     {
                         case 1:
-                            {
-                                std::cout << "Value: ";
-                                std::cin >> val;
-                                msgFromDebg.cmdFlag = CMD_SET_ZF;
-                                msgFromDebg.buffer[0] = val;
-                                serializeMSG(&msgFromDebg, bufferMSGfromDbg);
-                                retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
-                                if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
-                            }
+                            setRegValue(cliSocket, CMD_SET_ZF, val, -1);
                             break;
                         case 2:
-                            {
-                                std::cout << "Value: ";
-                                std::cin >> val;
-                                msgFromDebg.cmdFlag = CMD_SET_CF;
-                                msgFromDebg.buffer[0] = val;
-                                serializeMSG(&msgFromDebg, bufferMSGfromDbg);
-                                retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
-                                if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
-                            }
+                            setRegValue(cliSocket, CMD_SET_CF, val, -1);
                             break;
                         default:
                             std::cout << "Unkonown command!\n";
@@ -228,4 +182,39 @@ SHOWOPTIONS:
     closesocket(cliSocket);
     WSACleanup();
 #endif
+}
+
+void sendCmd(int cliSocket, int cmdNumber)
+{
+    int retValFromFunc;
+    MESSAGE_FROM_DEBUGGER msgFromDebg;
+    char bufferMSGfromDbg[PACKET_FROM_DEBUGGER_SIZE];
+
+    msgFromDebg.cmdFlag = CMD_RUN;
+    serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+    retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+    if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+    return;
+}
+
+void setRegValue(int cliSocket, int cmdNumber, VDWORD val, int regNr)
+{
+    int retValFromFunc;
+    MESSAGE_FROM_DEBUGGER msgFromDebg;
+    char bufferMSGfromDbg[PACKET_FROM_DEBUGGER_SIZE];
+
+    msgFromDebg.cmdFlag = cmdNumber;
+    if(regNr == -1)
+    {
+        *(VDWORD*) &msgFromDebg.buffer[0] = val;
+    }
+    else
+    {
+        msgFromDebg.buffer[0] = regNr + '0';
+        *(VDWORD*) &msgFromDebg.buffer[1] = val;
+    }
+    serializeMSG(&msgFromDebg, bufferMSGfromDbg);
+    retValFromFunc = sendData(cliSocket, bufferMSGfromDbg, PACKET_FROM_DEBUGGER_SIZE);
+    if(retValFromFunc == SEND_ERROR) errorSend(cliSocket);
+    return;
 }
