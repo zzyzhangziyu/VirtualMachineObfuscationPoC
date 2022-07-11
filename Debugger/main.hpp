@@ -49,6 +49,8 @@ void printOptions();
 void printRegToModifyOptions();
 void printFlagToModifyOptions();
 
+void showData(MESSAGE_TO_DEBUGGER *, DEBUG_OPTIONS);
+
 void errorSend(int);
 void conn(int);
 void sendCmd(int, int);
