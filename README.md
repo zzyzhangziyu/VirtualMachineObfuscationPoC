@@ -114,7 +114,7 @@ When debugging a program you can use a dedicated debugger for *VirtualMachineObf
 9. Show all registers.
 10. Write to the code data.
 
-In case of option *10*, the overwritten data will start from where the *PC* register points. The debugger connects to the *VMPROTECT* using a TCP socket, default port *9313*. An example of debugging is seen in the screenshot below.
+In case of option *10*, the overwritten data will start from where the *PC* register points. The debugger connects to the *VirtualMachineObfuscationPoC* using a TCP socket, default port *9313*. An example of debugging is seen in the screenshot below.
 
 <img src="doc/6.png" height="300">
 
@@ -136,7 +136,7 @@ VMCPU::VMCPU()
 
 ## VMCore
 ### Args
-The *VMPROTECT* can be start with no arguments but there need to be set a code to execute in *protected.hpp*.
+The *VirtualMachineObfuscationPoC* can be start with no arguments but there need to be set a code to execute in *protected.hpp*.
 
 ```c++
 VBYTE ProtectedData[] = { 0xFF }; // <- HERE PASTE A CODE TO EXECUTE BY VMCPU.
@@ -144,11 +144,11 @@ VBYTE ProtectedData[] = { 0xFF }; // <- HERE PASTE A CODE TO EXECUTE BY VMCPU.
 
 Param *-m* set a program mode. Possible program execution modes:
 * exec - normal execution,
-* debug - debugging mode, you need to run *VMPROTECT-Debugger*.
+* debug - debugging mode, you need to run *VirtualMachineObfuscationPoC-Debugger*.
 
 Param *-p* describe a path to a file with a compiled code to execute.
 
-Example usage of *VMPROTECT* below.
+Example usage of *VirtualMachineObfuscationPoC* below.
 
 ```ascii
 VMPROTECT.exe -m exec -p ./example-SumAndPrint
