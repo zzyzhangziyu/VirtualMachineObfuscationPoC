@@ -1,7 +1,5 @@
 #  VirtualMachineObfuscationPoC
 
-<img src="https://repository-images.githubusercontent.com/236199786/eab7cc00-05b7-11eb-9f91-6ea165c2cc2c" height="200">
-
 <i>A code obfuscation method using virtual machines to protect programs</i>
 
 <a href="https://github.com/eaglx/VirtualMachineObfuscationPoC/stargazers"><img src="https://img.shields.io/github/stars/eaglx/VirtualMachineObfuscationPoC" alt="Stars Badge"/></a>
