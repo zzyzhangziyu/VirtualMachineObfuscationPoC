@@ -1,13 +1,13 @@
-# VMPROTECT
+#  VirtualMachineObfuscationPoC
 
 <img src="https://repository-images.githubusercontent.com/236199786/eab7cc00-05b7-11eb-9f91-6ea165c2cc2c" height="200">
 
 <i>A code obfuscation method using virtual machines to protect programs</i>
 
-<a href="https://github.com/eaglx/VMPROTECT/stargazers"><img src="https://img.shields.io/github/stars/eaglx/VMPROTECT" alt="Stars Badge"/></a>
-<a href="https://github.com/eaglx/VMPROTECT/network/members"><img src="https://img.shields.io/github/forks/eaglx/VMPROTECT" alt="Forks Badge"/></a>
-<a href="https://github.com/eaglx/VMPROTECT/blob/master/LICENSE"><img src="https://img.shields.io/github/license/eaglx/VMPROTECT?color=2b9348" alt="License Badge"/></a>
-[![GitHub release](https://img.shields.io/github/release/eaglx/VMPROTECT)](https://GitHub.com/eaglx/VMPROTECT/releases/)
+<a href="https://github.com/eaglx/VirtualMachineObfuscationPoC/stargazers"><img src="https://img.shields.io/github/stars/eaglx/VirtualMachineObfuscationPoC" alt="Stars Badge"/></a>
+<a href="https://github.com/eaglx/VirtualMachineObfuscationPoC/network/members"><img src="https://img.shields.io/github/forks/eaglx/VirtualMachineObfuscationPoC" alt="Forks Badge"/></a>
+<a href="https://github.com/eaglx/VirtualMachineObfuscationPoC/blob/master/LICENSE"><img src="https://img.shields.io/github/license/eaglx/VirtualMachineObfuscationPoC?color=2b9348" alt="License Badge"/></a>
+[![GitHub release](https://img.shields.io/github/release/eaglx/VirtualMachineObfuscationPoC)](https://GitHub.com/eaglx/VirtualMachineObfuscationPoC/releases/)
 ![Progress](https://progress-bar.dev/6/?title=progress-v0.5)
 
 A virtual machine that simulates a CPU along with a few other hardware components, allows to perform arithmetic operations, reads and writes to memory and interacts with I/O devices. It can understand a machine language which can be used to program it. Virtual machines used in code obfuscation are completely different than common virtual machnines. They are very specific to the task of executing a few set of instructions. Each instruction is given a custom opcode (often generated at random). :warning: Project only tested on Linux!
@@ -75,7 +75,7 @@ The editor was written in *Python*. It is a plain text editor with no code synta
 
 <img src="doc/3.png" height="300">
 
-There are two options for building a program. The first mode is to compile the program into a separate file and prepare the *VMPROTECT* and *VMPROTECT-DEBUGGER* executables. The second option differs from the previous one in that it merges the compiled code with *VMPROTECT*. Then *VMPROTECT* can be executed without passing arguments.
+There are two options for building a program. The first mode is to compile the program into a separate file and prepare the *VirtualMachineObfuscationPoC* and *VirtualMachineObfuscationPoC-DEBUGGER* executables. The second option differs from the previous one in that it merges the compiled code with *VirtualMachineObfuscationPoC*. Then *VirtualMachineObfuscationPoC* can be executed without passing arguments.
 
 <img src="doc/4.png" height="300">
 
@@ -102,10 +102,10 @@ start:
 ```
 
 ## Debugger
-When debugging a program you can use a dedicated debugger for *VMPROTECT*. The debugger has following options:
+When debugging a program you can use a dedicated debugger for *VirtualMachineObfuscationPoC*. The debugger has following options:
 1. Execute a program on the VM.
 2. Step execution.
-3. Exit debugger and exit debug mode in the *VMPROTECT*.
+3. Exit debugger and exit debug mode in the *VirtualMachineObfuscationPoC*.
 4. Set a value in a register.
 5. Set a flag.
 6. Show the stack.
