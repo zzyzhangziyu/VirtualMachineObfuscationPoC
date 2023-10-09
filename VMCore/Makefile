@@ -1,4 +1,4 @@
-PROJECTNAME = VirtualMachineObfuscationPoC
+PROJECTNAME = VMPROTECT
 CC = g++
 CFLAGS = -Wall -Wextra -std=c++17
 SRC_DIR = src
