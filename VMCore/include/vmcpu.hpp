@@ -14,7 +14,7 @@
 
 #ifdef _WIN32_DEV_ENVIRONMENT
     #include <Windows.h>
-#else _LINUX_DEV_ENVIRONMENT
+#else //_LINUX_DEV_ENVIRONMENT
     #include <unistd.h>
 #endif
 
